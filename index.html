@@ -118,6 +118,11 @@
             font-size: 1.2rem; font-weight: 700; color: var(--primary-light);
             background: linear-gradient(135deg, rgba(49,130,206,0.08), rgba(107,70,193,0.08));
             padding: 0.8rem; border-radius: var(--radius-sm); text-align: center; border: 2px dashed var(--accent);
+            transition: all 0.3s ease;
+        }
+        .age-display.calculated {
+            border-color: var(--success); background: linear-gradient(135deg, rgba(56,161,105,0.08), rgba(72,187,120,0.12));
+            color: var(--success);
         }
         .pending-list { max-height: 450px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.8rem; background: var(--input-bg); }
         .history-item {
@@ -150,9 +155,7 @@
             padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600;
             color: var(--primary-light); margin-bottom: 0.5rem;
         }
-        .loading-spinner {
-            text-align: center; padding: 2rem;
-        }
+        .loading-spinner { text-align: center; padding: 2rem; }
         .loading-spinner i { font-size: 2rem; color: var(--accent); }
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -182,51 +185,139 @@
 </header>
 
 <div class="container">
-    <!-- FORMULARIO DE CARGA -->
+    <!-- ========== FORMULARIO DE CARGA ========== -->
     <div class="card" id="formCard">
         <div class="card-header"><i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · TELEFONÍA</div>
         <div class="hospital-badge"><i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias</div>
+
         <div class="form-grid">
-            <div class="field-group"><label><i class="far fa-calendar-alt"></i> Fecha</label><input type="text" id="fecha" readonly></div>
-            <div class="field-group"><label><i class="far fa-clock"></i> Hora</label><input type="text" id="hora" readonly></div>
+            <div class="field-group">
+                <label><i class="far fa-calendar-alt"></i> Fecha</label>
+                <input type="text" id="fecha" readonly>
+            </div>
+            <div class="field-group">
+                <label><i class="far fa-clock"></i> Hora</label>
+                <input type="text" id="hora" readonly>
+            </div>
+
             <div class="field-group full-width">
                 <label><i class="fas fa-truck-medical"></i> Tipo de ingreso</label>
                 <div class="radio-group">
-                    <div class="radio-item"><input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked><label for="tipoAmbulatorio">🚶 Ambulatorio</label></div>
-                    <div class="radio-item"><input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia"><label for="tipoAmbulancia">🚑 Ambulancia</label></div>
+                    <div class="radio-item">
+                        <input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked>
+                        <label for="tipoAmbulatorio">🚶 Ambulatorio</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia">
+                        <label for="tipoAmbulancia">🚑 Ambulancia</label>
+                    </div>
                 </div>
             </div>
-            <div class="field-group"><label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label><input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off"></div>
-            <div class="field-group"><label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label><input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></div>
+
             <div class="field-group">
-                <label><i class="fas fa-cake-candles"></i> Fecha Nac. <span class="required">*</span></label>
-                <div style="display:flex;gap:0.5rem;"><input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" style="flex:1;" autocomplete="off"><button type="button" class="btn btn-info btn-sm" id="btnConfirmarFecha"><i class="fas fa-check-circle"></i> Confirmar</button></div>
+                <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
+                <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
             </div>
-            <div class="field-group"><label><i class="fas fa-calculator"></i> Edad</label><div class="age-display" id="edadDisplay">—</div></div>
-            <div class="field-group full-width"><label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label><textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea><span class="counter" id="contadorRazon">0/50</span></div>
-            <div class="field-group"><label><i class="fas fa-phone"></i> Teléfono</label><input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"><div class="checkbox-group"><input type="checkbox" id="sinTelefono"><label for="sinTelefono">Sin teléfono</label></div></div>
-            <div class="field-group"><label><i class="fas fa-hospital"></i> Obra Social</label><input type="text" id="obraSocial" style="text-transform: uppercase;"><div class="checkbox-group"><input type="checkbox" id="sinObraSocial"><label for="sinObraSocial">Sin obra social</label></div></div>
-            <div class="field-group"><label><i class="fas fa-map-marker-alt"></i> Domicilio</label><input type="text" id="domicilio" style="text-transform: uppercase;"><div class="checkbox-group"><input type="checkbox" id="sinDomicilio"><label for="sinDomicilio">Sin domicilio</label></div></div>
-            <div class="full-width" id="seccionAmbulancia" style="display:none;">
+            <div class="field-group">
+                <label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label>
+                <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-cake-candles"></i> Fecha de Nacimiento <span class="required">*</span></label>
+                <input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" style="flex:1;" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label><i class="fas fa-calculator"></i> Edad (automática)</label>
+                <div class="age-display" id="edadDisplay">—</div>
+            </div>
+
+            <div class="field-group full-width">
+                <label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label>
+                <textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea>
+                <span class="counter" id="contadorRazon">0/50</span>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-phone"></i> Teléfono</label>
+                <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Solo números">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinTelefono">
+                    <label for="sinTelefono">Sin teléfono</label>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-hospital"></i> Obra Social</label>
+                <input type="text" id="obraSocial" style="text-transform: uppercase;" placeholder="NOMBRE DE OBRA SOCIAL">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinObraSocial">
+                    <label for="sinObraSocial">Sin obra social</label>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-map-marker-alt"></i> Domicilio</label>
+                <input type="text" id="domicilio" style="text-transform: uppercase;" placeholder="DIRECCIÓN COMPLETA">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinDomicilio">
+                    <label for="sinDomicilio">Sin domicilio</label>
+                </div>
+            </div>
+
+            <!-- Sección ambulancia (oculta) -->
+            <div class="full-width" id="seccionAmbulancia" style="display: none;">
                 <div class="section-separator"></div>
                 <div class="form-grid">
-                    <div class="field-group"><label><i class="fas fa-ambulance"></i> Ambulancia</label><input type="text" id="ambulanciaNombre" style="text-transform: uppercase;"></div>
-                    <div class="field-group" style="align-self:center;"><div class="checkbox-group"><input type="checkbox" id="ambulanciaInterior"><label for="ambulanciaInterior">Proviene del interior</label></div></div>
-                    <div class="field-group full-width" id="grupoDepartamento" style="display:none;"><label><i class="fas fa-map"></i> Departamento</label><select id="departamento"><option value="">Seleccione...</option><option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option><option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option><option>CAPAYÁN</option><option>EL ALTO</option><option>FRAY MAMERTO ESQUIÚ</option><option>LA PAZ</option><option>PACLÍN</option><option>POMÁN</option><option>SANTA MARÍA</option><option>SANTA ROSA</option><option>TINOGASTA</option><option>VALLE VIEJO</option></select></div>
-                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display:none;">
+                    <div class="field-group">
+                        <label><i class="fas fa-ambulance"></i> Ambulancia que traslada</label>
+                        <input type="text" id="ambulanciaNombre" style="text-transform: uppercase;" placeholder="Nombre o empresa">
+                    </div>
+                    <div class="field-group" style="align-self: center;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ambulanciaInterior">
+                            <label for="ambulanciaInterior">Proviene del interior</label>
+                        </div>
+                    </div>
+                    <div class="field-group full-width" id="grupoDepartamento" style="display: none;">
+                        <label><i class="fas fa-map"></i> Departamento</label>
+                        <select id="departamento">
+                            <option value="">Seleccione un departamento...</option>
+                            <option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option>
+                            <option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option>
+                            <option>CAPAYÁN</option><option>EL ALTO</option>
+                            <option>FRAY MAMERTO ESQUIÚ</option>
+                            <option>LA PAZ</option><option>PACLÍN</option>
+                            <option>POMÁN</option><option>SANTA MARÍA</option>
+                            <option>SANTA ROSA</option><option>TINOGASTA</option>
+                            <option>VALLE VIEJO</option>
+                        </select>
+                    </div>
+                    <!-- REANIMACIÓN -->
+                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display: none;">
                         <label><i class="fas fa-heart-pulse"></i> ¿ES REANIMACIÓN?</label>
-                        <div class="radio-group" style="border-color:rgba(220,38,38,0.3);"><div class="radio-item"><input type="radio" id="reanimacionSi" name="esReanimacion" value="SI"><label for="reanimacionSi" style="color:var(--reanimation-red);font-weight:700;">⚠️ SÍ</label></div><div class="radio-item"><input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked><label for="reanimacionNo">NO</label></div></div>
+                        <div class="radio-group" style="border-color: rgba(220,38,38,0.3);">
+                            <div class="radio-item">
+                                <input type="radio" id="reanimacionSi" name="esReanimacion" value="SI">
+                                <label for="reanimacionSi" style="color: var(--reanimation-red); font-weight: 700;">⚠️ SÍ - REANIMACIÓN</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked>
+                                <label for="reanimacionNo">NO</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem;border-top:1px solid var(--border);padding-top:1.5rem;">
-            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar</button>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
         </div>
     </div>
 
-    <!-- CONSULTA DESDE EXCEL -->
+    <!-- ========== CONSULTA ========== -->
     <div class="card hidden" id="historyCard">
         <div class="card-header"><i class="fas fa-database"></i> CONSULTA DE REGISTROS · GOOGLE SHEETS</div>
         <div class="search-box">
@@ -249,12 +340,12 @@
         </div>
     </div>
 
-    <!-- PENDIENTES -->
+    <!-- ========== PENDIENTES ========== -->
     <div class="card hidden" id="panelPendientes">
-        <div class="card-header"><i class="fas fa-cloud-upload-alt"></i> Pendientes de sincronizar</div>
+        <div class="card-header"><i class="fas fa-cloud-upload-alt"></i> Registros pendientes de sincronizar</div>
         <div id="listaPendientes" class="pending-list"></div>
-        <div style="margin-top:1.2rem;display:flex;gap:1rem;flex-wrap:wrap;">
-            <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar</button>
+        <div style="margin-top: 1.2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar todos</button>
             <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar todos</button>
         </div>
     </div>
@@ -262,234 +353,426 @@
 
 <div id="toastContainer"></div>
 
-<script src="config.js"></script>
 <script>
-    if (typeof APPS_SCRIPT_URL === 'undefined' || APPS_SCRIPT_URL === '') console.error('config.js no cargado.');
-    if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') console.error('API_TOKEN no definido.');
+    // ========== CONFIGURACIÓN SEGURA ==========
+    (function() {
+        var _u = 'https://script.google.com/macros/s/AKfycbxON0o9XLdUWMr8bQPy40hhJbV3NDL7chuwYQVomEAZWxI9wJZ7Lkq_W35haq2huUWccg/exec';
+        var _t = '226452K@rko932566258233karko';
+        var dominioActual = window.location.hostname;
+        var dominiosValidos = ['kl33m1ng.github.io', 'localhost', '127.0.0.1'];
+        var dominioValido = dominiosValidos.some(function(d) { return dominioActual.indexOf(d) !== -1; });
+        if (!dominioValido) { _u = ''; _t = ''; console.warn('Dominio no autorizado'); }
+        window.APPS_SCRIPT_URL = _u;
+        window.API_TOKEN = _t;
+    })();
 
-    let pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
-    const isOnline = () => navigator.onLine;
+    // ========== ESTADO ==========
+    var pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
+    function isOnline() { return navigator.onLine; }
 
-    // MODO OSCURO
-    const themeToggle = document.getElementById('themeToggle');
-    const themeLabel = document.getElementById('themeLabel');
-    const themeIcon = themeToggle.querySelector('i');
+    // ========== MODO OSCURO ==========
+    var themeToggle = document.getElementById('themeToggle');
+    var themeLabel = document.getElementById('themeLabel');
+    var themeIcon = themeToggle.querySelector('i');
     if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
         themeIcon.className = 'fas fa-sun'; themeLabel.textContent = 'Claro';
     }
-    themeToggle.addEventListener('click', () => {
-        const isDark = document.body.classList.toggle('dark-mode');
+    themeToggle.addEventListener('click', function() {
+        var isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode', isDark);
         themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
         themeLabel.textContent = isDark ? 'Claro' : 'Oscuro';
     });
 
-    // NAVEGACIÓN
-    const formCard = document.getElementById('formCard');
-    const historyCard = document.getElementById('historyCard');
-    const panelPendientes = document.getElementById('panelPendientes');
-    const btnNavForm = document.getElementById('btnNavForm');
-    const btnNavHistory = document.getElementById('btnNavHistory');
-    const btnNavPending = document.getElementById('btnNavPending');
+    // ========== NAVEGACIÓN ==========
+    var formCard = document.getElementById('formCard');
+    var historyCard = document.getElementById('historyCard');
+    var panelPendientes = document.getElementById('panelPendientes');
+    var btnNavForm = document.getElementById('btnNavForm');
+    var btnNavHistory = document.getElementById('btnNavHistory');
+    var btnNavPending = document.getElementById('btnNavPending');
+
     function mostrarSeccion(s) {
-        [formCard, historyCard, panelPendientes].forEach(c => c.classList.add('hidden'));
-        [btnNavForm, btnNavHistory, btnNavPending].forEach(b => b.classList.remove('active'));
+        formCard.classList.add('hidden');
+        historyCard.classList.add('hidden');
+        panelPendientes.classList.add('hidden');
+        btnNavForm.classList.remove('active');
+        btnNavHistory.classList.remove('active');
+        btnNavPending.classList.remove('active');
         if (s === 'form') { formCard.classList.remove('hidden'); btnNavForm.classList.add('active'); }
         if (s === 'history') { historyCard.classList.remove('hidden'); btnNavHistory.classList.add('active'); }
         if (s === 'pending') { panelPendientes.classList.remove('hidden'); btnNavPending.classList.add('active'); actualizarListaPendientes(); }
     }
-    btnNavForm.addEventListener('click', () => mostrarSeccion('form'));
-    btnNavHistory.addEventListener('click', () => mostrarSeccion('history'));
-    btnNavPending.addEventListener('click', () => mostrarSeccion('pending'));
 
-    // RELOJ
+    btnNavForm.addEventListener('click', function() { mostrarSeccion('form'); });
+    btnNavHistory.addEventListener('click', function() { mostrarSeccion('history'); });
+    btnNavPending.addEventListener('click', function() { mostrarSeccion('pending'); });
+
+    // ========== RELOJ ==========
     function actualizarReloj() {
-        const ahora = new Date();
-        document.getElementById('fecha').value = ahora.toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit', year:'numeric'});
-        document.getElementById('hora').value = ahora.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        var ahora = new Date();
+        var dia = String(ahora.getDate()).padStart(2, '0');
+        var mes = String(ahora.getMonth() + 1).padStart(2, '0');
+        var anio = ahora.getFullYear();
+        var h = ahora.getHours();
+        var m = String(ahora.getMinutes()).padStart(2, '0');
+        var s = String(ahora.getSeconds()).padStart(2, '0');
+        document.getElementById('fecha').value = dia + '/' + mes + '/' + anio;
+        document.getElementById('hora').value = h + ':' + m + ':' + s;
     }
-    setInterval(actualizarReloj, 1000); actualizarReloj();
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
 
-    // TOAST
-    function mostrarToast(mensaje, tipo = 'info') {
-        const cont = document.getElementById('toastContainer');
-        const toast = document.createElement('div');
+    // ========== TOAST ==========
+    function mostrarToast(mensaje, tipo) {
+        tipo = tipo || 'info';
+        var cont = document.getElementById('toastContainer');
+        var toast = document.createElement('div');
         toast.className = 'toast';
         toast.style.background = tipo === 'error' ? '#e53e3e' : '#2b6cb0';
-        toast.innerHTML = `<i class="fas fa-${tipo === 'error' ? 'exclamation-circle' : 'check-circle'}"></i> ${mensaje}`;
+        toast.innerHTML = '<i class="fas fa-' + (tipo === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + mensaje;
         cont.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
+        setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(function() { toast.remove(); }, 300); }, 3500);
     }
 
-    // FORMATO FECHA
+    // ========== FORMATO FECHA AUTOMÁTICO + CÁLCULO DE EDAD ==========
     document.getElementById('nacimiento').addEventListener('input', function(e) {
-        let val = e.target.value.replace(/\D/g, '');
-        if (val.length > 8) val = val.slice(0,8);
-        let formatted = '';
-        if (val.length > 4) formatted = val.slice(0,2) + '/' + val.slice(2,4) + '/' + val.slice(4);
-        else if (val.length > 2) formatted = val.slice(0,2) + '/' + val.slice(2);
+        var val = e.target.value.replace(/\D/g, '');
+        if (val.length > 8) val = val.slice(0, 8);
+        var formatted = '';
+        if (val.length > 4) formatted = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
+        else if (val.length > 2) formatted = val.slice(0, 2) + '/' + val.slice(2);
         else formatted = val;
         e.target.value = formatted;
-    });
-    document.getElementById('btnConfirmarFecha').addEventListener('click', () => {
-        const v = document.getElementById('nacimiento').value.trim();
-        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(v)) return mostrarToast('Formato dd/mm/aaaa', 'error');
-        const [d,m,a] = v.split('/').map(Number);
-        const fn = new Date(a,m-1,d), hoy = new Date();
-        if (fn.getDate() !== d || fn.getMonth() !== m-1 || fn > hoy) return mostrarToast('Fecha inválida', 'error');
-        let edad = hoy.getFullYear() - fn.getFullYear();
-        if (hoy.getMonth() < fn.getMonth() || (hoy.getMonth() === fn.getMonth() && hoy.getDate() < fn.getDate())) edad--;
-        document.getElementById('edadDisplay').textContent = `${edad} años`;
-    });
-    document.getElementById('razon').addEventListener('input', e => document.getElementById('contadorRazon').textContent = `${e.target.value.length}/50`);
 
-    function configurarToggle(cb, f) {
-        document.getElementById(cb).addEventListener('change', () => {
-            const field = document.getElementById(f);
-            if (document.getElementById(cb).checked) { field.value = 'NN'; field.disabled = true; field.style.background = 'var(--border)'; }
-            else { field.value = ''; field.disabled = false; field.style.background = ''; }
+        // Calcular edad automáticamente si la fecha está completa
+        if (formatted.length === 10 && /^\d{2}\/\d{2}\/\d{4}$/.test(formatted)) {
+            calcularEdadAutomatica(formatted);
+        } else if (formatted.length < 10) {
+            document.getElementById('edadDisplay').textContent = '—';
+            document.getElementById('edadDisplay').classList.remove('calculated');
+        }
+    });
+
+    function calcularEdadAutomatica(valor) {
+        var partes = valor.split('/');
+        var d = parseInt(partes[0]);
+        var m = parseInt(partes[1]);
+        var a = parseInt(partes[2]);
+        var fechaNac = new Date(a, m - 1, d);
+        var hoy = new Date();
+
+        if (fechaNac.getDate() !== d || fechaNac.getMonth() !== m - 1 || fechaNac.getFullYear() !== a || fechaNac > hoy) {
+            document.getElementById('edadDisplay').textContent = 'Fecha inválida';
+            document.getElementById('edadDisplay').classList.remove('calculated');
+            return;
+        }
+
+        var edad = hoy.getFullYear() - fechaNac.getFullYear();
+        var mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
+
+        if (edad < 0 || edad > 120) {
+            document.getElementById('edadDisplay').textContent = 'Fuera de rango';
+            document.getElementById('edadDisplay').classList.remove('calculated');
+            return;
+        }
+
+        document.getElementById('edadDisplay').textContent = edad + ' años';
+        document.getElementById('edadDisplay').classList.add('calculated');
+    }
+
+    // Contador razón
+    document.getElementById('razon').addEventListener('input', function(e) {
+        document.getElementById('contadorRazon').textContent = e.target.value.length + '/50';
+    });
+
+    // Toggle checkboxes
+    function configurarToggle(checkboxId, fieldId) {
+        document.getElementById(checkboxId).addEventListener('change', function() {
+            var field = document.getElementById(fieldId);
+            if (this.checked) {
+                field.value = 'NN';
+                field.disabled = true;
+                field.style.background = 'var(--border)';
+            } else {
+                field.value = '';
+                field.disabled = false;
+                field.style.background = '';
+            }
         });
     }
     configurarToggle('sinTelefono', 'telefono');
     configurarToggle('sinObraSocial', 'obraSocial');
     configurarToggle('sinDomicilio', 'domicilio');
-    document.querySelectorAll('input[name="tipoIngreso"]').forEach(r => r.addEventListener('change', function() {
-        const a = this.value === 'Ambulancia';
-        document.getElementById('seccionAmbulancia').style.display = a ? 'block' : 'none';
-        document.getElementById('seccionReanimacion').style.display = a ? 'block' : 'none';
-    }));
+
+    // Radio tipo ingreso
+    document.querySelectorAll('input[name="tipoIngreso"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            var esAmbulancia = this.value === 'Ambulancia';
+            document.getElementById('seccionAmbulancia').style.display = esAmbulancia ? 'block' : 'none';
+            document.getElementById('seccionReanimacion').style.display = esAmbulancia ? 'block' : 'none';
+        });
+    });
+
+    // Ambulancia interior
     document.getElementById('ambulanciaInterior').addEventListener('change', function() {
-        document.getElementById('grupoDepartamento').style.display = this.checked ? 'block' : 'none';
-        document.getElementById('ambulanciaNombre').style.display = this.checked ? 'none' : 'block';
-    });
-
-    // GUARDAR
-    document.getElementById('btnGuardar').addEventListener('click', () => {
-        const nombre = document.getElementById('nombre').value.trim();
-        const dni = document.getElementById('dni').value.trim();
-        const nac = document.getElementById('nacimiento').value.trim();
-        const edad = document.getElementById('edadDisplay').textContent;
-        const razon = document.getElementById('razon').value.trim();
-        if (!nombre) return mostrarToast('Complete Nombre', 'error');
-        if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido', 'error');
-        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nac)) return mostrarToast('Fecha incorrecta', 'error');
-        if (edad === '—') return mostrarToast('Confirme la fecha', 'error');
-        if (!razon) return mostrarToast('Ingrese razón', 'error');
-        const tipo = document.querySelector('input[name="tipoIngreso"]:checked').value;
-        let amb = '', dep = '', rea = 'NO';
-        if (tipo === 'Ambulancia') {
-            rea = document.querySelector('input[name="esReanimacion"]:checked').value;
-            if (document.getElementById('ambulanciaInterior').checked) {
-                dep = document.getElementById('departamento').value; amb = dep;
-                if (!dep) return mostrarToast('Seleccione departamento', 'error');
-            } else { amb = document.getElementById('ambulanciaNombre').value.trim(); if (!amb) return mostrarToast('Ingrese ambulancia', 'error'); }
+        var grupoDep = document.getElementById('grupoDepartamento');
+        var nombreAmb = document.getElementById('ambulanciaNombre');
+        if (this.checked) {
+            grupoDep.style.display = 'block';
+            nombreAmb.style.display = 'none';
+            nombreAmb.value = '';
+        } else {
+            grupoDep.style.display = 'none';
+            nombreAmb.style.display = 'block';
+            document.getElementById('departamento').value = '';
         }
-        const r = {
-            fecha: document.getElementById('fecha').value, hora: document.getElementById('hora').value,
-            nombre: nombre.toUpperCase(), dni, nacimiento: nac, edad: edad.replace(' años',''),
-            razon: razon.toUpperCase(),
-            telefono: (document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '')).toUpperCase(),
-            obraSocial: (document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '')).toUpperCase(),
-            domicilio: (document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '')).toUpperCase(),
-            tipoIngreso: tipo, ambulancia: amb.toUpperCase(), departamento: dep.toUpperCase(), esReanimacion: rea, token: API_TOKEN
-        };
-        if (isOnline() && APPS_SCRIPT_URL) enviarRegistro(r);
-        else { guardarPendiente(r); mostrarToast('Guardado localmente'); }
     });
 
-    async function enviarRegistro(r) {
-        try {
-            await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(r), headers: {'Content-Type':'application/json'}, mode:'no-cors' });
-            mostrarToast('Registro guardado'); limpiarFormulario();
-        } catch(e) { guardarPendiente(r); mostrarToast('Error. Guardado pendiente.', 'error'); }
+    // ========== GUARDAR ==========
+    document.getElementById('btnGuardar').addEventListener('click', function() {
+        var nombre = document.getElementById('nombre').value.trim();
+        var dni = document.getElementById('dni').value.trim();
+        var nacimiento = document.getElementById('nacimiento').value.trim();
+        var edadTexto = document.getElementById('edadDisplay').textContent;
+        var razon = document.getElementById('razon').value.trim();
+
+        if (!nombre) return mostrarToast('Complete Apellido y Nombre', 'error');
+        if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido (7-11 dígitos)', 'error');
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nacimiento)) return mostrarToast('Fecha de nacimiento incompleta', 'error');
+        if (edadTexto === '—' || edadTexto === 'Fecha inválida' || edadTexto === 'Fuera de rango') return mostrarToast('Fecha de nacimiento inválida. Corríjala.', 'error');
+        if (!razon) return mostrarToast('Ingrese la razón de urgencia', 'error');
+
+        var telefono = document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '');
+        var obraSocial = document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '');
+        var domicilio = document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '');
+
+        var tipoIngreso = document.querySelector('input[name="tipoIngreso"]:checked').value;
+        var ambulancia = '', departamento = '', esReanimacion = 'NO';
+
+        if (tipoIngreso === 'Ambulancia') {
+            esReanimacion = document.querySelector('input[name="esReanimacion"]:checked').value;
+            if (document.getElementById('ambulanciaInterior').checked) {
+                departamento = document.getElementById('departamento').value;
+                ambulancia = departamento;
+                if (!departamento) return mostrarToast('Seleccione un departamento', 'error');
+            } else {
+                ambulancia = document.getElementById('ambulanciaNombre').value.trim();
+                if (!ambulancia) return mostrarToast('Ingrese el nombre de la ambulancia', 'error');
+            }
+        }
+
+        var registro = {
+            fecha: document.getElementById('fecha').value,
+            hora: document.getElementById('hora').value,
+            nombre: nombre.toUpperCase(),
+            dni: dni,
+            nacimiento: nacimiento,
+            edad: edadTexto.replace(' años', ''),
+            razon: razon.toUpperCase(),
+            telefono: telefono.toUpperCase(),
+            obraSocial: obraSocial.toUpperCase(),
+            domicilio: domicilio.toUpperCase(),
+            tipoIngreso: tipoIngreso,
+            ambulancia: ambulancia.toUpperCase(),
+            departamento: departamento.toUpperCase(),
+            esReanimacion: esReanimacion,
+            token: window.API_TOKEN
+        };
+
+        if (isOnline() && window.APPS_SCRIPT_URL) {
+            enviarRegistro(registro);
+        } else {
+            guardarPendiente(registro);
+            mostrarToast('Guardado localmente (sin conexión)');
+        }
+    });
+
+    function enviarRegistro(registro) {
+        fetch(window.APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(registro),
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors'
+        }).then(function() {
+            mostrarToast('Registro guardado exitosamente');
+            limpiarFormulario();
+        }).catch(function(err) {
+            console.error(err);
+            guardarPendiente(registro);
+            mostrarToast('Error al enviar. Guardado como pendiente.', 'error');
+        });
     }
-    async function enviarRegistroSinGuardar(r) {
-        await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(r), headers: {'Content-Type':'application/json'}, mode:'no-cors' });
+
+    function enviarRegistroSinGuardar(registro) {
+        return fetch(window.APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(registro),
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors'
+        });
     }
-    function guardarPendiente(r) { pendingRecords.push({...r, timestamp: Date.now()}); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); }
+
+    function guardarPendiente(registro) {
+        pendingRecords.push({ ...registro, timestamp: Date.now() });
+        localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+        actualizarListaPendientes();
+    }
+
     function limpiarFormulario() {
-        ['nombre','dni','nacimiento','razon','telefono','obraSocial','domicilio'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).disabled = false; document.getElementById(id).style.background = ''; });
+        ['nombre', 'dni', 'nacimiento', 'razon', 'telefono', 'obraSocial', 'domicilio'].forEach(function(id) {
+            var el = document.getElementById(id);
+            el.value = '';
+            el.disabled = false;
+            el.style.background = '';
+        });
         document.getElementById('edadDisplay').textContent = '—';
+        document.getElementById('edadDisplay').classList.remove('calculated');
         document.getElementById('contadorRazon').textContent = '0/50';
-        ['sinTelefono','sinObraSocial','sinDomicilio'].forEach(id => document.getElementById(id).checked = false);
+        ['sinTelefono', 'sinObraSocial', 'sinDomicilio'].forEach(function(id) {
+            document.getElementById(id).checked = false;
+        });
         document.querySelector('input[value="Ambulatorio"]').checked = true;
         document.getElementById('seccionAmbulancia').style.display = 'none';
         document.getElementById('seccionReanimacion').style.display = 'none';
+        document.getElementById('ambulanciaNombre').value = '';
         document.getElementById('ambulanciaInterior').checked = false;
         document.getElementById('grupoDepartamento').style.display = 'none';
+        document.getElementById('departamento').value = '';
         document.querySelector('input[value="NO"]').checked = true;
     }
+
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
 
-    // PENDIENTES
+    // ========== PANEL PENDIENTES ==========
     function actualizarListaPendientes() {
-        const c = document.getElementById('listaPendientes'); c.innerHTML = '';
-        if (!pendingRecords.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;">Sin pendientes</p>'; return; }
-        pendingRecords.forEach((r,i) => {
-            const d = document.createElement('div'); d.className = 'history-item';
-            if (r.esReanimacion === 'SI') d.classList.add('reanimation');
-            d.innerHTML = `<div><strong>${r.nombre}</strong> · DNI ${r.dni} ${r.esReanimacion==='SI'?'<span class="badge-reanimation">REANIMACIÓN</span>':''}<br><small>${r.fecha} ${r.hora} — ${r.razon}</small></div><button class="btn btn-danger btn-sm" data-idx="${i}"><i class="fas fa-trash"></i></button>`;
-            d.querySelector('button').addEventListener('click', () => { pendingRecords.splice(i,1); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); });
-            c.appendChild(d);
+        var cont = document.getElementById('listaPendientes');
+        cont.innerHTML = '';
+        if (pendingRecords.length === 0) {
+            cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;">No hay registros pendientes</p>';
+            return;
+        }
+        pendingRecords.forEach(function(r, i) {
+            var div = document.createElement('div');
+            div.className = 'history-item';
+            if (r.esReanimacion === 'SI') div.classList.add('reanimation');
+            div.innerHTML = '<div><strong>' + r.nombre + '</strong> · DNI ' + r.dni + ' ' + (r.esReanimacion === 'SI' ? '<span class="badge-reanimation">REANIMACIÓN</span>' : '') + '<br><small>' + r.fecha + ' ' + r.hora + ' — ' + r.razon + '</small></div><button class="btn btn-danger btn-sm" data-idx="' + i + '"><i class="fas fa-trash"></i></button>';
+            div.querySelector('button').addEventListener('click', function() {
+                var idx = parseInt(this.getAttribute('data-idx'));
+                pendingRecords.splice(idx, 1);
+                localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+                actualizarListaPendientes();
+                mostrarToast('Registro eliminado');
+            });
+            cont.appendChild(div);
         });
     }
-    document.getElementById('btnClearAll').addEventListener('click', () => { if (pendingRecords.length && confirm('¿Eliminar todos?')) { pendingRecords = []; localStorage.setItem('pendingRecords', '[]'); actualizarListaPendientes(); } });
-    document.getElementById('btnSyncAll').addEventListener('click', async () => {
-        if (!isOnline()) return mostrarToast('Sin conexión', 'error');
-        if (!pendingRecords.length) return;
-        const btn = document.getElementById('btnSyncAll'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        let ok = 0; const fail = [];
-        for (const r of pendingRecords) { try { await enviarRegistroSinGuardar(r); ok++; } catch(e) { fail.push(r); } }
-        pendingRecords = fail; localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes();
-        btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar';
-        mostrarToast(`${ok} ok, ${fail.length} pendientes`);
+
+    document.getElementById('btnClearAll').addEventListener('click', function() {
+        if (pendingRecords.length === 0) return;
+        if (confirm('¿Eliminar TODOS los registros pendientes?')) {
+            pendingRecords = [];
+            localStorage.setItem('pendingRecords', '[]');
+            actualizarListaPendientes();
+            mostrarToast('Todos los pendientes eliminados');
+        }
     });
 
-    // BUSCAR EN GOOGLE SHEETS
-    async function buscarEnSheets(query, filter) {
-        const histDiv = document.getElementById('historyList');
+    document.getElementById('btnSyncAll').addEventListener('click', function() {
+        if (!isOnline()) return mostrarToast('Sin conexión a internet', 'error');
+        if (pendingRecords.length === 0) return mostrarToast('No hay registros para sincronizar');
+
+        var btn = document.getElementById('btnSyncAll');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
+
+        var exitos = 0;
+        var fallidos = [];
+        var promesas = pendingRecords.map(function(registro) {
+            return enviarRegistroSinGuardar(registro).then(function() { exitos++; }).catch(function() { fallidos.push(registro); });
+        });
+
+        Promise.all(promesas).then(function() {
+            pendingRecords = fallidos;
+            localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+            actualizarListaPendientes();
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar todos';
+            mostrarToast(exitos + ' exitosos, ' + fallidos.length + ' pendientes');
+        });
+    });
+
+    // ========== BUSCAR EN GOOGLE SHEETS ==========
+    function buscarEnSheets(query, filter) {
+        var histDiv = document.getElementById('historyList');
         histDiv.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Consultando Google Sheets...</p></div>';
-        try {
-            const params = new URLSearchParams({ action:'search', query, filter, token: API_TOKEN });
-            const res = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`);
-            const data = await res.json();
-            if (data.result !== 'success') throw new Error(data.error);
-            mostrarResultados(data.data);
-        } catch(e) {
-            histDiv.innerHTML = `<p style="text-align:center;color:var(--danger);padding:2rem;"><i class="fas fa-exclamation-triangle"></i> Error: ${e.message}</p>`;
-        }
+
+        var params = 'action=search&query=' + encodeURIComponent(query) + '&filter=' + encodeURIComponent(filter) + '&token=' + encodeURIComponent(window.API_TOKEN);
+        var url = window.APPS_SCRIPT_URL + '?' + params;
+
+        fetch(url)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.result !== 'success') throw new Error(data.error || 'Error desconocido');
+                mostrarResultados(data.data);
+            })
+            .catch(function(err) {
+                histDiv.innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;"><i class="fas fa-exclamation-triangle"></i> Error: ' + err.message + '</p>';
+            });
     }
 
     function mostrarResultados(registros) {
-        const c = document.getElementById('historyList'); c.innerHTML = '';
-        if (!registros.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:2rem;">Sin resultados</p>'; return; }
-        registros.forEach(r => {
-            const d = document.createElement('div'); d.className = 'history-item';
-            if (r.esReanimacion === 'SI') d.classList.add('reanimation');
-            d.innerHTML = `<div><strong>${r.nombre}</strong> · DNI ${r.dni} · ${r.edad} años ${r.esReanimacion==='SI'?'<span class="badge-reanimation">REANIMACIÓN</span>':''}<br><small>${r.fecha} ${r.hora} — ${r.razon} | ${r.tipoIngreso}${r.tipoIngreso==='Ambulancia'?' · '+r.ambulancia:''}</small><br><small>📞 ${r.telefono} | 🏥 ${r.obraSocial} | 📍 ${r.domicilio}</small></div>`;
-            c.appendChild(d);
+        var cont = document.getElementById('historyList');
+        cont.innerHTML = '';
+        if (!registros || registros.length === 0) {
+            cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:2rem;">Sin resultados</p>';
+            return;
+        }
+        registros.forEach(function(r) {
+            var div = document.createElement('div');
+            div.className = 'history-item';
+            if (r.esReanimacion === 'SI') div.classList.add('reanimation');
+            div.innerHTML = '<div><strong>' + r.nombre + '</strong> · DNI ' + r.dni + ' · ' + r.edad + ' años ' + (r.esReanimacion === 'SI' ? '<span class="badge-reanimation">REANIMACIÓN</span>' : '') + '<br><small>' + r.fecha + ' ' + r.hora + ' — ' + r.razon + ' | ' + r.tipoIngreso + (r.tipoIngreso === 'Ambulancia' ? ' · ' + r.ambulancia : '') + '</small><br><small>📞 ' + r.telefono + ' | 🏥 ' + r.obraSocial + ' | 📍 ' + r.domicilio + '</small></div>';
+            cont.appendChild(div);
         });
-        mostrarToast(`${registros.length} resultado(s)`);
+        mostrarToast(registros.length + ' resultado(s) encontrado(s)');
     }
 
-    document.getElementById('btnSearch').addEventListener('click', () => {
-        const q = document.getElementById('searchInput').value.trim();
-        const f = document.getElementById('searchFilter').value;
-        if (!q) return mostrarToast('Ingrese un término de búsqueda', 'error');
-        buscarEnSheets(q, f);
+    document.getElementById('btnSearch').addEventListener('click', function() {
+        var query = document.getElementById('searchInput').value.trim();
+        var filter = document.getElementById('searchFilter').value;
+        if (!query) return mostrarToast('Ingrese un término de búsqueda', 'error');
+        buscarEnSheets(query, filter);
     });
-    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('btnSearch').click(); });
-    document.getElementById('btnLoadAll').addEventListener('click', () => buscarEnSheets('', 'todos'));
 
-    // CONEXIÓN
-    window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; if (pendingRecords.length) mostrarToast('Hay pendientes para sincronizar'); });
-    window.addEventListener('offline', () => document.getElementById('offlineBanner').style.display = 'block');
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') document.getElementById('btnSearch').click();
+    });
+
+    document.getElementById('btnLoadAll').addEventListener('click', function() {
+        buscarEnSheets('', 'todos');
+    });
+
+    // ========== DETECCIÓN DE CONEXIÓN ==========
+    window.addEventListener('online', function() {
+        document.getElementById('offlineBanner').style.display = 'none';
+        if (pendingRecords.length > 0) mostrarToast('Conexión restablecida. Tiene pendientes para sincronizar.');
+    });
+    window.addEventListener('offline', function() {
+        document.getElementById('offlineBanner').style.display = 'block';
+    });
     if (!isOnline()) document.getElementById('offlineBanner').style.display = 'block';
 
-    // SW
-    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').then(() => {}).catch(() => {}));
+    // ========== SERVICE WORKER ==========
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js').then(function() {}).catch(function() {});
+        });
+    }
 
+    // ========== INICIALIZAR ==========
     actualizarListaPendientes();
 </script>
 </body>
