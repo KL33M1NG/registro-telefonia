@@ -411,13 +411,14 @@
     
 <script src="config.js"></script>
 <script>
-    if (typeof APPS_SCRIPT_URL === '') {
-        var APPS_SCRIPT_URL = '';
-        console.warn('config.js no cargado. La sincronización con Google Sheets no funcionará.');
-    }
-    if (typeof API_TOKEN === 'undefined') {
-        var API_TOKEN = '';
-    }
+    
+// Verificar que config.js se cargó correctamente
+if (typeof APPS_SCRIPT_URL === 'undefined' || APPS_SCRIPT_URL === '') {
+    console.error('config.js no cargado o vacío. Verificar el archivo.');
+}
+if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
+    console.error('API_TOKEN no definido. Verificar config.js.');
+}
 
     let pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
     const isOnline = () => navigator.onLine;
