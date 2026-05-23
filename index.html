@@ -4,167 +4,264 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Urgencias · Telefonía</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e3c72;
-            --primary-light: #2a5298;
-            --accent: #3b82f6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #8b5cf6;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1a202c;
+            --text-secondary: #4a5568;
             --border: #e2e8f0;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-            --radius: 12px;
-            --transition: 0.2s ease;
+            --input-bg: #f7fafc;
+            --input-focus: #ffffff;
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-gradient: linear-gradient(135deg, #1e3a5f, #2c5282);
+            --accent: #3182ce;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --info: #6b46c1;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.08);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --header-gradient: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
         }
+
+        body.dark-mode {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --input-bg: #1e293b;
+            --input-focus: #1e293b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow: 0 4px 6px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+            --header-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+            background: var(--bg);
             min-height: 100vh;
             color: var(--text);
-            line-height: 1.5;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
         }
+
         .offline-banner {
             background: var(--danger);
             color: white;
             text-align: center;
-            padding: 0.6rem;
-            font-weight: 500;
+            padding: 0.7rem;
+            font-weight: 600;
             font-size: 0.9rem;
             display: none;
-            animation: pulse 2s infinite;
+            animation: slideDown 0.3s ease;
+            letter-spacing: 0.3px;
         }
-        @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.85; }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
         }
+
         .header {
-            background: white;
-            padding: 0.8rem 1.5rem;
+            background: var(--header-gradient);
+            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2rem;
-            box-shadow: var(--shadow-sm);
-            border-bottom: 1px solid var(--border);
+            gap: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 3px solid rgba(255,255,255,0.1);
         }
         .header img {
-            height: 42px;
+            height: 44px;
             object-fit: contain;
             transition: transform var(--transition);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
-        .header img:hover { transform: scale(1.05); }
+        .header img:hover { transform: scale(1.08); }
+
+        .header-controls {
+            margin-left: auto;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .theme-toggle {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            backdrop-filter: blur(10px);
+        }
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 600px) {
-            .header { gap: 1rem; }
-            .header img { height: 34px; }
+            .header { gap: 1rem; padding: 0.8rem 1rem; }
+            .header img { height: 32px; }
+            .header-controls { margin-left: 0; }
         }
+
         .container {
             max-width: 1100px;
             margin: 1.5rem auto;
             padding: 0 1rem;
         }
+
         .card {
-            background: var(--card);
+            background: var(--card-bg);
             border-radius: var(--radius);
             padding: 2rem;
             box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
             border: 1px solid var(--border);
-            transition: box-shadow var(--transition);
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        .card:hover { box-shadow: var(--shadow-lg); }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-light), var(--info), var(--success));
+            opacity: 0.8;
+        }
         .card-header {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.3rem;
+            font-weight: 700;
             color: var(--primary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.75rem;
+            gap: 0.6rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.8rem;
         }
-        .card-header i { color: var(--accent); }
+        .card-header i {
+            color: var(--accent);
+            background: linear-gradient(135deg, var(--primary-light), var(--info));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+        }
+        body.dark-mode .card-header { color: var(--primary-light); }
+
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.3rem;
         }
         .full-width { grid-column: 1 / -1; }
-        .field-group { margin-bottom: 0.25rem; }
+        .field-group { margin-bottom: 0.2rem; }
+
         label {
             display: block;
-            font-weight: 500;
-            margin-bottom: 0.3rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
             color: var(--text);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            letter-spacing: 0.2px;
         }
+        label .required {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
         input, select, textarea {
             width: 100%;
-            padding: 0.7rem 0.9rem;
+            padding: 0.75rem 1rem;
             border: 1.5px solid var(--border);
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             font-size: 0.95rem;
             transition: all var(--transition);
-            background: #fafbfc;
+            background: var(--input-bg);
             color: var(--text);
             font-family: 'Inter', sans-serif;
         }
         input:focus, select:focus, textarea:focus {
             border-color: var(--accent);
-            background: white;
+            background: var(--input-focus);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+            box-shadow: 0 0 0 4px rgba(49,130,206,0.12);
+            transform: translateY(-1px);
         }
         input[readonly] {
-            background: #f1f5f9;
+            background: var(--border);
             cursor: not-allowed;
-            color: #475569;
+            opacity: 0.75;
+            font-weight: 500;
         }
         input::placeholder, textarea::placeholder {
-            color: #94a3b8;
+            color: #a0aec0;
             font-style: italic;
+            font-size: 0.85rem;
         }
         textarea { resize: vertical; min-height: 60px; }
+
         .checkbox-group, .radio-group {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            margin-top: 0.4rem;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
             font-size: 0.9rem;
+            font-weight: 500;
         }
         .radio-group {
             gap: 2rem;
             margin: 0.5rem 0;
+            padding: 0.6rem;
+            background: var(--input-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
         }
         .radio-item {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
         input[type="checkbox"], input[type="radio"] {
-            width: 1.1rem;
-            height: 1.1rem;
+            width: 1.2rem;
+            height: 1.2rem;
             accent-color: var(--accent);
             cursor: pointer;
         }
+
         .btn {
-            padding: 0.7rem 1.4rem;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 2rem;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
@@ -175,192 +272,254 @@
             color: white;
             letter-spacing: 0.3px;
             box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
         }
-        .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
-        .btn:active { transform: translateY(0); }
-        .btn-primary { background: var(--primary-light); }
-        .btn-primary:hover { background: var(--primary); }
-        .btn-success { background: var(--success); }
-        .btn-warning { background: var(--warning); color: #1e293b; }
-        .btn-danger { background: var(--danger); }
-        .btn-info { background: var(--info); }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+        .btn:hover::after { opacity: 1; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
+        .btn-success { background: linear-gradient(135deg, #38a169, #48bb78); }
+        .btn-warning { background: linear-gradient(135deg, #d69e2e, #ecc94b); color: #1a202c; }
+        .btn-danger { background: linear-gradient(135deg, #e53e3e, #fc8181); }
+        .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
+        .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
+
         .counter {
             font-size: 0.75rem;
-            color: var(--text-light);
+            color: var(--text-secondary);
             margin-left: 0.4rem;
             font-weight: 500;
         }
+
         .age-display {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: var(--primary-light);
-            background: #f0f4ff;
-            padding: 0.7rem;
-            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(49,130,206,0.08), rgba(107,70,193,0.08));
+            padding: 0.8rem;
+            border-radius: var(--radius-sm);
             text-align: center;
-            border: 1px dashed var(--accent);
+            border: 2px dashed var(--accent);
+            transition: all var(--transition);
         }
+
         .pending-list {
-            max-height: 320px;
+            max-height: 350px;
             overflow-y: auto;
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: var(--radius-sm);
             padding: 0.8rem;
-            background: #f8fafc;
+            background: var(--input-bg);
         }
         .pending-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
+            padding: 0.9rem;
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.6rem;
             box-shadow: var(--shadow-sm);
             transition: all var(--transition);
+            border-left: 4px solid var(--warning);
         }
-        .pending-item:hover { background: #f1f5f9; }
+        .pending-item:hover {
+            transform: translateX(3px);
+            box-shadow: var(--shadow);
+        }
         .pending-item strong { color: var(--primary); }
+
         .toast {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: var(--primary-light);
+            background: var(--primary);
             color: white;
             padding: 1rem 1.5rem;
-            border-radius: 10px;
+            border-radius: 1rem;
             box-shadow: var(--shadow-lg);
             z-index: 1000;
-            animation: slideIn 0.3s ease;
-            font-weight: 500;
+            animation: slideInRight 0.35s ease;
+            font-weight: 600;
             max-width: 90vw;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
+        @keyframes slideInRight {
+            from { transform: translateX(120%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
         .hidden { display: none !important; }
+
+        .section-separator {
+            border-top: 2px dashed var(--border);
+            margin: 1.2rem 0;
+            grid-column: 1 / -1;
+        }
+
+        .hospital-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(49,130,206,0.12), rgba(107,70,193,0.12));
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 0.5rem;
+        }
+
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .card { padding: 1.5rem; }
         }
-        .section-separator {
-            border-top: 1px solid var(--border);
-            margin: 1rem 0;
-            grid-column: 1 / -1;
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
 <body>
 
 <div class="offline-banner" id="offlineBanner">
-    <i class="fas fa-wifi-slash"></i> Sin conexión · Los registros se guardan localmente y se sincronizarán al recuperar internet.
+    <i class="fas fa-wifi-slash"></i> Sin conexión · Registros guardados localmente — se sincronizarán al volver
 </div>
 
 <header class="header">
     <img src="https://i.ibb.co/qFk65j2s/LOGO-HOSPITAL.png" alt="Hospital">
     <img src="https://i.ibb.co/CKhvCqbc/LOGO-HC-DIGITAL.png" alt="HC Digital">
     <img src="https://i.ibb.co/hRm3C7xv/DEEM.png" alt="DEEM">
+    <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle" title="Cambiar modo claro/oscuro">
+            <i class="fas fa-moon"></i> <span id="themeLabel">Modo Oscuro</span>
+        </button>
+    </div>
 </header>
 
 <div class="container">
+    <!-- Formulario principal -->
     <div class="card" id="formCard">
         <div class="card-header">
-            <i class="fas fa-user-plus"></i> REGISTRO DE PACIENTES · TELEFONÍA
+            <i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · SERVICIO DE TELEFONÍA
+        </div>
+        <div class="hospital-badge">
+            <i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias
         </div>
 
         <div class="form-grid">
+            <!-- Fecha y Hora automáticas -->
             <div class="field-group">
-                <label>📅 Fecha</label>
+                <label><i class="far fa-calendar-alt"></i> Fecha</label>
                 <input type="text" id="fecha" readonly>
             </div>
             <div class="field-group">
-                <label>🕒 Hora</label>
+                <label><i class="far fa-clock"></i> Hora</label>
                 <input type="text" id="hora" readonly>
             </div>
 
+            <!-- Tipo de ingreso -->
             <div class="field-group full-width">
-                <label>🚑 Tipo de ingreso</label>
+                <label><i class="fas fa-truck-medical"></i> Tipo de ingreso</label>
                 <div class="radio-group">
                     <div class="radio-item">
                         <input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked>
-                        <label for="tipoAmbulatorio">Ambulatorio</label>
+                        <label for="tipoAmbulatorio">🚶 Ambulatorio</label>
                     </div>
                     <div class="radio-item">
                         <input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia">
-                        <label for="tipoAmbulancia">Ambulancia</label>
+                        <label for="tipoAmbulancia">🚑 Ambulancia</label>
                     </div>
                 </div>
             </div>
 
+            <!-- Datos del paciente -->
             <div class="field-group">
-                <label>👤 Apellido y Nombre *</label>
-                <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;">
+                <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
+                <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
             </div>
             <div class="field-group">
-                <label>🆔 DNI *</label>
-                <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*">
+                <label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label>
+                <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
+            <!-- Fecha de nacimiento + confirmación -->
             <div class="field-group">
-                <label>🎂 Fecha de Nacimiento *</label>
+                <label><i class="fas fa-cake-candles"></i> Fecha de Nacimiento <span class="required">*</span></label>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" style="flex:1;">
-                    <button type="button" class="btn btn-info" id="btnConfirmarFecha" style="white-space: nowrap;">
+                    <input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" style="flex:1;" autocomplete="off">
+                    <button type="button" class="btn btn-info btn-sm" id="btnConfirmarFecha" style="white-space: nowrap;">
                         <i class="fas fa-check-circle"></i> Confirmar
                     </button>
                 </div>
             </div>
             <div class="field-group">
-                <label>🔢 Edad</label>
+                <label><i class="fas fa-calculator"></i> Edad calculada</label>
                 <div class="age-display" id="edadDisplay">—</div>
             </div>
 
+            <!-- Razón de urgencia -->
             <div class="field-group full-width">
-                <label>❗ Razón de Urgencia *</label>
+                <label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label>
                 <textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea>
                 <span class="counter" id="contadorRazon">0/50</span>
             </div>
 
+            <!-- Teléfono -->
             <div class="field-group">
-                <label>📞 Teléfono</label>
-                <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*">
+                <label><i class="fas fa-phone"></i> Teléfono</label>
+                <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Solo números">
                 <div class="checkbox-group">
                     <input type="checkbox" id="sinTelefono">
                     <label for="sinTelefono">Sin teléfono</label>
                 </div>
             </div>
 
+            <!-- Obra Social -->
             <div class="field-group">
-                <label>🏥 Obra Social</label>
-                <input type="text" id="obraSocial" style="text-transform: uppercase;">
+                <label><i class="fas fa-hospital"></i> Obra Social</label>
+                <input type="text" id="obraSocial" style="text-transform: uppercase;" placeholder="NOMBRE DE OBRA SOCIAL">
                 <div class="checkbox-group">
                     <input type="checkbox" id="sinObraSocial">
                     <label for="sinObraSocial">Sin obra social</label>
                 </div>
             </div>
 
+            <!-- Domicilio -->
             <div class="field-group">
-                <label>📍 Domicilio</label>
-                <input type="text" id="domicilio" style="text-transform: uppercase;">
+                <label><i class="fas fa-map-marker-alt"></i> Domicilio</label>
+                <input type="text" id="domicilio" style="text-transform: uppercase;" placeholder="DIRECCIÓN COMPLETA">
                 <div class="checkbox-group">
                     <input type="checkbox" id="sinDomicilio">
                     <label for="sinDomicilio">Sin domicilio</label>
                 </div>
             </div>
 
+            <!-- Sección ambulancia (oculta por defecto) -->
             <div class="full-width" id="seccionAmbulancia" style="display: none;">
                 <div class="section-separator"></div>
                 <div class="form-grid">
                     <div class="field-group">
-                        <label>🚨 Ambulancia que traslada</label>
+                        <label><i class="fas fa-ambulance"></i> Ambulancia que traslada</label>
                         <input type="text" id="ambulanciaNombre" style="text-transform: uppercase;" placeholder="Nombre o empresa">
                     </div>
                     <div class="field-group" style="align-self: center;">
@@ -370,7 +529,7 @@
                         </div>
                     </div>
                     <div class="field-group full-width" id="grupoDepartamento" style="display: none;">
-                        <label>🗺️ Departamento</label>
+                        <label><i class="fas fa-map"></i> Departamento</label>
                         <select id="departamento">
                             <option value="">Seleccione un departamento...</option>
                             <option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option>
@@ -387,20 +546,22 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+        <!-- Acciones del formulario -->
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
             <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
-            <button class="btn btn-warning" id="btnVerPendientes"><i class="fas fa-clock"></i> Pendientes <span id="contadorPendientes" style="background:white;color:#1e293b;padding:0.2rem 0.5rem;border-radius:20px;font-size:0.8rem;margin-left:0.3rem;">0</span></button>
+            <button class="btn btn-warning" id="btnVerPendientes"><i class="fas fa-clock"></i> Pendientes <span id="contadorPendientes" style="background:rgba(0,0,0,0.15);color:inherit;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.8rem;margin-left:0.3rem;">0</span></button>
         </div>
     </div>
 
+    <!-- Panel de registros pendientes -->
     <div class="card hidden" id="panelPendientes">
         <div class="card-header">
             <i class="fas fa-cloud-upload-alt"></i> Registros pendientes de sincronizar
             <button class="btn btn-danger btn-sm" style="margin-left: auto;" id="btnCerrarPendientes"><i class="fas fa-times"></i> Cerrar</button>
         </div>
         <div id="listaPendientes" class="pending-list"></div>
-        <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <div style="margin-top: 1.2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
             <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar todos</button>
             <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar todos</button>
         </div>
@@ -408,43 +569,72 @@
 </div>
 
 <div id="toastContainer"></div>
-    
+
 <script src="config.js"></script>
 <script>
-    
-// Verificar que config.js se cargó correctamente
-if (typeof APPS_SCRIPT_URL === 'undefined' || APPS_SCRIPT_URL === '') {
-    console.error('config.js no cargado o vacío. Verificar el archivo.');
-}
-if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
-    console.error('API_TOKEN no definido. Verificar config.js.');
-}
+    // Verificar que config.js se cargó correctamente
+    if (typeof APPS_SCRIPT_URL === 'undefined' || APPS_SCRIPT_URL === '') {
+        console.error('config.js no cargado o vacío.');
+    }
+    if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
+        console.error('API_TOKEN no definido en config.js.');
+    }
 
+    // Estado
     let pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
     const isOnline = () => navigator.onLine;
 
+    // ---------- MODO OSCURO ----------
+    const themeToggle = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+    const themeIcon = themeToggle.querySelector('i');
+
+    // Cargar preferencia guardada
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        themeIcon.className = 'fas fa-sun';
+        themeLabel.textContent = 'Modo Claro';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', isDark);
+        if (isDark) {
+            themeIcon.className = 'fas fa-sun';
+            themeLabel.textContent = 'Modo Claro';
+        } else {
+            themeIcon.className = 'fas fa-moon';
+            themeLabel.textContent = 'Modo Oscuro';
+        }
+    });
+
+    // ---------- RELOJ ----------
     function actualizarReloj() {
         const ahora = new Date();
-        document.getElementById('fecha').value = ahora.toLocaleDateString('es-AR');
-        document.getElementById('hora').value = ahora.toLocaleTimeString('es-AR');
+        document.getElementById('fecha').value = ahora.toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit', year:'numeric'});
+        document.getElementById('hora').value = ahora.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
     }
     setInterval(actualizarReloj, 1000);
     actualizarReloj();
 
+    // ---------- TOAST ----------
     function mostrarToast(mensaje, tipo = 'info') {
         const cont = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.innerHTML = `<i class="fas ${tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}" style="margin-right:0.5rem;"></i> ${mensaje}`;
-        if (tipo === 'error') toast.style.background = '#ef4444';
+        const icono = tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+        const color = tipo === 'error' ? '#e53e3e' : '#2b6cb0';
+        toast.style.background = color;
+        toast.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
         cont.appendChild(toast);
-        setTimeout(() => toast.remove(), 3500);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
     }
 
     function actualizarContadorPendientes() {
         document.getElementById('contadorPendientes').textContent = pendingRecords.length;
     }
 
+    // ---------- FORMATO FECHA AUTOMÁTICO ----------
     document.getElementById('nacimiento').addEventListener('input', function(e) {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 8) val = val.slice(0,8);
@@ -455,6 +645,7 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
         e.target.value = formatted;
     });
 
+    // Confirmar fecha
     document.getElementById('btnConfirmarFecha').addEventListener('click', () => {
         const input = document.getElementById('nacimiento');
         const valor = input.value.trim();
@@ -473,18 +664,19 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
         const mes = hoy.getMonth() - fechaNac.getMonth();
         if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
         if (edad < 0 || edad > 120) {
-            mostrarToast('Edad fuera de rango (0-120)', 'error');
+            mostrarToast('Edad fuera de rango', 'error');
             return;
         }
         document.getElementById('edadDisplay').textContent = `${edad} años`;
         mostrarToast(`Edad calculada: ${edad} años`);
     });
 
+    // Contador razón
     document.getElementById('razon').addEventListener('input', function(e) {
-        const len = e.target.value.length;
-        document.getElementById('contadorRazon').textContent = `${len}/50`;
+        document.getElementById('contadorRazon').textContent = `${e.target.value.length}/50`;
     });
 
+    // Toggle checkboxes
     function configurarToggle(checkboxId, fieldId) {
         const cb = document.getElementById(checkboxId);
         const field = document.getElementById(fieldId);
@@ -492,7 +684,7 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
             if (cb.checked) {
                 field.value = 'NN';
                 field.disabled = true;
-                field.style.background = '#f1f5f9';
+                field.style.background = 'var(--border)';
             } else {
                 field.value = '';
                 field.disabled = false;
@@ -504,13 +696,14 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
     configurarToggle('sinObraSocial', 'obraSocial');
     configurarToggle('sinDomicilio', 'domicilio');
 
+    // Radio tipo ingreso
     document.querySelectorAll('input[name="tipoIngreso"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            document.getElementById('seccionAmbulancia').style.display = 
-                this.value === 'Ambulancia' ? 'block' : 'none';
+            document.getElementById('seccionAmbulancia').style.display = this.value === 'Ambulancia' ? 'block' : 'none';
         });
     });
 
+    // Ambulancia interior
     document.getElementById('ambulanciaInterior').addEventListener('change', function() {
         const grupoDep = document.getElementById('grupoDepartamento');
         const nombreAmb = document.getElementById('ambulanciaNombre');
@@ -525,6 +718,7 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
         }
     });
 
+    // ---------- GUARDAR ----------
     document.getElementById('btnGuardar').addEventListener('click', () => {
         const nombre = document.getElementById('nombre').value.trim();
         const dni = document.getElementById('dni').value.trim();
@@ -572,7 +766,7 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
             token: API_TOKEN
         };
 
-        if (isOnline()) {
+        if (isOnline() && APPS_SCRIPT_URL) {
             enviarRegistro(registro);
         } else {
             guardarPendiente(registro);
@@ -580,22 +774,41 @@ if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
         }
     });
 
-async function enviarRegistro(registro) {
-    try {
-        await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(registro),
-            headers: { 'Content-Type': 'application/json' },
-            mode: 'no-cors'
-        });
-        mostrarToast('Registro guardado exitosamente');
-        limpiarFormulario();
-    } catch (err) {
-        console.error(err);
-        guardarPendiente(registro);
-        mostrarToast('Error al enviar. Guardado como pendiente.', 'error');
+    async function enviarRegistro(registro) {
+        try {
+            const formData = new URLSearchParams();
+            formData.append('data', JSON.stringify(registro));
+            const res = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+            const data = await res.json();
+            if (data.result === 'success') {
+                mostrarToast('Registro guardado exitosamente');
+                limpiarFormulario();
+            } else {
+                throw new Error(data.error || 'Error del servidor');
+            }
+        } catch (err) {
+            console.error(err);
+            guardarPendiente(registro);
+            mostrarToast('Error al enviar. Guardado como pendiente.', 'error');
+        }
     }
-}
+
+    async function enviarRegistroSinGuardar(registro) {
+        const formData = new URLSearchParams();
+        formData.append('data', JSON.stringify(registro));
+        const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        const data = await res.json();
+        if (data.result !== 'success') throw new Error(data.error);
+    }
+
     function guardarPendiente(registro) {
         pendingRecords.push({ ...registro, timestamp: Date.now() });
         localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
@@ -609,11 +822,11 @@ async function enviarRegistro(registro) {
         document.getElementById('edadDisplay').textContent = '—';
         document.getElementById('razon').value = '';
         document.getElementById('contadorRazon').textContent = '0/50';
-        document.getElementById('telefono').value = ''; document.getElementById('telefono').disabled = false;
+        document.getElementById('telefono').value = ''; document.getElementById('telefono').disabled = false; document.getElementById('telefono').style.background = '';
         document.getElementById('sinTelefono').checked = false;
-        document.getElementById('obraSocial').value = ''; document.getElementById('obraSocial').disabled = false;
+        document.getElementById('obraSocial').value = ''; document.getElementById('obraSocial').disabled = false; document.getElementById('obraSocial').style.background = '';
         document.getElementById('sinObraSocial').checked = false;
-        document.getElementById('domicilio').value = ''; document.getElementById('domicilio').disabled = false;
+        document.getElementById('domicilio').value = ''; document.getElementById('domicilio').disabled = false; document.getElementById('domicilio').style.background = '';
         document.getElementById('sinDomicilio').checked = false;
         document.querySelector('input[value="Ambulatorio"]').checked = true;
         document.getElementById('seccionAmbulancia').style.display = 'none';
@@ -625,11 +838,12 @@ async function enviarRegistro(registro) {
 
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
 
+    // ---------- PANEL PENDIENTES ----------
     function actualizarListaPendientes() {
         const cont = document.getElementById('listaPendientes');
         cont.innerHTML = '';
         if (pendingRecords.length === 0) {
-            cont.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:1rem;"><i class="fas fa-check-circle"></i> No hay registros pendientes</p>';
+            cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;"><i class="fas fa-check-circle" style="font-size:2rem;display:block;margin-bottom:0.5rem;"></i> No hay registros pendientes</p>';
             actualizarContadorPendientes();
             return;
         }
@@ -639,7 +853,7 @@ async function enviarRegistro(registro) {
             div.innerHTML = `
                 <div>
                     <strong>${r.nombre}</strong> · DNI ${r.dni}<br>
-                    <small style="color:#64748b;">${r.fecha} ${r.hora} — ${r.razon}</small>
+                    <small style="color:var(--text-secondary);">${r.fecha} ${r.hora} — ${r.razon}</small>
                 </div>
                 <button class="btn btn-danger btn-sm" data-index="${idx}"><i class="fas fa-trash"></i></button>`;
             div.querySelector('button').addEventListener('click', () => {
@@ -660,22 +874,19 @@ async function enviarRegistro(registro) {
         document.getElementById('panelPendientes').classList.remove('hidden');
         actualizarListaPendientes();
     });
-
     document.getElementById('btnCerrarPendientes').addEventListener('click', () => {
         document.getElementById('panelPendientes').classList.add('hidden');
         document.getElementById('formCard').classList.remove('hidden');
     });
-
     document.getElementById('btnClearAll').addEventListener('click', () => {
         if (pendingRecords.length === 0) return;
-        if (confirm('¿Eliminar TODOS los registros pendientes? Esta acción no se puede deshacer.')) {
+        if (confirm('¿Eliminar TODOS los registros pendientes?')) {
             pendingRecords = [];
             localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
             actualizarListaPendientes();
             mostrarToast('Todos los pendientes fueron eliminados');
         }
     });
-
     document.getElementById('btnSyncAll').addEventListener('click', async () => {
         if (!isOnline()) return mostrarToast('No hay conexión a internet', 'error');
         if (pendingRecords.length === 0) return mostrarToast('No hay registros para sincronizar');
@@ -686,14 +897,8 @@ async function enviarRegistro(registro) {
         const fallidos = [];
         for (const registro of pendingRecords) {
             try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(registro),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await res.json();
-                if (data.result === 'success') exitos++;
-                else fallidos.push(registro);
+                await enviarRegistroSinGuardar(registro);
+                exitos++;
             } catch (e) {
                 fallidos.push(registro);
             }
@@ -703,27 +908,23 @@ async function enviarRegistro(registro) {
         actualizarListaPendientes();
         syncBtn.disabled = false;
         syncBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar todos';
-        mostrarToast(`Sincronización finalizada: ${exitos} exitosos, ${fallidos.length} pendientes`);
+        mostrarToast(`Sincronización: ${exitos} exitosos, ${fallidos.length} pendientes`);
     });
 
+    // ---------- DETECCIÓN DE CONEXIÓN ----------
     window.addEventListener('online', () => {
         document.getElementById('offlineBanner').style.display = 'none';
-        if (pendingRecords.length > 0) {
-            mostrarToast('Conexión restablecida. Tiene registros pendientes para sincronizar.');
-        }
+        if (pendingRecords.length > 0) mostrarToast('Conexión restablecida. Tiene pendientes para sincronizar.');
     });
     window.addEventListener('offline', () => {
         document.getElementById('offlineBanner').style.display = 'block';
     });
-    if (!isOnline()) {
-        document.getElementById('offlineBanner').style.display = 'block';
-    }
+    if (!isOnline()) document.getElementById('offlineBanner').style.display = 'block';
 
+    // ---------- SERVICE WORKER ----------
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('Service Worker registrado'))
-                .catch(err => console.error('Error SW:', err));
+            navigator.serviceWorker.register('sw.js').then(() => console.log('SW OK')).catch(() => {});
         });
     }
 
