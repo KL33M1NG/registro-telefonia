@@ -25,6 +25,7 @@
             --success: #38a169;
             --warning: #d69e2e;
             --danger: #e53e3e;
+            --danger-light: #fc8181;
             --info: #6b46c1;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
             --shadow: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
@@ -33,6 +34,7 @@
             --radius-sm: 8px;
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --header-gradient: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            --reanimation-red: #dc2626;
         }
 
         body.dark-mode {
@@ -71,10 +73,7 @@
             animation: slideDown 0.3s ease;
             letter-spacing: 0.3px;
         }
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
 
         .header {
             background: var(--header-gradient);
@@ -90,20 +89,9 @@
             z-index: 10;
             border-bottom: 3px solid rgba(255,255,255,0.1);
         }
-        .header img {
-            height: 44px;
-            object-fit: contain;
-            transition: transform var(--transition);
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
+        .header img { height: 44px; object-fit: contain; transition: transform var(--transition); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
         .header img:hover { transform: scale(1.08); }
-
-        .header-controls {
-            margin-left: auto;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
+        .header-controls { margin-left: auto; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
         .theme-toggle {
             background: rgba(255,255,255,0.15);
             border: 1px solid rgba(255,255,255,0.25);
@@ -119,22 +107,32 @@
             gap: 0.4rem;
             backdrop-filter: blur(10px);
         }
-        .theme-toggle:hover {
-            background: rgba(255,255,255,0.25);
-            transform: translateY(-1px);
+        .theme-toggle:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
+        .nav-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-btn.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .header { gap: 1rem; padding: 0.8rem 1rem; }
-            .header img { height: 32px; }
-            .header-controls { margin-left: 0; }
+            .header img { height: 30px; }
+            .header-controls { margin-left: 0; justify-content: center; }
+            .nav-btn { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
-        }
+        .container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
 
         .card {
             background: var(--card-bg);
@@ -150,9 +148,7 @@
         .card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--primary-light), var(--info), var(--success));
             opacity: 0.8;
@@ -178,26 +174,12 @@
         }
         body.dark-mode .card-header { color: var(--primary-light); }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-            gap: 1.3rem;
-        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.3rem; }
         .full-width { grid-column: 1 / -1; }
         .field-group { margin-bottom: 0.2rem; }
 
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.35rem;
-            color: var(--text);
-            font-size: 0.88rem;
-            letter-spacing: 0.2px;
-        }
-        label .required {
-            color: var(--danger);
-            font-weight: 700;
-        }
+        label { display: block; font-weight: 600; margin-bottom: 0.35rem; color: var(--text); font-size: 0.88rem; letter-spacing: 0.2px; }
+        label .required { color: var(--danger); font-weight: 700; }
 
         input, select, textarea {
             width: 100%;
@@ -217,17 +199,8 @@
             box-shadow: 0 0 0 4px rgba(49,130,206,0.12);
             transform: translateY(-1px);
         }
-        input[readonly] {
-            background: var(--border);
-            cursor: not-allowed;
-            opacity: 0.75;
-            font-weight: 500;
-        }
-        input::placeholder, textarea::placeholder {
-            color: #a0aec0;
-            font-style: italic;
-            font-size: 0.85rem;
-        }
+        input[readonly] { background: var(--border); cursor: not-allowed; opacity: 0.75; font-weight: 500; }
+        input::placeholder, textarea::placeholder { color: #a0aec0; font-style: italic; font-size: 0.85rem; }
         textarea { resize: vertical; min-height: 60px; }
 
         .checkbox-group, .radio-group {
@@ -238,25 +211,9 @@
             font-size: 0.9rem;
             font-weight: 500;
         }
-        .radio-group {
-            gap: 2rem;
-            margin: 0.5rem 0;
-            padding: 0.6rem;
-            background: var(--input-bg);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-        }
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        input[type="checkbox"], input[type="radio"] {
-            width: 1.2rem;
-            height: 1.2rem;
-            accent-color: var(--accent);
-            cursor: pointer;
-        }
+        .radio-group { gap: 2rem; margin: 0.5rem 0; padding: 0.6rem; background: var(--input-bg); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        .radio-item { display: flex; align-items: center; gap: 0.5rem; }
+        input[type="checkbox"], input[type="radio"] { width: 1.2rem; height: 1.2rem; accent-color: var(--accent); cursor: pointer; }
 
         .btn {
             padding: 0.75rem 1.5rem;
@@ -275,14 +232,7 @@
             position: relative;
             overflow: hidden;
         }
-        .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.1);
-            opacity: 0;
-            transition: opacity var(--transition);
-        }
+        .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.1); opacity: 0; transition: opacity var(--transition); }
         .btn:hover::after { opacity: 1; }
         .btn:active { transform: scale(0.97); }
         .btn-primary { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
@@ -290,19 +240,36 @@
         .btn-warning { background: linear-gradient(135deg, #d69e2e, #ecc94b); color: #1a202c; }
         .btn-danger { background: linear-gradient(135deg, #e53e3e, #fc8181); }
         .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
+        .btn-reanimation {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            animation: pulse-reanimation 2s infinite;
+            border: 2px solid #fca5a5;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        @keyframes pulse-reanimation {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); }
+            50% { box-shadow: 0 0 0 12px rgba(220,38,38,0); }
+        }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .counter {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-left: 0.4rem;
-            font-weight: 500;
+        .reanimation-section {
+            background: linear-gradient(135deg, rgba(220,38,38,0.06), rgba(239,68,68,0.08));
+            border: 2px solid rgba(220,38,38,0.3);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem;
+            margin-top: 0.8rem;
+            animation: borderPulse 2s infinite;
         }
+        @keyframes borderPulse {
+            0%, 100% { border-color: rgba(220,38,38,0.3); }
+            50% { border-color: rgba(220,38,38,0.6); }
+        }
+        .reanimation-section label { color: var(--reanimation-red); font-weight: 700; }
+
+        .counter { font-size: 0.75rem; color: var(--text-secondary); margin-left: 0.4rem; font-weight: 500; }
 
         .age-display {
             font-size: 1.2rem;
@@ -313,7 +280,6 @@
             border-radius: var(--radius-sm);
             text-align: center;
             border: 2px dashed var(--accent);
-            transition: all var(--transition);
         }
 
         .pending-list {
@@ -324,7 +290,7 @@
             padding: 0.8rem;
             background: var(--input-bg);
         }
-        .pending-item {
+        .pending-item, .history-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -336,11 +302,38 @@
             transition: all var(--transition);
             border-left: 4px solid var(--warning);
         }
-        .pending-item:hover {
-            transform: translateX(3px);
-            box-shadow: var(--shadow);
+        .history-item { border-left-color: var(--accent); }
+        .history-item.reanimation { border-left-color: var(--reanimation-red); border-left-width: 5px; }
+        .pending-item:hover, .history-item:hover { transform: translateX(3px); box-shadow: var(--shadow); }
+        .pending-item strong, .history-item strong { color: var(--primary); }
+        .history-item .badge-reanimation {
+            background: var(--reanimation-red);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: pulse-reanimation 2s infinite;
         }
-        .pending-item strong { color: var(--primary); }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.7rem 1rem;
+            border-radius: 2rem;
+        }
+        .search-box select {
+            width: auto;
+            min-width: 150px;
+            border-radius: 2rem;
+        }
 
         .toast {
             position: fixed;
@@ -359,17 +352,10 @@
             align-items: center;
             gap: 0.6rem;
         }
-        @keyframes slideInRight {
-            from { transform: translateX(120%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .hidden { display: none !important; }
 
-        .section-separator {
-            border-top: 2px dashed var(--border);
-            margin: 1.2rem 0;
-            grid-column: 1 / -1;
-        }
+        .section-separator { border-top: 2px dashed var(--border); margin: 1.2rem 0; grid-column: 1 / -1; }
 
         .hospital-badge {
             display: inline-flex;
@@ -384,19 +370,32 @@
             margin-bottom: 0.5rem;
         }
 
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .stat-card {
+            flex: 1;
+            min-width: 100px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.8rem;
+            text-align: center;
+        }
+        .stat-card .stat-number { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .stat-card .stat-label { font-size: 0.75rem; color: var(--text-secondary); }
+
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .card { padding: 1.5rem; }
         }
 
         input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
     </style>
 </head>
 <body>
@@ -410,24 +409,24 @@
     <img src="https://i.ibb.co/CKhvCqbc/LOGO-HC-DIGITAL.png" alt="HC Digital">
     <img src="https://i.ibb.co/hRm3C7xv/DEEM.png" alt="DEEM">
     <div class="header-controls">
-        <button class="theme-toggle" id="themeToggle" title="Cambiar modo claro/oscuro">
-            <i class="fas fa-moon"></i> <span id="themeLabel">Modo Oscuro</span>
+        <button class="nav-btn active" id="btnNavForm"><i class="fas fa-user-plus"></i> Carga</button>
+        <button class="nav-btn" id="btnNavHistory"><i class="fas fa-search"></i> Consultar</button>
+        <button class="nav-btn" id="btnNavPending"><i class="fas fa-clock"></i> Pendientes</button>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i> <span id="themeLabel">Oscuro</span>
         </button>
     </div>
 </header>
 
 <div class="container">
-    <!-- Formulario principal -->
+    <!-- ========== FORMULARIO DE CARGA ========== -->
     <div class="card" id="formCard">
         <div class="card-header">
             <i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · SERVICIO DE TELEFONÍA
         </div>
-        <div class="hospital-badge">
-            <i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias
-        </div>
+        <div class="hospital-badge"><i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias</div>
 
         <div class="form-grid">
-            <!-- Fecha y Hora automáticas -->
             <div class="field-group">
                 <label><i class="far fa-calendar-alt"></i> Fecha</label>
                 <input type="text" id="fecha" readonly>
@@ -437,7 +436,6 @@
                 <input type="text" id="hora" readonly>
             </div>
 
-            <!-- Tipo de ingreso -->
             <div class="field-group full-width">
                 <label><i class="fas fa-truck-medical"></i> Tipo de ingreso</label>
                 <div class="radio-group">
@@ -452,7 +450,6 @@
                 </div>
             </div>
 
-            <!-- Datos del paciente -->
             <div class="field-group">
                 <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
                 <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
@@ -462,7 +459,6 @@
                 <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
-            <!-- Fecha de nacimiento + confirmación -->
             <div class="field-group">
                 <label><i class="fas fa-cake-candles"></i> Fecha de Nacimiento <span class="required">*</span></label>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -477,14 +473,12 @@
                 <div class="age-display" id="edadDisplay">—</div>
             </div>
 
-            <!-- Razón de urgencia -->
             <div class="field-group full-width">
                 <label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label>
                 <textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea>
                 <span class="counter" id="contadorRazon">0/50</span>
             </div>
 
-            <!-- Teléfono -->
             <div class="field-group">
                 <label><i class="fas fa-phone"></i> Teléfono</label>
                 <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Solo números">
@@ -494,7 +488,6 @@
                 </div>
             </div>
 
-            <!-- Obra Social -->
             <div class="field-group">
                 <label><i class="fas fa-hospital"></i> Obra Social</label>
                 <input type="text" id="obraSocial" style="text-transform: uppercase;" placeholder="NOMBRE DE OBRA SOCIAL">
@@ -504,7 +497,6 @@
                 </div>
             </div>
 
-            <!-- Domicilio -->
             <div class="field-group">
                 <label><i class="fas fa-map-marker-alt"></i> Domicilio</label>
                 <input type="text" id="domicilio" style="text-transform: uppercase;" placeholder="DIRECCIÓN COMPLETA">
@@ -514,7 +506,7 @@
                 </div>
             </div>
 
-            <!-- Sección ambulancia (oculta por defecto) -->
+            <!-- Sección ambulancia -->
             <div class="full-width" id="seccionAmbulancia" style="display: none;">
                 <div class="section-separator"></div>
                 <div class="form-grid">
@@ -542,23 +534,60 @@
                             <option>VALLE VIEJO</option>
                         </select>
                     </div>
+                    <!-- SECCIÓN REANIMACIÓN -->
+                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display: none;">
+                        <label><i class="fas fa-heart-pulse"></i> ¿ES REANIMACIÓN?</label>
+                        <div class="radio-group" style="border-color: rgba(220,38,38,0.3);">
+                            <div class="radio-item">
+                                <input type="radio" id="reanimacionSi" name="esReanimacion" value="SI">
+                                <label for="reanimacionSi" style="color: var(--reanimation-red); font-weight: 700;">⚠️ SÍ - REANIMACIÓN</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked>
+                                <label for="reanimacionNo">NO</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Acciones del formulario -->
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
             <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
-            <button class="btn btn-warning" id="btnVerPendientes"><i class="fas fa-clock"></i> Pendientes <span id="contadorPendientes" style="background:rgba(0,0,0,0.15);color:inherit;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.8rem;margin-left:0.3rem;">0</span></button>
         </div>
     </div>
 
-    <!-- Panel de registros pendientes -->
+    <!-- ========== PANEL DE CONSULTA ========== -->
+    <div class="card hidden" id="historyCard">
+        <div class="card-header">
+            <i class="fas fa-list-ul"></i> CONSULTA DE REGISTROS
+        </div>
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card"><div class="stat-number" id="statTotal">0</div><div class="stat-label">Total</div></div>
+            <div class="stat-card"><div class="stat-number" id="statAmbulatorio">0</div><div class="stat-label">Ambulatorio</div></div>
+            <div class="stat-card"><div class="stat-number" id="statAmbulancia">0</div><div class="stat-label">Ambulancia</div></div>
+            <div class="stat-card" style="border-color: var(--reanimation-red);"><div class="stat-number" id="statReanimacion" style="color: var(--reanimation-red);">0</div><div class="stat-label">Reanimación</div></div>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre, DNI, razón...">
+            <select id="searchFilter">
+                <option value="todos">Todos</option>
+                <option value="nombre">Nombre</option>
+                <option value="dni">DNI</option>
+                <option value="razon">Razón</option>
+                <option value="fecha">Fecha (dd/mm/aaaa)</option>
+            </select>
+            <button class="btn btn-info btn-sm" id="btnSearch"><i class="fas fa-search"></i> Buscar</button>
+            <button class="btn btn-success btn-sm" id="btnRefreshHistory"><i class="fas fa-sync-alt"></i> Actualizar</button>
+        </div>
+        <div id="historyList" class="pending-list"></div>
+    </div>
+
+    <!-- ========== PANEL DE PENDIENTES ========== -->
     <div class="card hidden" id="panelPendientes">
         <div class="card-header">
             <i class="fas fa-cloud-upload-alt"></i> Registros pendientes de sincronizar
-            <button class="btn btn-danger btn-sm" style="margin-left: auto;" id="btnCerrarPendientes"><i class="fas fa-times"></i> Cerrar</button>
         </div>
         <div id="listaPendientes" class="pending-list"></div>
         <div style="margin-top: 1.2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
@@ -572,41 +601,51 @@
 
 <script src="config.js"></script>
 <script>
-    // Verificar que config.js se cargó correctamente
-    if (typeof APPS_SCRIPT_URL === 'undefined' || APPS_SCRIPT_URL === '') {
-        console.error('config.js no cargado o vacío.');
-    }
-    if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') {
-        console.error('API_TOKEN no definido en config.js.');
-    }
+    if (typeof APPS_SCRIPT_URL === 'undefined' || APPS_SCRIPT_URL === '') console.error('config.js no cargado.');
+    if (typeof API_TOKEN === 'undefined' || API_TOKEN === '') console.error('API_TOKEN no definido.');
 
-    // Estado
     let pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
+    let historyRecords = JSON.parse(localStorage.getItem('historyRecords') || '[]');
     const isOnline = () => navigator.onLine;
 
     // ---------- MODO OSCURO ----------
     const themeToggle = document.getElementById('themeToggle');
     const themeLabel = document.getElementById('themeLabel');
     const themeIcon = themeToggle.querySelector('i');
-
-    // Cargar preferencia guardada
     if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
-        themeIcon.className = 'fas fa-sun';
-        themeLabel.textContent = 'Modo Claro';
+        themeIcon.className = 'fas fa-sun'; themeLabel.textContent = 'Claro';
     }
-
     themeToggle.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode', isDark);
-        if (isDark) {
-            themeIcon.className = 'fas fa-sun';
-            themeLabel.textContent = 'Modo Claro';
-        } else {
-            themeIcon.className = 'fas fa-moon';
-            themeLabel.textContent = 'Modo Oscuro';
-        }
+        themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        themeLabel.textContent = isDark ? 'Claro' : 'Oscuro';
     });
+
+    // ---------- NAVEGACIÓN ----------
+    const formCard = document.getElementById('formCard');
+    const historyCard = document.getElementById('historyCard');
+    const panelPendientes = document.getElementById('panelPendientes');
+    const btnNavForm = document.getElementById('btnNavForm');
+    const btnNavHistory = document.getElementById('btnNavHistory');
+    const btnNavPending = document.getElementById('btnNavPending');
+
+    function mostrarSeccion(seccion) {
+        formCard.classList.add('hidden');
+        historyCard.classList.add('hidden');
+        panelPendientes.classList.add('hidden');
+        btnNavForm.classList.remove('active');
+        btnNavHistory.classList.remove('active');
+        btnNavPending.classList.remove('active');
+        if (seccion === 'form') { formCard.classList.remove('hidden'); btnNavForm.classList.add('active'); }
+        if (seccion === 'history') { historyCard.classList.remove('hidden'); btnNavHistory.classList.add('active'); cargarHistorial(); }
+        if (seccion === 'pending') { panelPendientes.classList.remove('hidden'); btnNavPending.classList.add('active'); actualizarListaPendientes(); }
+    }
+
+    btnNavForm.addEventListener('click', () => mostrarSeccion('form'));
+    btnNavHistory.addEventListener('click', () => mostrarSeccion('history'));
+    btnNavPending.addEventListener('click', () => mostrarSeccion('pending'));
 
     // ---------- RELOJ ----------
     function actualizarReloj() {
@@ -614,8 +653,7 @@
         document.getElementById('fecha').value = ahora.toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit', year:'numeric'});
         document.getElementById('hora').value = ahora.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
     }
-    setInterval(actualizarReloj, 1000);
-    actualizarReloj();
+    setInterval(actualizarReloj, 1000); actualizarReloj();
 
     // ---------- TOAST ----------
     function mostrarToast(mensaje, tipo = 'info') {
@@ -623,18 +661,13 @@
         const toast = document.createElement('div');
         toast.className = 'toast';
         const icono = tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
-        const color = tipo === 'error' ? '#e53e3e' : '#2b6cb0';
-        toast.style.background = color;
+        toast.style.background = tipo === 'error' ? '#e53e3e' : '#2b6cb0';
         toast.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
         cont.appendChild(toast);
         setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
     }
 
-    function actualizarContadorPendientes() {
-        document.getElementById('contadorPendientes').textContent = pendingRecords.length;
-    }
-
-    // ---------- FORMATO FECHA AUTOMÁTICO ----------
+    // ---------- FORMATO FECHA ----------
     document.getElementById('nacimiento').addEventListener('input', function(e) {
         let val = e.target.value.replace(/\D/g, '');
         if (val.length > 8) val = val.slice(0,8);
@@ -645,51 +678,32 @@
         e.target.value = formatted;
     });
 
-    // Confirmar fecha
     document.getElementById('btnConfirmarFecha').addEventListener('click', () => {
         const input = document.getElementById('nacimiento');
         const valor = input.value.trim();
-        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(valor)) {
-            mostrarToast('Formato inválido. Use dd/mm/aaaa', 'error');
-            return;
-        }
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(valor)) return mostrarToast('Formato inválido. Use dd/mm/aaaa', 'error');
         const [d, m, a] = valor.split('/').map(Number);
         const fechaNac = new Date(a, m-1, d);
         const hoy = new Date();
-        if (fechaNac.getDate() !== d || fechaNac.getMonth() !== m-1 || fechaNac.getFullYear() !== a || fechaNac > hoy) {
-            mostrarToast('Fecha inexistente o futura', 'error');
-            return;
-        }
+        if (fechaNac.getDate() !== d || fechaNac.getMonth() !== m-1 || fechaNac.getFullYear() !== a || fechaNac > hoy) return mostrarToast('Fecha inexistente o futura', 'error');
         let edad = hoy.getFullYear() - fechaNac.getFullYear();
         const mes = hoy.getMonth() - fechaNac.getMonth();
         if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
-        if (edad < 0 || edad > 120) {
-            mostrarToast('Edad fuera de rango', 'error');
-            return;
-        }
+        if (edad < 0 || edad > 120) return mostrarToast('Edad fuera de rango', 'error');
         document.getElementById('edadDisplay').textContent = `${edad} años`;
         mostrarToast(`Edad calculada: ${edad} años`);
     });
 
-    // Contador razón
     document.getElementById('razon').addEventListener('input', function(e) {
         document.getElementById('contadorRazon').textContent = `${e.target.value.length}/50`;
     });
 
-    // Toggle checkboxes
     function configurarToggle(checkboxId, fieldId) {
         const cb = document.getElementById(checkboxId);
         const field = document.getElementById(fieldId);
         cb.addEventListener('change', () => {
-            if (cb.checked) {
-                field.value = 'NN';
-                field.disabled = true;
-                field.style.background = 'var(--border)';
-            } else {
-                field.value = '';
-                field.disabled = false;
-                field.style.background = '';
-            }
+            if (cb.checked) { field.value = 'NN'; field.disabled = true; field.style.background = 'var(--border)'; }
+            else { field.value = ''; field.disabled = false; field.style.background = ''; }
         });
     }
     configurarToggle('sinTelefono', 'telefono');
@@ -699,7 +713,9 @@
     // Radio tipo ingreso
     document.querySelectorAll('input[name="tipoIngreso"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            document.getElementById('seccionAmbulancia').style.display = this.value === 'Ambulancia' ? 'block' : 'none';
+            const esAmbulancia = this.value === 'Ambulancia';
+            document.getElementById('seccionAmbulancia').style.display = esAmbulancia ? 'block' : 'none';
+            document.getElementById('seccionReanimacion').style.display = esAmbulancia ? 'block' : 'none';
         });
     });
 
@@ -707,15 +723,8 @@
     document.getElementById('ambulanciaInterior').addEventListener('change', function() {
         const grupoDep = document.getElementById('grupoDepartamento');
         const nombreAmb = document.getElementById('ambulanciaNombre');
-        if (this.checked) {
-            grupoDep.style.display = 'block';
-            nombreAmb.style.display = 'none';
-            nombreAmb.value = '';
-        } else {
-            grupoDep.style.display = 'none';
-            nombreAmb.style.display = 'block';
-            document.getElementById('departamento').value = '';
-        }
+        if (this.checked) { grupoDep.style.display = 'block'; nombreAmb.style.display = 'none'; nombreAmb.value = ''; }
+        else { grupoDep.style.display = 'none'; nombreAmb.style.display = 'block'; document.getElementById('departamento').value = ''; }
     });
 
     // ---------- GUARDAR ----------
@@ -736,9 +745,9 @@
         const domicilio = document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '');
 
         const tipoIngreso = document.querySelector('input[name="tipoIngreso"]:checked').value;
-        let ambulancia = '';
-        let departamento = '';
+        let ambulancia = '', departamento = '', esReanimacion = 'NO';
         if (tipoIngreso === 'Ambulancia') {
+            esReanimacion = document.querySelector('input[name="esReanimacion"]:checked').value;
             if (document.getElementById('ambulanciaInterior').checked) {
                 departamento = document.getElementById('departamento').value;
                 ambulancia = departamento;
@@ -753,8 +762,7 @@
             fecha: document.getElementById('fecha').value,
             hora: document.getElementById('hora').value,
             nombre: nombre.toUpperCase(),
-            dni,
-            nacimiento,
+            dni, nacimiento,
             edad: edadTexto.replace(' años',''),
             razon: razon.toUpperCase(),
             telefono: telefono.toUpperCase(),
@@ -763,33 +771,29 @@
             tipoIngreso,
             ambulancia: ambulancia.toUpperCase(),
             departamento: departamento.toUpperCase(),
+            esReanimacion,
             token: API_TOKEN
         };
 
-        if (isOnline() && APPS_SCRIPT_URL) {
-            enviarRegistro(registro);
-        } else {
-            guardarPendiente(registro);
-            mostrarToast('Guardado localmente (sin conexión)');
-        }
+        // Guardar en historial local
+        historyRecords.unshift({...registro, id: Date.now()});
+        if (historyRecords.length > 500) historyRecords = historyRecords.slice(0, 500);
+        localStorage.setItem('historyRecords', JSON.stringify(historyRecords));
+
+        if (isOnline() && APPS_SCRIPT_URL) enviarRegistro(registro);
+        else { guardarPendiente(registro); mostrarToast('Guardado localmente (sin conexión)'); }
     });
 
     async function enviarRegistro(registro) {
         try {
-            const formData = new URLSearchParams();
-            formData.append('data', JSON.stringify(registro));
-            const res = await fetch(APPS_SCRIPT_URL, {
+            await fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
-                body: formData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                body: JSON.stringify(registro),
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'no-cors'
             });
-            const data = await res.json();
-            if (data.result === 'success') {
-                mostrarToast('Registro guardado exitosamente');
-                limpiarFormulario();
-            } else {
-                throw new Error(data.error || 'Error del servidor');
-            }
+            mostrarToast('Registro guardado exitosamente');
+            limpiarFormulario();
         } catch (err) {
             console.error(err);
             guardarPendiente(registro);
@@ -798,15 +802,12 @@
     }
 
     async function enviarRegistroSinGuardar(registro) {
-        const formData = new URLSearchParams();
-        formData.append('data', JSON.stringify(registro));
-        const res = await fetch(APPS_SCRIPT_URL, {
+        await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
-            body: formData,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            body: JSON.stringify(registro),
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors'
         });
-        const data = await res.json();
-        if (data.result !== 'success') throw new Error(data.error);
     }
 
     function guardarPendiente(registro) {
@@ -830,10 +831,12 @@
         document.getElementById('sinDomicilio').checked = false;
         document.querySelector('input[value="Ambulatorio"]').checked = true;
         document.getElementById('seccionAmbulancia').style.display = 'none';
+        document.getElementById('seccionReanimacion').style.display = 'none';
         document.getElementById('ambulanciaNombre').value = '';
         document.getElementById('ambulanciaInterior').checked = false;
         document.getElementById('grupoDepartamento').style.display = 'none';
         document.getElementById('departamento').value = '';
+        document.querySelector('input[value="NO"]').checked = true;
     }
 
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
@@ -844,15 +847,15 @@
         cont.innerHTML = '';
         if (pendingRecords.length === 0) {
             cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;"><i class="fas fa-check-circle" style="font-size:2rem;display:block;margin-bottom:0.5rem;"></i> No hay registros pendientes</p>';
-            actualizarContadorPendientes();
             return;
         }
         pendingRecords.forEach((r, idx) => {
             const div = document.createElement('div');
             div.className = 'pending-item';
+            if (r.esReanimacion === 'SI') div.style.borderLeftColor = 'var(--reanimation-red)';
             div.innerHTML = `
                 <div>
-                    <strong>${r.nombre}</strong> · DNI ${r.dni}<br>
+                    <strong>${r.nombre}</strong> · DNI ${r.dni} ${r.esReanimacion === 'SI' ? '<span class="badge-reanimation">REANIMACIÓN</span>' : ''}<br>
                     <small style="color:var(--text-secondary);">${r.fecha} ${r.hora} — ${r.razon}</small>
                 </div>
                 <button class="btn btn-danger btn-sm" data-index="${idx}"><i class="fas fa-trash"></i></button>`;
@@ -866,18 +869,8 @@
             });
             cont.appendChild(div);
         });
-        actualizarContadorPendientes();
     }
 
-    document.getElementById('btnVerPendientes').addEventListener('click', () => {
-        document.getElementById('formCard').classList.add('hidden');
-        document.getElementById('panelPendientes').classList.remove('hidden');
-        actualizarListaPendientes();
-    });
-    document.getElementById('btnCerrarPendientes').addEventListener('click', () => {
-        document.getElementById('panelPendientes').classList.add('hidden');
-        document.getElementById('formCard').classList.remove('hidden');
-    });
     document.getElementById('btnClearAll').addEventListener('click', () => {
         if (pendingRecords.length === 0) return;
         if (confirm('¿Eliminar TODOS los registros pendientes?')) {
@@ -887,48 +880,96 @@
             mostrarToast('Todos los pendientes fueron eliminados');
         }
     });
+
     document.getElementById('btnSyncAll').addEventListener('click', async () => {
-        if (!isOnline()) return mostrarToast('No hay conexión a internet', 'error');
-        if (pendingRecords.length === 0) return mostrarToast('No hay registros para sincronizar');
-        const syncBtn = document.getElementById('btnSyncAll');
-        syncBtn.disabled = true;
-        syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
-        let exitos = 0;
-        const fallidos = [];
-        for (const registro of pendingRecords) {
-            try {
-                await enviarRegistroSinGuardar(registro);
-                exitos++;
-            } catch (e) {
-                fallidos.push(registro);
-            }
+        if (!isOnline()) return mostrarToast('No hay conexión', 'error');
+        if (pendingRecords.length === 0) return mostrarToast('No hay pendientes');
+        const btn = document.getElementById('btnSyncAll');
+        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
+        let exitos = 0; const fallidos = [];
+        for (const r of pendingRecords) {
+            try { await enviarRegistroSinGuardar(r); exitos++; }
+            catch(e) { fallidos.push(r); }
         }
         pendingRecords = fallidos;
         localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
         actualizarListaPendientes();
-        syncBtn.disabled = false;
-        syncBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar todos';
-        mostrarToast(`Sincronización: ${exitos} exitosos, ${fallidos.length} pendientes`);
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar todos';
+        mostrarToast(`${exitos} exitosos, ${fallidos.length} pendientes`);
     });
+
+    // ---------- HISTORIAL Y BÚSQUEDA ----------
+    function cargarHistorial() {
+        historyRecords = JSON.parse(localStorage.getItem('historyRecords') || '[]');
+        mostrarHistorial(historyRecords);
+        actualizarEstadisticas();
+    }
+
+    function mostrarHistorial(registros) {
+        const cont = document.getElementById('historyList');
+        cont.innerHTML = '';
+        if (registros.length === 0) {
+            cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;"><i class="fas fa-folder-open" style="font-size:2rem;display:block;margin-bottom:0.5rem;"></i> No hay registros cargados</p>';
+            return;
+        }
+        registros.forEach((r, idx) => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            if (r.esReanimacion === 'SI') div.classList.add('reanimation');
+            div.innerHTML = `
+                <div>
+                    <strong>${r.nombre}</strong> · DNI ${r.dni} · ${r.edad} años ${r.esReanimacion === 'SI' ? '<span class="badge-reanimation">REANIMACIÓN</span>' : ''}<br>
+                    <small style="color:var(--text-secondary);">${r.fecha} ${r.hora} — ${r.razon} | ${r.tipoIngreso} ${r.tipoIngreso === 'Ambulancia' ? '· ' + r.ambulancia : ''}</small>
+                    <br><small style="color:var(--text-secondary);">📞 ${r.telefono} | 🏥 ${r.obraSocial} | 📍 ${r.domicilio}</small>
+                </div>`;
+            cont.appendChild(div);
+        });
+    }
+
+    function actualizarEstadisticas() {
+        document.getElementById('statTotal').textContent = historyRecords.length;
+        document.getElementById('statAmbulatorio').textContent = historyRecords.filter(r => r.tipoIngreso === 'Ambulatorio').length;
+        document.getElementById('statAmbulancia').textContent = historyRecords.filter(r => r.tipoIngreso === 'Ambulancia').length;
+        document.getElementById('statReanimacion').textContent = historyRecords.filter(r => r.esReanimacion === 'SI').length;
+    }
+
+    document.getElementById('btnSearch').addEventListener('click', () => {
+        const query = document.getElementById('searchInput').value.trim().toUpperCase();
+        const filter = document.getElementById('searchFilter').value;
+        if (!query) return mostrarHistorial(historyRecords);
+        let resultados = historyRecords.filter(r => {
+            if (filter === 'todos') return Object.values(r).some(v => String(v).toUpperCase().includes(query));
+            if (filter === 'nombre') return r.nombre.includes(query);
+            if (filter === 'dni') return r.dni.includes(query);
+            if (filter === 'razon') return r.razon.includes(query);
+            if (filter === 'fecha') return r.fecha.includes(query);
+            return false;
+        });
+        mostrarHistorial(resultados);
+        mostrarToast(`${resultados.length} resultado(s) encontrado(s)`);
+    });
+
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('btnSearch').click();
+    });
+
+    document.getElementById('btnRefreshHistory').addEventListener('click', cargarHistorial);
 
     // ---------- DETECCIÓN DE CONEXIÓN ----------
     window.addEventListener('online', () => {
         document.getElementById('offlineBanner').style.display = 'none';
-        if (pendingRecords.length > 0) mostrarToast('Conexión restablecida. Tiene pendientes para sincronizar.');
+        if (pendingRecords.length > 0) mostrarToast('Conexión restablecida. Pendientes para sincronizar.');
     });
-    window.addEventListener('offline', () => {
-        document.getElementById('offlineBanner').style.display = 'block';
-    });
+    window.addEventListener('offline', () => document.getElementById('offlineBanner').style.display = 'block');
     if (!isOnline()) document.getElementById('offlineBanner').style.display = 'block';
 
     // ---------- SERVICE WORKER ----------
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').then(() => console.log('SW OK')).catch(() => {});
-        });
+        window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').then(() => console.log('SW OK')).catch(() => {}));
     }
 
     actualizarListaPendientes();
+    historyRecords = JSON.parse(localStorage.getItem('historyRecords') || '[]');
 </script>
 </body>
 </html>
