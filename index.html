@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Urgencias · Telefonía</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3c72;
+            --primary-light: #2a5298;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #8b5cf6;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --transition: 0.2s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .offline-banner {
+            background: var(--danger);
+            color: white;
+            text-align: center;
+            padding: 0.6rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        .header {
+            background: white;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .header img {
+            height: 42px;
+            object-fit: contain;
+            transition: transform var(--transition);
+        }
+        .header img:hover { transform: scale(1.05); }
+        @media (max-width: 600px) {
+            .header { gap: 1rem; }
+            .header img { height: 34px; }
+        }
+        .container {
+            max-width: 1100px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            transition: box-shadow var(--transition);
+        }
+        .card:hover { box-shadow: var(--shadow-lg); }
+        .card-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+        }
+        .card-header i { color: var(--accent); }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.2rem;
+        }
+        .full-width { grid-column: 1 / -1; }
+        .field-group { margin-bottom: 0.25rem; }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all var(--transition);
+            background: #fafbfc;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        input[readonly] {
+            background: #f1f5f9;
+            cursor: not-allowed;
+            color: #475569;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        textarea { resize: vertical; min-height: 60px; }
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+            font-size: 0.9rem;
+        }
+        .radio-group {
+            gap: 2rem;
+            margin: 0.5rem 0;
+        }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        input[type="checkbox"], input[type="radio"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .btn {
+            padding: 0.7rem 1.4rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition);
+            color: white;
+            letter-spacing: 0.3px;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+        .btn:active { transform: translateY(0); }
+        .btn-primary { background: var(--primary-light); }
+        .btn-primary:hover { background: var(--primary); }
+        .btn-success { background: var(--success); }
+        .btn-warning { background: var(--warning); color: #1e293b; }
+        .btn-danger { background: var(--danger); }
+        .btn-info { background: var(--info); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .counter {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-left: 0.4rem;
+            font-weight: 500;
+        }
+        .age-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            background: #f0f4ff;
+            padding: 0.7rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px dashed var(--accent);
+        }
+        .pending-list {
+            max-height: 320px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.8rem;
+            background: #f8fafc;
+        }
+        .pending-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+        .pending-item:hover { background: #f1f5f9; }
+        .pending-item strong { color: var(--primary); }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-light);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            font-weight: 500;
+            max-width: 90vw;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .hidden { display: none !important; }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .card { padding: 1.5rem; }
+        }
+        .section-separator {
+            border-top: 1px solid var(--border);
+            margin: 1rem 0;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="offline-banner" id="offlineBanner">
+    <i class="fas fa-wifi-slash"></i> Sin conexión · Los registros se guardan localmente y se sincronizarán al recuperar internet.
+</div>
+
+<header class="header">
+    <img src="https://i.ibb.co/qFk65j2s/LOGO-HOSPITAL.png" alt="Hospital">
+    <img src="https://i.ibb.co/CKhvCqbc/LOGO-HC-DIGITAL.png" alt="HC Digital">
+    <img src="https://i.ibb.co/hRm3C7xv/DEEM.png" alt="DEEM">
+</header>
+
+<div class="container">
+    <div class="card" id="formCard">
+        <div class="card-header">
+            <i class="fas fa-user-plus"></i> REGISTRO DE PACIENTES · TELEFONÍA
+        </div>
+
+        <div class="form-grid">
+            <div class="field-group">
+                <label>📅 Fecha</label>
+                <input type="text" id="fecha" readonly>
+            </div>
+            <div class="field-group">
+                <label>🕒 Hora</label>
+                <input type="text" id="hora" readonly>
+            </div>
+
+            <div class="field-group full-width">
+                <label>🚑 Tipo de ingreso</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked>
+                        <label for="tipoAmbulatorio">Ambulatorio</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia">
+                        <label for="tipoAmbulancia">Ambulancia</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label>👤 Apellido y Nombre *</label>
+                <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;">
+            </div>
+            <div class="field-group">
+                <label>🆔 DNI *</label>
+                <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*">
+            </div>
+
+            <div class="field-group">
+                <label>🎂 Fecha de Nacimiento *</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" style="flex:1;">
+                    <button type="button" class="btn btn-info" id="btnConfirmarFecha" style="white-space: nowrap;">
+                        <i class="fas fa-check-circle"></i> Confirmar
+                    </button>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>🔢 Edad</label>
+                <div class="age-display" id="edadDisplay">—</div>
+            </div>
+
+            <div class="field-group full-width">
+                <label>❗ Razón de Urgencia *</label>
+                <textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea>
+                <span class="counter" id="contadorRazon">0/50</span>
+            </div>
+
+            <div class="field-group">
+                <label>📞 Teléfono</label>
+                <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinTelefono">
+                    <label for="sinTelefono">Sin teléfono</label>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label>🏥 Obra Social</label>
+                <input type="text" id="obraSocial" style="text-transform: uppercase;">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinObraSocial">
+                    <label for="sinObraSocial">Sin obra social</label>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label>📍 Domicilio</label>
+                <input type="text" id="domicilio" style="text-transform: uppercase;">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinDomicilio">
+                    <label for="sinDomicilio">Sin domicilio</label>
+                </div>
+            </div>
+
+            <div class="full-width" id="seccionAmbulancia" style="display: none;">
+                <div class="section-separator"></div>
+                <div class="form-grid">
+                    <div class="field-group">
+                        <label>🚨 Ambulancia que traslada</label>
+                        <input type="text" id="ambulanciaNombre" style="text-transform: uppercase;" placeholder="Nombre o empresa">
+                    </div>
+                    <div class="field-group" style="align-self: center;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ambulanciaInterior">
+                            <label for="ambulanciaInterior">Proviene del interior</label>
+                        </div>
+                    </div>
+                    <div class="field-group full-width" id="grupoDepartamento" style="display: none;">
+                        <label>🗺️ Departamento</label>
+                        <select id="departamento">
+                            <option value="">Seleccione un departamento...</option>
+                            <option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option>
+                            <option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option>
+                            <option>CAPAYÁN</option><option>EL ALTO</option>
+                            <option>FRAY MAMERTO ESQUIÚ</option>
+                            <option>LA PAZ</option><option>PACLÍN</option>
+                            <option>POMÁN</option><option>SANTA MARÍA</option>
+                            <option>SANTA ROSA</option><option>TINOGASTA</option>
+                            <option>VALLE VIEJO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
+            <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
+            <button class="btn btn-warning" id="btnVerPendientes"><i class="fas fa-clock"></i> Pendientes <span id="contadorPendientes" style="background:white;color:#1e293b;padding:0.2rem 0.5rem;border-radius:20px;font-size:0.8rem;margin-left:0.3rem;">0</span></button>
+        </div>
+    </div>
+
+    <div class="card hidden" id="panelPendientes">
+        <div class="card-header">
+            <i class="fas fa-cloud-upload-alt"></i> Registros pendientes de sincronizar
+            <button class="btn btn-danger btn-sm" style="margin-left: auto;" id="btnCerrarPendientes"><i class="fas fa-times"></i> Cerrar</button>
+        </div>
+        <div id="listaPendientes" class="pending-list"></div>
+        <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar todos</button>
+            <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar todos</button>
+        </div>
+    </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+    if (typeof APPS_SCRIPT_URL === '') {
+        var APPS_SCRIPT_URL = '';
+        console.warn('config.js no cargado. La sincronización con Google Sheets no funcionará.');
+    }
+    if (typeof API_TOKEN === 'undefined') {
+        var API_TOKEN = '';
+    }
+
+    let pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
+    const isOnline = () => navigator.onLine;
+
+    function actualizarReloj() {
+        const ahora = new Date();
+        document.getElementById('fecha').value = ahora.toLocaleDateString('es-AR');
+        document.getElementById('hora').value = ahora.toLocaleTimeString('es-AR');
+    }
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
+
+    function mostrarToast(mensaje, tipo = 'info') {
+        const cont = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fas ${tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}" style="margin-right:0.5rem;"></i> ${mensaje}`;
+        if (tipo === 'error') toast.style.background = '#ef4444';
+        cont.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+
+    function actualizarContadorPendientes() {
+        document.getElementById('contadorPendientes').textContent = pendingRecords.length;
+    }
+
+    document.getElementById('nacimiento').addEventListener('input', function(e) {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 8) val = val.slice(0,8);
+        let formatted = '';
+        if (val.length > 4) formatted = val.slice(0,2) + '/' + val.slice(2,4) + '/' + val.slice(4);
+        else if (val.length > 2) formatted = val.slice(0,2) + '/' + val.slice(2);
+        else formatted = val;
+        e.target.value = formatted;
+    });
+
+    document.getElementById('btnConfirmarFecha').addEventListener('click', () => {
+        const input = document.getElementById('nacimiento');
+        const valor = input.value.trim();
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(valor)) {
+            mostrarToast('Formato inválido. Use dd/mm/aaaa', 'error');
+            return;
+        }
+        const [d, m, a] = valor.split('/').map(Number);
+        const fechaNac = new Date(a, m-1, d);
+        const hoy = new Date();
+        if (fechaNac.getDate() !== d || fechaNac.getMonth() !== m-1 || fechaNac.getFullYear() !== a || fechaNac > hoy) {
+            mostrarToast('Fecha inexistente o futura', 'error');
+            return;
+        }
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
+        if (edad < 0 || edad > 120) {
+            mostrarToast('Edad fuera de rango (0-120)', 'error');
+            return;
+        }
+        document.getElementById('edadDisplay').textContent = `${edad} años`;
+        mostrarToast(`Edad calculada: ${edad} años`);
+    });
+
+    document.getElementById('razon').addEventListener('input', function(e) {
+        const len = e.target.value.length;
+        document.getElementById('contadorRazon').textContent = `${len}/50`;
+    });
+
+    function configurarToggle(checkboxId, fieldId) {
+        const cb = document.getElementById(checkboxId);
+        const field = document.getElementById(fieldId);
+        cb.addEventListener('change', () => {
+            if (cb.checked) {
+                field.value = 'NN';
+                field.disabled = true;
+                field.style.background = '#f1f5f9';
+            } else {
+                field.value = '';
+                field.disabled = false;
+                field.style.background = '';
+            }
+        });
+    }
+    configurarToggle('sinTelefono', 'telefono');
+    configurarToggle('sinObraSocial', 'obraSocial');
+    configurarToggle('sinDomicilio', 'domicilio');
+
+    document.querySelectorAll('input[name="tipoIngreso"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.getElementById('seccionAmbulancia').style.display = 
+                this.value === 'Ambulancia' ? 'block' : 'none';
+        });
+    });
+
+    document.getElementById('ambulanciaInterior').addEventListener('change', function() {
+        const grupoDep = document.getElementById('grupoDepartamento');
+        const nombreAmb = document.getElementById('ambulanciaNombre');
+        if (this.checked) {
+            grupoDep.style.display = 'block';
+            nombreAmb.style.display = 'none';
+            nombreAmb.value = '';
+        } else {
+            grupoDep.style.display = 'none';
+            nombreAmb.style.display = 'block';
+            document.getElementById('departamento').value = '';
+        }
+    });
+
+    document.getElementById('btnGuardar').addEventListener('click', () => {
+        const nombre = document.getElementById('nombre').value.trim();
+        const dni = document.getElementById('dni').value.trim();
+        const nacimiento = document.getElementById('nacimiento').value.trim();
+        const edadTexto = document.getElementById('edadDisplay').textContent;
+        const razon = document.getElementById('razon').value.trim();
+        if (!nombre) return mostrarToast('Complete Apellido y Nombre', 'error');
+        if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido (7-11 dígitos)', 'error');
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nacimiento)) return mostrarToast('Formato de fecha incorrecto', 'error');
+        if (edadTexto === '—') return mostrarToast('Presione "Confirmar" para calcular la edad', 'error');
+        if (!razon) return mostrarToast('Ingrese la razón de urgencia', 'error');
+
+        const telefono = document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '');
+        const obraSocial = document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '');
+        const domicilio = document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '');
+
+        const tipoIngreso = document.querySelector('input[name="tipoIngreso"]:checked').value;
+        let ambulancia = '';
+        let departamento = '';
+        if (tipoIngreso === 'Ambulancia') {
+            if (document.getElementById('ambulanciaInterior').checked) {
+                departamento = document.getElementById('departamento').value;
+                ambulancia = departamento;
+                if (!departamento) return mostrarToast('Seleccione un departamento', 'error');
+            } else {
+                ambulancia = document.getElementById('ambulanciaNombre').value.trim();
+                if (!ambulancia) return mostrarToast('Ingrese el nombre de la ambulancia', 'error');
+            }
+        }
+
+        const registro = {
+            fecha: document.getElementById('fecha').value,
+            hora: document.getElementById('hora').value,
+            nombre: nombre.toUpperCase(),
+            dni,
+            nacimiento,
+            edad: edadTexto.replace(' años',''),
+            razon: razon.toUpperCase(),
+            telefono: telefono.toUpperCase(),
+            obraSocial: obraSocial.toUpperCase(),
+            domicilio: domicilio.toUpperCase(),
+            tipoIngreso,
+            ambulancia: ambulancia.toUpperCase(),
+            departamento: departamento.toUpperCase(),
+            token: API_TOKEN
+        };
+
+        if (isOnline()) {
+            enviarRegistro(registro);
+        } else {
+            guardarPendiente(registro);
+            mostrarToast('Guardado localmente (sin conexión)');
+        }
+    });
+
+    async function enviarRegistro(registro) {
+        try {
+            const res = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(registro),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await res.json();
+            if (data.result === 'success') {
+                mostrarToast('Registro guardado exitosamente');
+                limpiarFormulario();
+            } else {
+                throw new Error(data.error || 'Error del servidor');
+            }
+        } catch (err) {
+            console.error(err);
+            guardarPendiente(registro);
+            mostrarToast('Error al enviar. Guardado como pendiente.', 'error');
+        }
+    }
+
+    function guardarPendiente(registro) {
+        pendingRecords.push({ ...registro, timestamp: Date.now() });
+        localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+        actualizarListaPendientes();
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('nombre').value = '';
+        document.getElementById('dni').value = '';
+        document.getElementById('nacimiento').value = '';
+        document.getElementById('edadDisplay').textContent = '—';
+        document.getElementById('razon').value = '';
+        document.getElementById('contadorRazon').textContent = '0/50';
+        document.getElementById('telefono').value = ''; document.getElementById('telefono').disabled = false;
+        document.getElementById('sinTelefono').checked = false;
+        document.getElementById('obraSocial').value = ''; document.getElementById('obraSocial').disabled = false;
+        document.getElementById('sinObraSocial').checked = false;
+        document.getElementById('domicilio').value = ''; document.getElementById('domicilio').disabled = false;
+        document.getElementById('sinDomicilio').checked = false;
+        document.querySelector('input[value="Ambulatorio"]').checked = true;
+        document.getElementById('seccionAmbulancia').style.display = 'none';
+        document.getElementById('ambulanciaNombre').value = '';
+        document.getElementById('ambulanciaInterior').checked = false;
+        document.getElementById('grupoDepartamento').style.display = 'none';
+        document.getElementById('departamento').value = '';
+    }
+
+    document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
+
+    function actualizarListaPendientes() {
+        const cont = document.getElementById('listaPendientes');
+        cont.innerHTML = '';
+        if (pendingRecords.length === 0) {
+            cont.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:1rem;"><i class="fas fa-check-circle"></i> No hay registros pendientes</p>';
+            actualizarContadorPendientes();
+            return;
+        }
+        pendingRecords.forEach((r, idx) => {
+            const div = document.createElement('div');
+            div.className = 'pending-item';
+            div.innerHTML = `
+                <div>
+                    <strong>${r.nombre}</strong> · DNI ${r.dni}<br>
+                    <small style="color:#64748b;">${r.fecha} ${r.hora} — ${r.razon}</small>
+                </div>
+                <button class="btn btn-danger btn-sm" data-index="${idx}"><i class="fas fa-trash"></i></button>`;
+            div.querySelector('button').addEventListener('click', () => {
+                if (confirm('¿Eliminar este registro pendiente?')) {
+                    pendingRecords.splice(idx, 1);
+                    localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+                    actualizarListaPendientes();
+                    mostrarToast('Registro eliminado');
+                }
+            });
+            cont.appendChild(div);
+        });
+        actualizarContadorPendientes();
+    }
+
+    document.getElementById('btnVerPendientes').addEventListener('click', () => {
+        document.getElementById('formCard').classList.add('hidden');
+        document.getElementById('panelPendientes').classList.remove('hidden');
+        actualizarListaPendientes();
+    });
+
+    document.getElementById('btnCerrarPendientes').addEventListener('click', () => {
+        document.getElementById('panelPendientes').classList.add('hidden');
+        document.getElementById('formCard').classList.remove('hidden');
+    });
+
+    document.getElementById('btnClearAll').addEventListener('click', () => {
+        if (pendingRecords.length === 0) return;
+        if (confirm('¿Eliminar TODOS los registros pendientes? Esta acción no se puede deshacer.')) {
+            pendingRecords = [];
+            localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+            actualizarListaPendientes();
+            mostrarToast('Todos los pendientes fueron eliminados');
+        }
+    });
+
+    document.getElementById('btnSyncAll').addEventListener('click', async () => {
+        if (!isOnline()) return mostrarToast('No hay conexión a internet', 'error');
+        if (pendingRecords.length === 0) return mostrarToast('No hay registros para sincronizar');
+        const syncBtn = document.getElementById('btnSyncAll');
+        syncBtn.disabled = true;
+        syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
+        let exitos = 0;
+        const fallidos = [];
+        for (const registro of pendingRecords) {
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(registro),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.result === 'success') exitos++;
+                else fallidos.push(registro);
+            } catch (e) {
+                fallidos.push(registro);
+            }
+        }
+        pendingRecords = fallidos;
+        localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+        actualizarListaPendientes();
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar todos';
+        mostrarToast(`Sincronización finalizada: ${exitos} exitosos, ${fallidos.length} pendientes`);
+    });
+
+    window.addEventListener('online', () => {
+        document.getElementById('offlineBanner').style.display = 'none';
+        if (pendingRecords.length > 0) {
+            mostrarToast('Conexión restablecida. Tiene registros pendientes para sincronizar.');
+        }
+    });
+    window.addEventListener('offline', () => {
+        document.getElementById('offlineBanner').style.display = 'block';
+    });
+    if (!isOnline()) {
+        document.getElementById('offlineBanner').style.display = 'block';
+    }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker registrado'))
+                .catch(err => console.error('Error SW:', err));
+        });
+    }
+
+    actualizarListaPendientes();
+</script>
+</body>
+</html>
