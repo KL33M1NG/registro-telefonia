@@ -104,6 +104,7 @@
         .btn-warning { background: linear-gradient(135deg, #d69e2e, #ecc94b); color: #1a202c; }
         .btn-danger { background: linear-gradient(135deg, #e53e3e, #fc8181); }
         .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
+        .btn-green { background: linear-gradient(135deg, #0d9488, #14b8a6); }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reanimation-section {
@@ -123,13 +124,6 @@
         .age-display.calculated {
             border-color: var(--success); background: linear-gradient(135deg, rgba(56,161,105,0.08), rgba(72,187,120,0.12));
             color: var(--success);
-        }
-
-        /* CONSULTA - MÁS GRANDE */
-        .history-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
         }
         .history-list {
             max-height: 600px;
@@ -158,99 +152,45 @@
             border-left-width: 5px;
             background: linear-gradient(135deg, rgba(220,38,38,0.03), rgba(239,68,68,0.06));
         }
-        .history-item:hover {
-            transform: translateX(3px);
-            box-shadow: var(--shadow);
-        }
-        .history-item .info-paciente {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-        .history-item .info-paciente strong {
-            font-size: 1.1rem;
-            color: var(--primary);
-        }
+        .history-item:hover { transform: translateX(3px); box-shadow: var(--shadow); }
+        .history-item .info-paciente { display: flex; flex-direction: column; gap: 0.4rem; }
+        .history-item .info-paciente strong { font-size: 1.1rem; color: var(--primary); }
         .history-item .info-paciente .detalle {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
+            color: var(--text-secondary); font-size: 0.9rem;
+            display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
         }
         .history-item .info-paciente .extra {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
+            color: var(--text-secondary); font-size: 0.85rem;
+            display: flex; flex-wrap: wrap; gap: 1rem;
         }
         .badge-reanimation {
-            background: var(--reanimation-red);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 2rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            animation: pulseBadge 2s infinite;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
+            background: var(--reanimation-red); color: white;
+            padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700;
+            text-transform: uppercase; animation: pulseBadge 2s infinite;
+            display: inline-flex; align-items: center; gap: 0.3rem;
         }
         @keyframes pulseBadge { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
         .search-box {
-            display: flex;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-            background: var(--input-bg);
-            padding: 1rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
+            display: flex; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
+            background: var(--input-bg); padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border);
         }
-        .search-box input {
-            flex: 1;
-            min-width: 250px;
-            padding: 0.8rem 1.2rem;
-            border-radius: 2rem;
-            font-size: 1rem;
-        }
-        .search-box select {
-            width: auto;
-            min-width: 180px;
-            padding: 0.8rem 1.2rem;
-            border-radius: 2rem;
-            font-size: 1rem;
-        }
+        .search-box input { flex: 1; min-width: 250px; padding: 0.8rem 1.2rem; border-radius: 2rem; font-size: 1rem; }
+        .search-box select { width: auto; min-width: 180px; padding: 0.8rem 1.2rem; border-radius: 2rem; font-size: 1rem; }
         .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem; margin-bottom: 1.5rem;
         }
         .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 1rem;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 1rem; text-align: center; box-shadow: var(--shadow-sm);
         }
         .stat-card .stat-number { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
         .stat-card .stat-label { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
         .stat-card.reanimacion-stat { border-color: var(--reanimation-red); }
         .stat-card.reanimacion-stat .stat-number { color: var(--reanimation-red); }
-
         .pending-list {
-            max-height: 450px;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 0.8rem;
-            background: var(--input-bg);
+            max-height: 450px; overflow-y: auto; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 0.8rem; background: var(--input-bg);
         }
         .toast {
             position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: white;
@@ -268,12 +208,8 @@
         }
         .loading-spinner { text-align: center; padding: 3rem; }
         .loading-spinner i { font-size: 3rem; color: var(--accent); }
-        .result-count {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
+        .result-count { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500; }
+        .load-more-container { text-align: center; margin-top: 1.5rem; }
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .card { padding: 1.5rem; }
@@ -281,7 +217,6 @@
             .history-item .info-paciente .detalle { flex-direction: column; gap: 0.3rem; }
             .history-item .info-paciente .extra { flex-direction: column; gap: 0.3rem; }
         }
-        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
     </style>
 </head>
 <body>
@@ -305,187 +240,86 @@
 </header>
 
 <div class="container">
-    <!-- ========== FORMULARIO DE CARGA ========== -->
+    <!-- FORMULARIO DE CARGA (resumido) -->
     <div class="card" id="formCard">
         <div class="card-header"><i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · TELEFONÍA</div>
         <div class="hospital-badge"><i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias</div>
-
         <div class="form-grid">
-            <div class="field-group">
-                <label><i class="far fa-calendar-alt"></i> Fecha</label>
-                <input type="text" id="fecha" readonly>
-            </div>
-            <div class="field-group">
-                <label><i class="far fa-clock"></i> Hora</label>
-                <input type="text" id="hora" readonly>
-            </div>
-
+            <div class="field-group"><label><i class="far fa-calendar-alt"></i> Fecha</label><input type="text" id="fecha" readonly></div>
+            <div class="field-group"><label><i class="far fa-clock"></i> Hora</label><input type="text" id="hora" readonly></div>
             <div class="field-group full-width">
                 <label><i class="fas fa-truck-medical"></i> Tipo de ingreso</label>
                 <div class="radio-group">
-                    <div class="radio-item">
-                        <input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked>
-                        <label for="tipoAmbulatorio">🚶 Ambulatorio</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia">
-                        <label for="tipoAmbulancia">🚑 Ambulancia</label>
-                    </div>
+                    <div class="radio-item"><input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked><label for="tipoAmbulatorio">🚶 Ambulatorio</label></div>
+                    <div class="radio-item"><input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia"><label for="tipoAmbulancia">🚑 Ambulancia</label></div>
                 </div>
             </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
-                <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
-            </div>
-            <div class="field-group">
-                <label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label>
-                <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-cake-candles"></i> Fecha de Nacimiento <span class="required">*</span></label>
-                <input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" style="flex:1;" autocomplete="off">
-            </div>
-            <div class="field-group">
-                <label><i class="fas fa-calculator"></i> Edad (automática)</label>
-                <div class="age-display" id="edadDisplay">—</div>
-            </div>
-
-            <div class="field-group full-width">
-                <label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label>
-                <textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea>
-                <span class="counter" id="contadorRazon">0/50</span>
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-phone"></i> Teléfono</label>
-                <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Solo números">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="sinTelefono">
-                    <label for="sinTelefono">Sin teléfono</label>
-                </div>
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-hospital"></i> Obra Social</label>
-                <input type="text" id="obraSocial" style="text-transform: uppercase;" placeholder="NOMBRE DE OBRA SOCIAL">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="sinObraSocial">
-                    <label for="sinObraSocial">Sin obra social</label>
-                </div>
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-map-marker-alt"></i> Domicilio</label>
-                <input type="text" id="domicilio" style="text-transform: uppercase;" placeholder="DIRECCIÓN COMPLETA">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="sinDomicilio">
-                    <label for="sinDomicilio">Sin domicilio</label>
-                </div>
-            </div>
-
-            <!-- Sección ambulancia -->
-            <div class="full-width" id="seccionAmbulancia" style="display: none;">
+            <div class="field-group"><label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label><input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform:uppercase;" autocomplete="off"></div>
+            <div class="field-group"><label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label><input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></div>
+            <div class="field-group"><label><i class="fas fa-cake-candles"></i> Fecha Nac. <span class="required">*</span></label><input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off"></div>
+            <div class="field-group"><label><i class="fas fa-calculator"></i> Edad</label><div class="age-display" id="edadDisplay">—</div></div>
+            <div class="field-group full-width"><label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label><textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO (MÁX. 50)" style="text-transform:uppercase;"></textarea><span class="counter" id="contadorRazon">0/50</span></div>
+            <div class="field-group"><label><i class="fas fa-phone"></i> Teléfono</label><input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"><div class="checkbox-group"><input type="checkbox" id="sinTelefono"><label for="sinTelefono">Sin teléfono</label></div></div>
+            <div class="field-group"><label><i class="fas fa-hospital"></i> Obra Social</label><input type="text" id="obraSocial" style="text-transform:uppercase;"><div class="checkbox-group"><input type="checkbox" id="sinObraSocial"><label for="sinObraSocial">Sin obra social</label></div></div>
+            <div class="field-group"><label><i class="fas fa-map-marker-alt"></i> Domicilio</label><input type="text" id="domicilio" style="text-transform:uppercase;"><div class="checkbox-group"><input type="checkbox" id="sinDomicilio"><label for="sinDomicilio">Sin domicilio</label></div></div>
+            <div class="full-width" id="seccionAmbulancia" style="display:none;">
                 <div class="section-separator"></div>
                 <div class="form-grid">
-                    <div class="field-group">
-                        <label><i class="fas fa-ambulance"></i> Ambulancia que traslada</label>
-                        <input type="text" id="ambulanciaNombre" style="text-transform: uppercase;" placeholder="Nombre o empresa">
-                    </div>
-                    <div class="field-group" style="align-self: center;">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="ambulanciaInterior">
-                            <label for="ambulanciaInterior">Proviene del interior</label>
-                        </div>
-                    </div>
-                    <div class="field-group full-width" id="grupoDepartamento" style="display: none;">
-                        <label><i class="fas fa-map"></i> Departamento</label>
-                        <select id="departamento">
-                            <option value="">Seleccione un departamento...</option>
-                            <option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option>
-                            <option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option>
-                            <option>CAPAYÁN</option><option>EL ALTO</option>
-                            <option>FRAY MAMERTO ESQUIÚ</option>
-                            <option>LA PAZ</option><option>PACLÍN</option>
-                            <option>POMÁN</option><option>SANTA MARÍA</option>
-                            <option>SANTA ROSA</option><option>TINOGASTA</option>
-                            <option>VALLE VIEJO</option>
-                        </select>
-                    </div>
-                    <!-- REANIMACIÓN -->
-                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display: none;">
+                    <div class="field-group"><label><i class="fas fa-ambulance"></i> Ambulancia</label><input type="text" id="ambulanciaNombre" style="text-transform:uppercase;"></div>
+                    <div class="field-group" style="align-self:center;"><div class="checkbox-group"><input type="checkbox" id="ambulanciaInterior"><label for="ambulanciaInterior">Proviene del interior</label></div></div>
+                    <div class="field-group full-width" id="grupoDepartamento" style="display:none;"><label><i class="fas fa-map"></i> Departamento</label><select id="departamento"><option value="">Seleccione...</option><option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option><option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option><option>CAPAYÁN</option><option>EL ALTO</option><option>FRAY MAMERTO ESQUIÚ</option><option>LA PAZ</option><option>PACLÍN</option><option>POMÁN</option><option>SANTA MARÍA</option><option>SANTA ROSA</option><option>TINOGASTA</option><option>VALLE VIEJO</option></select></div>
+                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display:none;">
                         <label><i class="fas fa-heart-pulse"></i> ¿ES REANIMACIÓN?</label>
-                        <div class="radio-group" style="border-color: rgba(220,38,38,0.3);">
-                            <div class="radio-item">
-                                <input type="radio" id="reanimacionSi" name="esReanimacion" value="SI">
-                                <label for="reanimacionSi" style="color: var(--reanimation-red); font-weight: 700;">⚠️ SÍ - REANIMACIÓN</label>
-                            </div>
-                            <div class="radio-item">
-                                <input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked>
-                                <label for="reanimacionNo">NO</label>
-                            </div>
-                        </div>
+                        <div class="radio-group"><div class="radio-item"><input type="radio" id="reanimacionSi" name="esReanimacion" value="SI"><label for="reanimacionSi" style="color:var(--reanimation-red);font-weight:700;">⚠️ SÍ</label></div><div class="radio-item"><input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked><label for="reanimacionNo">NO</label></div></div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem;border-top:1px solid var(--border);padding-top:1.5rem;">
+            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
         </div>
     </div>
 
-    <!-- ========== CONSULTA (MÁS GRANDE) ========== -->
+    <!-- CONSULTA -->
     <div class="card hidden" id="historyCard">
         <div class="card-header">
-            <i class="fas fa-database"></i> CONSULTA DE REGISTROS · GOOGLE SHEETS
-            <span style="margin-left: auto; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);">
+            <i class="fas fa-database"></i> CONSULTA · GOOGLE SHEETS
+            <span style="margin-left:auto;font-size:0.85rem;font-weight:500;color:var(--text-secondary);">
                 <i class="fas fa-sort-amount-down"></i> Más recientes primero
             </span>
         </div>
-
-        <!-- Estadísticas -->
         <div class="stats-bar" id="statsBar">
-            <div class="stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Total Registros</div></div>
+            <div class="stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Total</div></div>
             <div class="stat-card"><div class="stat-number" id="statAmbulatorio">-</div><div class="stat-label">Ambulatorio</div></div>
             <div class="stat-card"><div class="stat-number" id="statAmbulancia">-</div><div class="stat-label">Ambulancia</div></div>
             <div class="stat-card reanimacion-stat"><div class="stat-number" id="statReanimacion">-</div><div class="stat-label">Reanimación</div></div>
         </div>
-
-        <!-- Buscador -->
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar por nombre, DNI, razón, fecha...">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar... (automático al escribir)">
             <select id="searchFilter">
-                <option value="todos">Todos los campos</option>
-                <option value="nombre">Nombre</option>
-                <option value="dni">DNI</option>
-                <option value="razon">Razón</option>
-                <option value="fecha">Fecha (dd/mm/aaaa)</option>
+                <option value="todos">Todos</option><option value="nombre">Nombre</option><option value="dni">DNI</option><option value="razon">Razón</option><option value="fecha">Fecha</option>
             </select>
             <button class="btn btn-info btn-sm" id="btnSearch"><i class="fas fa-search"></i> Buscar</button>
             <button class="btn btn-success btn-sm" id="btnRefreshHistory"><i class="fas fa-sync-alt"></i> Actualizar</button>
+            <button class="btn btn-green btn-sm" id="btnOpenExcel"><i class="fas fa-file-excel"></i> Ver Excel</button>
         </div>
-
         <div class="result-count" id="resultCount"></div>
-
-        <!-- Lista de resultados más grande -->
         <div class="history-list" id="historyList">
-            <div class="loading-spinner" id="historyLoading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 1rem;">Cargando últimos registros desde Google Sheets...</p>
-            </div>
+            <div class="loading-spinner" id="historyLoading"><i class="fas fa-spinner fa-spin"></i><p style="margin-top:1rem;">Cargando...</p></div>
+        </div>
+        <div class="load-more-container" id="loadMoreContainer" style="display:none;">
+            <button class="btn btn-info" id="btnLoadMore"><i class="fas fa-chevron-down"></i> Cargar más registros</button>
         </div>
     </div>
 
-    <!-- ========== PENDIENTES ========== -->
+    <!-- PENDIENTES -->
     <div class="card hidden" id="panelPendientes">
-        <div class="card-header"><i class="fas fa-cloud-upload-alt"></i> Registros pendientes de sincronizar</div>
+        <div class="card-header"><i class="fas fa-cloud-upload-alt"></i> Pendientes</div>
         <div id="listaPendientes" class="pending-list"></div>
-        <div style="margin-top: 1.2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar todos</button>
-            <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar todos</button>
+        <div style="margin-top:1.2rem;display:flex;gap:1rem;">
+            <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar</button>
+            <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar</button>
         </div>
     </div>
 </div>
@@ -493,23 +327,26 @@
 <div id="toastContainer"></div>
 
 <script>
-    // ========== CONFIGURACIÓN SEGURA ==========
+    // CONFIG
     (function() {
         var _u = 'https://script.google.com/macros/s/AKfycbxON0o9XLdUWMr8bQPy40hhJbV3NDL7chuwYQVomEAZWxI9wJZ7Lkq_W35haq2huUWccg/exec';
         var _t = '226452K@rko932566258233karko';
         var dominioActual = window.location.hostname;
         var dominiosValidos = ['kl33m1ng.github.io', 'localhost', '127.0.0.1'];
         var dominioValido = dominiosValidos.some(function(d) { return dominioActual.indexOf(d) !== -1; });
-        if (!dominioValido) { _u = ''; _t = ''; console.warn('Dominio no autorizado'); }
+        if (!dominioValido) { _u = ''; _t = ''; }
         window.APPS_SCRIPT_URL = _u;
         window.API_TOKEN = _t;
+        window.SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1so9KibE-xbkPjcYYkuy6iESYMC1h9u3JKvh6CnxvXRM/edit';
     })();
 
-    // ========== ESTADO ==========
     var pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
+    var currentOffset = 0;
+    var currentLimit = 50;
+    var totalRegistros = 0;
     function isOnline() { return navigator.onLine; }
 
-    // ========== MODO OSCURO ==========
+    // MODO OSCURO
     var themeToggle = document.getElementById('themeToggle');
     var themeLabel = document.getElementById('themeLabel');
     var themeIcon = themeToggle.querySelector('i');
@@ -524,117 +361,67 @@
         themeLabel.textContent = isDark ? 'Claro' : 'Oscuro';
     });
 
-    // ========== NAVEGACIÓN ==========
+    // NAVEGACIÓN
     var formCard = document.getElementById('formCard');
     var historyCard = document.getElementById('historyCard');
     var panelPendientes = document.getElementById('panelPendientes');
-    var btnNavForm = document.getElementById('btnNavForm');
-    var btnNavHistory = document.getElementById('btnNavHistory');
-    var btnNavPending = document.getElementById('btnNavPending');
-
     function mostrarSeccion(s) {
-        formCard.classList.add('hidden');
-        historyCard.classList.add('hidden');
-        panelPendientes.classList.add('hidden');
-        btnNavForm.classList.remove('active');
-        btnNavHistory.classList.remove('active');
-        btnNavPending.classList.remove('active');
-        if (s === 'form') { formCard.classList.remove('hidden'); btnNavForm.classList.add('active'); }
-        if (s === 'history') {
-            historyCard.classList.remove('hidden');
-            btnNavHistory.classList.add('active');
-            cargarUltimosRegistros();
-        }
-        if (s === 'pending') { panelPendientes.classList.remove('hidden'); btnNavPending.classList.add('active'); actualizarListaPendientes(); }
+        formCard.classList.add('hidden'); historyCard.classList.add('hidden'); panelPendientes.classList.add('hidden');
+        document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+        if (s === 'form') { formCard.classList.remove('hidden'); document.getElementById('btnNavForm').classList.add('active'); }
+        if (s === 'history') { historyCard.classList.remove('hidden'); document.getElementById('btnNavHistory').classList.add('active'); cargarUltimosRegistros(); }
+        if (s === 'pending') { panelPendientes.classList.remove('hidden'); document.getElementById('btnNavPending').classList.add('active'); actualizarListaPendientes(); }
     }
+    document.getElementById('btnNavForm').addEventListener('click', function() { mostrarSeccion('form'); });
+    document.getElementById('btnNavHistory').addEventListener('click', function() { mostrarSeccion('history'); });
+    document.getElementById('btnNavPending').addEventListener('click', function() { mostrarSeccion('pending'); });
 
-    btnNavForm.addEventListener('click', function() { mostrarSeccion('form'); });
-    btnNavHistory.addEventListener('click', function() { mostrarSeccion('history'); });
-    btnNavPending.addEventListener('click', function() { mostrarSeccion('pending'); });
-
-    // ========== RELOJ ==========
+    // RELOJ
     function actualizarReloj() {
         var ahora = new Date();
-        var dia = String(ahora.getDate()).padStart(2, '0');
-        var mes = String(ahora.getMonth() + 1).padStart(2, '0');
-        var anio = ahora.getFullYear();
-        var h = ahora.getHours();
-        var m = String(ahora.getMinutes()).padStart(2, '0');
-        var s = String(ahora.getSeconds()).padStart(2, '0');
-        document.getElementById('fecha').value = dia + '/' + mes + '/' + anio;
-        document.getElementById('hora').value = h + ':' + m + ':' + s;
+        document.getElementById('fecha').value = String(ahora.getDate()).padStart(2,'0')+'/'+String(ahora.getMonth()+1).padStart(2,'0')+'/'+ahora.getFullYear();
+        document.getElementById('hora').value = ahora.getHours()+':'+String(ahora.getMinutes()).padStart(2,'0')+':'+String(ahora.getSeconds()).padStart(2,'0');
     }
-    setInterval(actualizarReloj, 1000);
-    actualizarReloj();
+    setInterval(actualizarReloj, 1000); actualizarReloj();
 
-    // ========== TOAST ==========
-    function mostrarToast(mensaje, tipo) {
-        tipo = tipo || 'info';
-        var cont = document.getElementById('toastContainer');
-        var toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.style.background = tipo === 'error' ? '#e53e3e' : '#2b6cb0';
-        toast.innerHTML = '<i class="fas fa-' + (tipo === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + mensaje;
-        cont.appendChild(toast);
-        setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(function() { toast.remove(); }, 300); }, 3500);
+    // TOAST
+    function mostrarToast(m, t) {
+        var c = document.getElementById('toastContainer');
+        var d = document.createElement('div'); d.className = 'toast';
+        d.style.background = t === 'error' ? '#e53e3e' : '#2b6cb0';
+        d.innerHTML = '<i class="fas fa-' + (t === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + m;
+        c.appendChild(d);
+        setTimeout(function() { d.style.opacity = '0'; d.style.transition = 'opacity 0.3s'; setTimeout(function() { d.remove(); }, 300); }, 3500);
     }
 
-    // ========== FORMATO FECHA + EDAD AUTOMÁTICA ==========
+    // FECHA + EDAD
     document.getElementById('nacimiento').addEventListener('input', function(e) {
-        var val = e.target.value.replace(/\D/g, '');
-        if (val.length > 8) val = val.slice(0, 8);
-        var formatted = '';
-        if (val.length > 4) formatted = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
-        else if (val.length > 2) formatted = val.slice(0, 2) + '/' + val.slice(2);
-        else formatted = val;
-        e.target.value = formatted;
-        if (formatted.length === 10 && /^\d{2}\/\d{2}\/\d{4}$/.test(formatted)) {
-            calcularEdadAutomatica(formatted);
-        } else if (formatted.length < 10) {
-            document.getElementById('edadDisplay').textContent = '—';
-            document.getElementById('edadDisplay').classList.remove('calculated');
-        }
+        var val = e.target.value.replace(/\D/g, '').slice(0, 8);
+        var f = '';
+        if (val.length > 4) f = val.slice(0,2)+'/'+val.slice(2,4)+'/'+val.slice(4);
+        else if (val.length > 2) f = val.slice(0,2)+'/'+val.slice(2);
+        else f = val;
+        e.target.value = f;
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(f)) {
+            var p = f.split('/'); var fn = new Date(p[2], p[1]-1, p[0]); var hoy = new Date();
+            if (fn.getDate() !== parseInt(p[0]) || fn.getMonth() !== parseInt(p[1])-1 || fn > hoy) { document.getElementById('edadDisplay').textContent = 'Inválida'; return; }
+            var edad = hoy.getFullYear() - fn.getFullYear();
+            if (hoy.getMonth() < fn.getMonth() || (hoy.getMonth() === fn.getMonth() && hoy.getDate() < fn.getDate())) edad--;
+            document.getElementById('edadDisplay').textContent = edad + ' años';
+            document.getElementById('edadDisplay').classList.add('calculated');
+        } else { document.getElementById('edadDisplay').textContent = '—'; document.getElementById('edadDisplay').classList.remove('calculated'); }
     });
-
-    function calcularEdadAutomatica(valor) {
-        var partes = valor.split('/');
-        var d = parseInt(partes[0]), m = parseInt(partes[1]), a = parseInt(partes[2]);
-        var fechaNac = new Date(a, m - 1, d);
-        var hoy = new Date();
-        if (fechaNac.getDate() !== d || fechaNac.getMonth() !== m - 1 || fechaNac.getFullYear() !== a || fechaNac > hoy) {
-            document.getElementById('edadDisplay').textContent = 'Fecha inválida';
-            document.getElementById('edadDisplay').classList.remove('calculated');
-            return;
-        }
-        var edad = hoy.getFullYear() - fechaNac.getFullYear();
-        var mes = hoy.getMonth() - fechaNac.getMonth();
-        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
-        if (edad < 0 || edad > 120) {
-            document.getElementById('edadDisplay').textContent = 'Fuera de rango';
-            document.getElementById('edadDisplay').classList.remove('calculated');
-            return;
-        }
-        document.getElementById('edadDisplay').textContent = edad + ' años';
-        document.getElementById('edadDisplay').classList.add('calculated');
-    }
-
-    document.getElementById('razon').addEventListener('input', function(e) {
-        document.getElementById('contadorRazon').textContent = e.target.value.length + '/50';
-    });
-
-    function configurarToggle(checkboxId, fieldId) {
-        document.getElementById(checkboxId).addEventListener('change', function() {
-            var field = document.getElementById(fieldId);
-            if (this.checked) { field.value = 'NN'; field.disabled = true; field.style.background = 'var(--border)'; }
-            else { field.value = ''; field.disabled = false; field.style.background = ''; }
+    document.getElementById('razon').addEventListener('input', function(e) { document.getElementById('contadorRazon').textContent = e.target.value.length + '/50'; });
+    function configurarToggle(cb, f) {
+        document.getElementById(cb).addEventListener('change', function() {
+            var el = document.getElementById(f);
+            if (this.checked) { el.value = 'NN'; el.disabled = true; el.style.background = 'var(--border)'; }
+            else { el.value = ''; el.disabled = false; el.style.background = ''; }
         });
     }
-    configurarToggle('sinTelefono', 'telefono');
-    configurarToggle('sinObraSocial', 'obraSocial');
-    configurarToggle('sinDomicilio', 'domicilio');
-
-    document.querySelectorAll('input[name="tipoIngreso"]').forEach(function(radio) {
-        radio.addEventListener('change', function() {
+    configurarToggle('sinTelefono', 'telefono'); configurarToggle('sinObraSocial', 'obraSocial'); configurarToggle('sinDomicilio', 'domicilio');
+    document.querySelectorAll('input[name="tipoIngreso"]').forEach(function(r) {
+        r.addEventListener('change', function() {
             var a = this.value === 'Ambulancia';
             document.getElementById('seccionAmbulancia').style.display = a ? 'block' : 'none';
             document.getElementById('seccionReanimacion').style.display = a ? 'block' : 'none';
@@ -645,207 +432,177 @@
         document.getElementById('ambulanciaNombre').style.display = this.checked ? 'none' : 'block';
     });
 
-    // ========== GUARDAR ==========
+    // GUARDAR
     document.getElementById('btnGuardar').addEventListener('click', function() {
         var nombre = document.getElementById('nombre').value.trim();
         var dni = document.getElementById('dni').value.trim();
-        var nacimiento = document.getElementById('nacimiento').value.trim();
-        var edadTexto = document.getElementById('edadDisplay').textContent;
+        var nac = document.getElementById('nacimiento').value.trim();
+        var edad = document.getElementById('edadDisplay').textContent;
         var razon = document.getElementById('razon').value.trim();
-        if (!nombre) return mostrarToast('Complete Apellido y Nombre', 'error');
-        if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido (7-11 dígitos)', 'error');
-        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nacimiento)) return mostrarToast('Fecha de nacimiento incompleta', 'error');
-        if (edadTexto === '—' || edadTexto === 'Fecha inválida' || edadTexto === 'Fuera de rango') return mostrarToast('Fecha de nacimiento inválida', 'error');
-        if (!razon) return mostrarToast('Ingrese la razón de urgencia', 'error');
-        var telefono = document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '');
-        var obraSocial = document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '');
-        var domicilio = document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '');
-        var tipoIngreso = document.querySelector('input[name="tipoIngreso"]:checked').value;
-        var ambulancia = '', departamento = '', esReanimacion = 'NO';
-        if (tipoIngreso === 'Ambulancia') {
-            esReanimacion = document.querySelector('input[name="esReanimacion"]:checked').value;
-            if (document.getElementById('ambulanciaInterior').checked) {
-                departamento = document.getElementById('departamento').value; ambulancia = departamento;
-                if (!departamento) return mostrarToast('Seleccione un departamento', 'error');
-            } else {
-                ambulancia = document.getElementById('ambulanciaNombre').value.trim();
-                if (!ambulancia) return mostrarToast('Ingrese el nombre de la ambulancia', 'error');
-            }
+        if (!nombre) return mostrarToast('Complete Nombre', 'error');
+        if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido', 'error');
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nac)) return mostrarToast('Fecha incompleta', 'error');
+        if (edad === '—' || edad === 'Inválida') return mostrarToast('Fecha inválida', 'error');
+        if (!razon) return mostrarToast('Ingrese razón', 'error');
+        var tipo = document.querySelector('input[name="tipoIngreso"]:checked').value;
+        var amb = '', dep = '', rea = 'NO';
+        if (tipo === 'Ambulancia') {
+            rea = document.querySelector('input[name="esReanimacion"]:checked').value;
+            if (document.getElementById('ambulanciaInterior').checked) { dep = document.getElementById('departamento').value; amb = dep; if (!dep) return mostrarToast('Seleccione departamento', 'error'); }
+            else { amb = document.getElementById('ambulanciaNombre').value.trim(); if (!amb) return mostrarToast('Ingrese ambulancia', 'error'); }
         }
-        var registro = {
+        var reg = {
             fecha: document.getElementById('fecha').value, hora: document.getElementById('hora').value,
-            nombre: nombre.toUpperCase(), dni: dni, nacimiento: nacimiento, edad: edadTexto.replace(' años', ''),
-            razon: razon.toUpperCase(), telefono: telefono.toUpperCase(), obraSocial: obraSocial.toUpperCase(),
-            domicilio: domicilio.toUpperCase(), tipoIngreso: tipoIngreso, ambulancia: ambulancia.toUpperCase(),
-            departamento: departamento.toUpperCase(), esReanimacion: esReanimacion, token: window.API_TOKEN
+            nombre: nombre.toUpperCase(), dni: dni, nacimiento: nac, edad: edad.replace(' años',''),
+            razon: razon.toUpperCase(),
+            telefono: (document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '')).toUpperCase(),
+            obraSocial: (document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '')).toUpperCase(),
+            domicilio: (document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '')).toUpperCase(),
+            tipoIngreso: tipo, ambulancia: amb.toUpperCase(), departamento: dep.toUpperCase(), esReanimacion: rea, token: window.API_TOKEN
         };
-        if (isOnline() && window.APPS_SCRIPT_URL) enviarRegistro(registro);
-        else { guardarPendiente(registro); mostrarToast('Guardado localmente (sin conexión)'); }
+        if (isOnline() && window.APPS_SCRIPT_URL) {
+            fetch(window.APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(reg), headers: {'Content-Type':'application/json'}, mode:'no-cors' })
+                .then(function() { mostrarToast('Guardado'); limpiarFormulario(); })
+                .catch(function() { guardarPendiente(reg); mostrarToast('Error. Pendiente.', 'error'); });
+        } else { guardarPendiente(reg); mostrarToast('Sin conexión. Pendiente.'); }
     });
-
-    function enviarRegistro(registro) {
-        fetch(window.APPS_SCRIPT_URL, {
-            method: 'POST', body: JSON.stringify(registro),
-            headers: { 'Content-Type': 'application/json' }, mode: 'no-cors'
-        }).then(function() { mostrarToast('Registro guardado exitosamente'); limpiarFormulario(); })
-          .catch(function() { guardarPendiente(registro); mostrarToast('Error. Guardado pendiente.', 'error'); });
-    }
-    function enviarRegistroSinGuardar(registro) {
-        return fetch(window.APPS_SCRIPT_URL, {
-            method: 'POST', body: JSON.stringify(registro),
-            headers: { 'Content-Type': 'application/json' }, mode: 'no-cors'
-        });
-    }
-    function guardarPendiente(registro) {
-        pendingRecords.push({ ...registro, timestamp: Date.now() });
-        localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
-        actualizarListaPendientes();
-    }
+    function guardarPendiente(r) { pendingRecords.push({...r, timestamp: Date.now()}); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); }
     function limpiarFormulario() {
-        ['nombre','dni','nacimiento','razon','telefono','obraSocial','domicilio'].forEach(function(id) {
-            var el = document.getElementById(id); el.value = ''; el.disabled = false; el.style.background = '';
-        });
-        document.getElementById('edadDisplay').textContent = '—';
-        document.getElementById('edadDisplay').classList.remove('calculated');
+        ['nombre','dni','nacimiento','razon','telefono','obraSocial','domicilio'].forEach(function(id) { var el = document.getElementById(id); el.value = ''; el.disabled = false; el.style.background = ''; });
+        document.getElementById('edadDisplay').textContent = '—'; document.getElementById('edadDisplay').classList.remove('calculated');
         document.getElementById('contadorRazon').textContent = '0/50';
         ['sinTelefono','sinObraSocial','sinDomicilio'].forEach(function(id) { document.getElementById(id).checked = false; });
         document.querySelector('input[value="Ambulatorio"]').checked = true;
-        document.getElementById('seccionAmbulancia').style.display = 'none';
-        document.getElementById('seccionReanimacion').style.display = 'none';
-        document.getElementById('ambulanciaInterior').checked = false;
-        document.getElementById('grupoDepartamento').style.display = 'none';
+        document.getElementById('seccionAmbulancia').style.display = 'none'; document.getElementById('seccionReanimacion').style.display = 'none';
+        document.getElementById('ambulanciaInterior').checked = false; document.getElementById('grupoDepartamento').style.display = 'none';
         document.querySelector('input[value="NO"]').checked = true;
     }
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
 
-    // ========== PENDIENTES ==========
+    // PENDIENTES
     function actualizarListaPendientes() {
-        var cont = document.getElementById('listaPendientes'); cont.innerHTML = '';
-        if (!pendingRecords.length) { cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;">No hay pendientes</p>'; return; }
+        var c = document.getElementById('listaPendientes'); c.innerHTML = '';
+        if (!pendingRecords.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;">Sin pendientes</p>'; return; }
         pendingRecords.forEach(function(r, i) {
-            var div = document.createElement('div'); div.className = 'history-item';
-            if (r.esReanimacion === 'SI') div.classList.add('reanimation');
-            div.innerHTML = '<div class="info-paciente"><strong>' + r.nombre + '</strong> · DNI ' + r.dni + ' ' + (r.esReanimacion==='SI'?'<span class="badge-reanimation">REANIMACIÓN</span>':'') + '<div class="detalle">' + r.fecha + ' ' + r.hora + ' — ' + r.razon + '</div></div><button class="btn btn-danger btn-sm" data-idx="' + i + '"><i class="fas fa-trash"></i></button>';
-            div.querySelector('button').addEventListener('click', function() {
-                pendingRecords.splice(parseInt(this.getAttribute('data-idx')), 1);
-                localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
-                actualizarListaPendientes();
-            });
-            cont.appendChild(div);
+            var d = document.createElement('div'); d.className = 'history-item'; if (r.esReanimacion==='SI') d.classList.add('reanimation');
+            d.innerHTML = '<div class="info-paciente"><strong>'+r.nombre+'</strong> · DNI '+r.dni+' '+(r.esReanimacion==='SI'?'<span class="badge-reanimation">REANIMACIÓN</span>':'')+'<div class="detalle">'+r.fecha+' '+r.hora+' — '+r.razon+'</div></div><button class="btn btn-danger btn-sm" data-idx="'+i+'"><i class="fas fa-trash"></i></button>';
+            d.querySelector('button').addEventListener('click', function() { pendingRecords.splice(parseInt(this.getAttribute('data-idx')),1); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); });
+            c.appendChild(d);
         });
     }
-    document.getElementById('btnClearAll').addEventListener('click', function() {
-        if (!pendingRecords.length) return;
-        if (confirm('¿Eliminar TODOS?')) { pendingRecords = []; localStorage.setItem('pendingRecords', '[]'); actualizarListaPendientes(); }
-    });
+    document.getElementById('btnClearAll').addEventListener('click', function() { if (pendingRecords.length && confirm('¿Eliminar todos?')) { pendingRecords = []; localStorage.setItem('pendingRecords','[]'); actualizarListaPendientes(); } });
     document.getElementById('btnSyncAll').addEventListener('click', function() {
-        if (!isOnline()) return mostrarToast('Sin conexión', 'error');
+        if (!isOnline()) return mostrarToast('Sin conexión','error');
         if (!pendingRecords.length) return;
         var btn = document.getElementById('btnSyncAll'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        var exitos = 0, fallidos = [];
+        var ok = 0, fail = [];
         Promise.all(pendingRecords.map(function(r) {
-            return enviarRegistroSinGuardar(r).then(function() { exitos++; }).catch(function() { fallidos.push(r); });
+            return fetch(window.APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(r), headers: {'Content-Type':'application/json'}, mode:'no-cors' })
+                .then(function() { ok++; }).catch(function() { fail.push(r); });
         })).then(function() {
-            pendingRecords = fallidos; localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
+            pendingRecords = fail; localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords));
             actualizarListaPendientes(); btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sincronizar';
-            mostrarToast(exitos + ' ok, ' + fallidos.length + ' pendientes');
+            mostrarToast(ok+' ok, '+fail.length+' pendientes');
         });
     });
 
-    // ========== CARGA AUTOMÁTICA DE ÚLTIMOS REGISTROS ==========
-    function cargarUltimosRegistros() {
-        var histDiv = document.getElementById('historyList');
-        var loading = document.getElementById('historyLoading');
-        if (loading) loading.style.display = 'block';
-        document.getElementById('resultCount').textContent = '';
-
-        var params = 'action=search&query=&filter=todos&token=' + encodeURIComponent(window.API_TOKEN);
-        var url = window.APPS_SCRIPT_URL + '?' + params;
-
-        fetch(url)
-            .then(function(res) { return res.json(); })
+    // CONSULTA CON PAGINACIÓN
+    function buscar(query, filter, offset, limit, append) {
+        if (!append) {
+            document.getElementById('historyList').innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
+            document.getElementById('loadMoreContainer').style.display = 'none';
+        }
+        var params = 'action=search&query='+encodeURIComponent(query)+'&filter='+encodeURIComponent(filter)+'&token='+encodeURIComponent(window.API_TOKEN)+'&offset='+offset+'&limit='+limit;
+        fetch(window.APPS_SCRIPT_URL+'?'+params)
+            .then(function(r) { return r.json(); })
             .then(function(data) {
-                if (loading) loading.style.display = 'none';
-                if (data.result !== 'success') throw new Error(data.error || 'Error');
-                mostrarResultados(data.data);
+                if (data.result !== 'success') throw new Error(data.error);
+                totalRegistros = data.total;
+                mostrarResultados(data.data, append);
+                document.getElementById('loadMoreContainer').style.display = (offset + limit < totalRegistros) ? 'block' : 'none';
             })
-            .catch(function(err) {
-                if (loading) loading.style.display = 'none';
-                document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;"><i class="fas fa-exclamation-triangle"></i> Error: ' + err.message + '</p>';
+            .catch(function(e) {
+                document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;">Error: '+e.message+'</p>';
             });
     }
 
-    function mostrarResultados(registros) {
-        var cont = document.getElementById('historyList');
-        cont.innerHTML = '';
-        document.getElementById('resultCount').textContent = registros.length + ' registro(s) encontrado(s)';
+    function cargarUltimosRegistros() {
+        currentOffset = 0; currentLimit = 50;
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchFilter').value = 'todos';
+        buscar('', 'todos', currentOffset, currentLimit, false);
+    }
 
-        if (!registros || registros.length === 0) {
-            cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">Sin resultados</p>';
-            actualizarEstadisticas([]);
-            return;
+    function mostrarResultados(registros, append) {
+        var cont = document.getElementById('historyList');
+        if (!append) { cont.innerHTML = ''; }
+        if (registros.length === 0 && !append) { cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">Sin resultados</p>'; return; }
+        document.getElementById('resultCount').textContent = 'Mostrando ' + (append ? currentOffset + registros.length : registros.length) + ' de ' + totalRegistros + ' registro(s)';
+        
+        // Estadísticas (solo en carga inicial)
+        if (!append) {
+            document.getElementById('statTotal').textContent = totalRegistros;
+            document.getElementById('statAmbulatorio').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulatorio'; }).length;
+            document.getElementById('statAmbulancia').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulancia'; }).length;
+            document.getElementById('statReanimacion').textContent = registros.filter(function(r) { return r.esReanimacion === 'SI'; }).length;
         }
 
-        actualizarEstadisticas(registros);
-
         registros.forEach(function(r) {
-            var div = document.createElement('div');
-            div.className = 'history-item';
-            if (r.esReanimacion === 'SI') div.classList.add('reanimation');
-            div.innerHTML = 
-                '<div class="info-paciente">' +
-                    '<strong>' + r.nombre + '</strong>' +
-                    '<div class="detalle">' +
-                        '<span>🆔 DNI: ' + r.dni + '</span>' +
-                        '<span>🎂 ' + r.edad + ' años</span>' +
-                        (r.esReanimacion === 'SI' ? '<span class="badge-reanimation"><i class="fas fa-heart-pulse"></i> REANIMACIÓN</span>' : '') +
-                    '</div>' +
-                    '<div class="detalle">' +
-                        '<span>📅 ' + r.fecha + ' · 🕒 ' + r.hora + '</span>' +
-                        '<span>❗ ' + r.razon + '</span>' +
-                        '<span>🚪 ' + r.tipoIngreso + (r.tipoIngreso === 'Ambulancia' ? ' · 🚑 ' + r.ambulancia : '') + '</span>' +
-                    '</div>' +
-                    '<div class="extra">' +
-                        '<span>📞 ' + r.telefono + '</span>' +
-                        '<span>🏥 ' + r.obraSocial + '</span>' +
-                        '<span>📍 ' + r.domicilio + '</span>' +
-                    '</div>' +
-                '</div>';
-            cont.appendChild(div);
+            var d = document.createElement('div'); d.className = 'history-item'; if (r.esReanimacion==='SI') d.classList.add('reanimation');
+            d.innerHTML = '<div class="info-paciente">' +
+                '<strong>'+r.nombre+'</strong>' +
+                '<div class="detalle"><span>🆔 '+r.dni+'</span><span>🎂 '+r.edad+' años</span>'+(r.esReanimacion==='SI'?'<span class="badge-reanimation"><i class="fas fa-heart-pulse"></i> REANIMACIÓN</span>':'')+'</div>' +
+                '<div class="detalle"><span>📅 '+r.fecha+' · 🕒 '+r.hora+'</span><span>❗ '+r.razon+'</span><span>🚪 '+r.tipoIngreso+(r.tipoIngreso==='Ambulancia'?' · 🚑 '+r.ambulancia:'')+'</span></div>' +
+                '<div class="extra"><span>📞 '+r.telefono+'</span><span>🏥 '+r.obraSocial+'</span><span>📍 '+r.domicilio+'</span></div></div>';
+            cont.appendChild(d);
         });
     }
 
-    function actualizarEstadisticas(registros) {
-        document.getElementById('statTotal').textContent = registros.length;
-        document.getElementById('statAmbulatorio').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulatorio'; }).length;
-        document.getElementById('statAmbulancia').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulancia'; }).length;
-        document.getElementById('statReanimacion').textContent = registros.filter(function(r) { return r.esReanimacion === 'SI'; }).length;
-    }
-
-    // Buscar
-    document.getElementById('btnSearch').addEventListener('click', function() {
+    // Botón "Cargar más"
+    document.getElementById('btnLoadMore').addEventListener('click', function() {
+        currentOffset += currentLimit;
         var query = document.getElementById('searchInput').value.trim();
         var filter = document.getElementById('searchFilter').value;
-        if (!query) return cargarUltimosRegistros();
-        var params = 'action=search&query=' + encodeURIComponent(query) + '&filter=' + encodeURIComponent(filter) + '&token=' + encodeURIComponent(window.API_TOKEN);
-        fetch(window.APPS_SCRIPT_URL + '?' + params)
-            .then(function(res) { return res.json(); })
-            .then(function(data) { if (data.result === 'success') mostrarResultados(data.data); })
-            .catch(function(err) { mostrarToast('Error al buscar', 'error'); });
+        this.disabled = true; this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+        buscar(query, filter, currentOffset, currentLimit, true);
+        var self = this;
+        setTimeout(function() { self.disabled = false; self.innerHTML = '<i class="fas fa-chevron-down"></i> Cargar más registros'; }, 1000);
     });
-    document.getElementById('searchInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('btnSearch').click(); });
+
+    // Búsqueda automática
+    var searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var q = e.target.value.trim();
+        searchTimeout = setTimeout(function() {
+            currentOffset = 0;
+            if (q.length >= 2 || q.length === 0) {
+                buscar(q, document.getElementById('searchFilter').value, 0, currentLimit, false);
+            }
+        }, 500);
+    });
+    document.getElementById('searchInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') { clearTimeout(searchTimeout); currentOffset = 0; buscar(this.value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); } });
+    document.getElementById('btnSearch').addEventListener('click', function() { currentOffset = 0; buscar(document.getElementById('searchInput').value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); });
     document.getElementById('btnRefreshHistory').addEventListener('click', cargarUltimosRegistros);
 
-    // ========== CONEXIÓN ==========
+    // BOTÓN VER EXCEL (abre en incógnito)
+    document.getElementById('btnOpenExcel').addEventListener('click', function() {
+        var url = window.SHEETS_URL;
+        // Intentar abrir en ventana incógnito (no todos los navegadores lo permiten)
+        var win = window.open(url, '_blank', 'noopener,noreferrer,width=1200,height=800');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+            // Si el popup fue bloqueado, abrir en pestaña normal
+            window.open(url, '_blank');
+            mostrarToast('Si no se abrió, permita ventanas emergentes o use Ctrl+Shift+N');
+        }
+    });
+
+    // CONEXIÓN
     window.addEventListener('online', function() { document.getElementById('offlineBanner').style.display = 'none'; });
     window.addEventListener('offline', function() { document.getElementById('offlineBanner').style.display = 'block'; });
     if (!isOnline()) document.getElementById('offlineBanner').style.display = 'block';
 
-    // ========== SERVICE WORKER ==========
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function() {}); });
-    }
-
+    if ('serviceWorker' in navigator) window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function() {}); });
     actualizarListaPendientes();
 </script>
 </body>
