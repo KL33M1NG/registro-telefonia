@@ -19,6 +19,7 @@
             --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --header-gradient: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
             --reanimation-red: #dc2626;
+            --whatsapp-green: #25D366;
         }
         body.dark-mode {
             --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0; --text-secondary: #94a3b8;
@@ -105,6 +106,7 @@
         .btn-danger { background: linear-gradient(135deg, #e53e3e, #fc8181); }
         .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
         .btn-green { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+        .btn-whatsapp { background: var(--whatsapp-green); color: white; }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reanimation-section {
@@ -240,48 +242,141 @@
 </header>
 
 <div class="container">
-    <!-- FORMULARIO DE CARGA (resumido) -->
+    <!-- ========== FORMULARIO DE CARGA ========== -->
     <div class="card" id="formCard">
         <div class="card-header"><i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · TELEFONÍA</div>
         <div class="hospital-badge"><i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias</div>
+
         <div class="form-grid">
-            <div class="field-group"><label><i class="far fa-calendar-alt"></i> Fecha</label><input type="text" id="fecha" readonly></div>
-            <div class="field-group"><label><i class="far fa-clock"></i> Hora</label><input type="text" id="hora" readonly></div>
+            <div class="field-group">
+                <label><i class="far fa-calendar-alt"></i> Fecha</label>
+                <input type="text" id="fecha" readonly>
+            </div>
+            <div class="field-group">
+                <label><i class="far fa-clock"></i> Hora</label>
+                <input type="text" id="hora" readonly>
+            </div>
+
             <div class="field-group full-width">
                 <label><i class="fas fa-truck-medical"></i> Tipo de ingreso</label>
                 <div class="radio-group">
-                    <div class="radio-item"><input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked><label for="tipoAmbulatorio">🚶 Ambulatorio</label></div>
-                    <div class="radio-item"><input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia"><label for="tipoAmbulancia">🚑 Ambulancia</label></div>
+                    <div class="radio-item">
+                        <input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked>
+                        <label for="tipoAmbulatorio">🚶 Ambulatorio</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia">
+                        <label for="tipoAmbulancia">🚑 Ambulancia</label>
+                    </div>
                 </div>
             </div>
-            <div class="field-group"><label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label><input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform:uppercase;" autocomplete="off"></div>
-            <div class="field-group"><label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label><input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></div>
-            <div class="field-group"><label><i class="fas fa-cake-candles"></i> Fecha Nac. <span class="required">*</span></label><input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off"></div>
-            <div class="field-group"><label><i class="fas fa-calculator"></i> Edad</label><div class="age-display" id="edadDisplay">—</div></div>
-            <div class="field-group full-width"><label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label><textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO (MÁX. 50)" style="text-transform:uppercase;"></textarea><span class="counter" id="contadorRazon">0/50</span></div>
-            <div class="field-group"><label><i class="fas fa-phone"></i> Teléfono</label><input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57"><div class="checkbox-group"><input type="checkbox" id="sinTelefono"><label for="sinTelefono">Sin teléfono</label></div></div>
-            <div class="field-group"><label><i class="fas fa-hospital"></i> Obra Social</label><input type="text" id="obraSocial" style="text-transform:uppercase;"><div class="checkbox-group"><input type="checkbox" id="sinObraSocial"><label for="sinObraSocial">Sin obra social</label></div></div>
-            <div class="field-group"><label><i class="fas fa-map-marker-alt"></i> Domicilio</label><input type="text" id="domicilio" style="text-transform:uppercase;"><div class="checkbox-group"><input type="checkbox" id="sinDomicilio"><label for="sinDomicilio">Sin domicilio</label></div></div>
-            <div class="full-width" id="seccionAmbulancia" style="display:none;">
+
+            <div class="field-group">
+                <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
+                <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label>
+                <input type="text" id="dni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-cake-candles"></i> Fecha de Nacimiento <span class="required">*</span></label>
+                <input type="text" id="nacimiento" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label><i class="fas fa-calculator"></i> Edad (automática)</label>
+                <div class="age-display" id="edadDisplay">—</div>
+            </div>
+
+            <div class="field-group full-width">
+                <label><i class="fas fa-clipboard-list"></i> Razón de Urgencia <span class="required">*</span></label>
+                <textarea id="razon" rows="2" maxlength="50" placeholder="MOTIVO DE CONSULTA (MÁX. 50 CARACTERES)" style="text-transform: uppercase;"></textarea>
+                <span class="counter" id="contadorRazon">0/50</span>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-phone"></i> Teléfono</label>
+                <input type="text" id="telefono" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Solo números">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinTelefono">
+                    <label for="sinTelefono">Sin teléfono</label>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-hospital"></i> Obra Social</label>
+                <input type="text" id="obraSocial" style="text-transform: uppercase;" placeholder="NOMBRE DE OBRA SOCIAL">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinObraSocial">
+                    <label for="sinObraSocial">Sin obra social</label>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-map-marker-alt"></i> Domicilio</label>
+                <input type="text" id="domicilio" style="text-transform: uppercase;" placeholder="DIRECCIÓN COMPLETA">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sinDomicilio">
+                    <label for="sinDomicilio">Sin domicilio</label>
+                </div>
+            </div>
+
+            <!-- Sección ambulancia -->
+            <div class="full-width" id="seccionAmbulancia" style="display: none;">
                 <div class="section-separator"></div>
                 <div class="form-grid">
-                    <div class="field-group"><label><i class="fas fa-ambulance"></i> Ambulancia</label><input type="text" id="ambulanciaNombre" style="text-transform:uppercase;"></div>
-                    <div class="field-group" style="align-self:center;"><div class="checkbox-group"><input type="checkbox" id="ambulanciaInterior"><label for="ambulanciaInterior">Proviene del interior</label></div></div>
-                    <div class="field-group full-width" id="grupoDepartamento" style="display:none;"><label><i class="fas fa-map"></i> Departamento</label><select id="departamento"><option value="">Seleccione...</option><option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option><option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option><option>CAPAYÁN</option><option>EL ALTO</option><option>FRAY MAMERTO ESQUIÚ</option><option>LA PAZ</option><option>PACLÍN</option><option>POMÁN</option><option>SANTA MARÍA</option><option>SANTA ROSA</option><option>TINOGASTA</option><option>VALLE VIEJO</option></select></div>
-                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display:none;">
+                    <div class="field-group">
+                        <label><i class="fas fa-ambulance"></i> Ambulancia que traslada</label>
+                        <input type="text" id="ambulanciaNombre" style="text-transform: uppercase;" placeholder="Nombre o empresa">
+                    </div>
+                    <div class="field-group" style="align-self: center;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ambulanciaInterior">
+                            <label for="ambulanciaInterior">Proviene del interior</label>
+                        </div>
+                    </div>
+                    <div class="field-group full-width" id="grupoDepartamento" style="display: none;">
+                        <label><i class="fas fa-map"></i> Departamento</label>
+                        <select id="departamento">
+                            <option value="">Seleccione un departamento...</option>
+                            <option>AMBATO</option><option>ANCASTI</option><option>ANDALGALÁ</option>
+                            <option>ANTOFAGASTA DE LA SIERRA</option><option>BELÉN</option>
+                            <option>CAPAYÁN</option><option>EL ALTO</option>
+                            <option>FRAY MAMERTO ESQUIÚ</option>
+                            <option>LA PAZ</option><option>PACLÍN</option>
+                            <option>POMÁN</option><option>SANTA MARÍA</option>
+                            <option>SANTA ROSA</option><option>TINOGASTA</option>
+                            <option>VALLE VIEJO</option>
+                        </select>
+                    </div>
+                    <!-- REANIMACIÓN -->
+                    <div class="full-width reanimation-section" id="seccionReanimacion" style="display: none;">
                         <label><i class="fas fa-heart-pulse"></i> ¿ES REANIMACIÓN?</label>
-                        <div class="radio-group"><div class="radio-item"><input type="radio" id="reanimacionSi" name="esReanimacion" value="SI"><label for="reanimacionSi" style="color:var(--reanimation-red);font-weight:700;">⚠️ SÍ</label></div><div class="radio-item"><input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked><label for="reanimacionNo">NO</label></div></div>
+                        <div class="radio-group" style="border-color: rgba(220,38,38,0.3);">
+                            <div class="radio-item">
+                                <input type="radio" id="reanimacionSi" name="esReanimacion" value="SI">
+                                <label for="reanimacionSi" style="color: var(--reanimation-red); font-weight: 700;">⚠️ SÍ - REANIMACIÓN</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="reanimacionNo" name="esReanimacion" value="NO" checked>
+                                <label for="reanimacionNo">NO</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem;border-top:1px solid var(--border);padding-top:1.5rem;">
-            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar</button>
+
+        <!-- Botones de acción -->
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
+            <button class="btn btn-whatsapp hidden" id="btnWhatsApp"><i class="fab fa-whatsapp"></i> Copiar para WhatsApp</button>
         </div>
     </div>
 
-    <!-- CONSULTA -->
+    <!-- ========== CONSULTA ========== -->
     <div class="card hidden" id="historyCard">
         <div class="card-header">
             <i class="fas fa-database"></i> CONSULTA · GOOGLE SHEETS
@@ -313,11 +408,11 @@
         </div>
     </div>
 
-    <!-- PENDIENTES -->
+    <!-- ========== PENDIENTES ========== -->
     <div class="card hidden" id="panelPendientes">
         <div class="card-header"><i class="fas fa-cloud-upload-alt"></i> Pendientes</div>
         <div id="listaPendientes" class="pending-list"></div>
-        <div style="margin-top:1.2rem;display:flex;gap:1rem;">
+        <div style="margin-top: 1.2rem; display: flex; gap: 1rem;">
             <button class="btn btn-primary" id="btnSyncAll"><i class="fas fa-sync-alt"></i> Sincronizar</button>
             <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar</button>
         </div>
@@ -327,26 +422,27 @@
 <div id="toastContainer"></div>
 
 <script>
-    // CONFIG
+    // ========== CONFIGURACIÓN SEGURA ==========
     (function() {
         var _u = 'https://script.google.com/macros/s/AKfycbxON0o9XLdUWMr8bQPy40hhJbV3NDL7chuwYQVomEAZWxI9wJZ7Lkq_W35haq2huUWccg/exec';
         var _t = '226452K@rko932566258233karko';
         var dominioActual = window.location.hostname;
         var dominiosValidos = ['kl33m1ng.github.io', 'localhost', '127.0.0.1'];
         var dominioValido = dominiosValidos.some(function(d) { return dominioActual.indexOf(d) !== -1; });
-        if (!dominioValido) { _u = ''; _t = ''; }
+        if (!dominioValido) { _u = ''; _t = ''; console.warn('Dominio no autorizado'); }
         window.APPS_SCRIPT_URL = _u;
         window.API_TOKEN = _t;
         window.SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1so9KibE-xbkPjcYYkuy6iESYMC1h9u3JKvh6CnxvXRM/edit';
     })();
 
+    // ========== ESTADO ==========
     var pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
     var currentOffset = 0;
     var currentLimit = 50;
     var totalRegistros = 0;
     function isOnline() { return navigator.onLine; }
 
-    // MODO OSCURO
+    // ========== MODO OSCURO ==========
     var themeToggle = document.getElementById('themeToggle');
     var themeLabel = document.getElementById('themeLabel');
     var themeIcon = themeToggle.querySelector('i');
@@ -361,7 +457,7 @@
         themeLabel.textContent = isDark ? 'Claro' : 'Oscuro';
     });
 
-    // NAVEGACIÓN
+    // ========== NAVEGACIÓN ==========
     var formCard = document.getElementById('formCard');
     var historyCard = document.getElementById('historyCard');
     var panelPendientes = document.getElementById('panelPendientes');
@@ -376,7 +472,7 @@
     document.getElementById('btnNavHistory').addEventListener('click', function() { mostrarSeccion('history'); });
     document.getElementById('btnNavPending').addEventListener('click', function() { mostrarSeccion('pending'); });
 
-    // RELOJ
+    // ========== RELOJ ==========
     function actualizarReloj() {
         var ahora = new Date();
         document.getElementById('fecha').value = String(ahora.getDate()).padStart(2,'0')+'/'+String(ahora.getMonth()+1).padStart(2,'0')+'/'+ahora.getFullYear();
@@ -384,7 +480,7 @@
     }
     setInterval(actualizarReloj, 1000); actualizarReloj();
 
-    // TOAST
+    // ========== TOAST ==========
     function mostrarToast(m, t) {
         var c = document.getElementById('toastContainer');
         var d = document.createElement('div'); d.className = 'toast';
@@ -394,7 +490,7 @@
         setTimeout(function() { d.style.opacity = '0'; d.style.transition = 'opacity 0.3s'; setTimeout(function() { d.remove(); }, 300); }, 3500);
     }
 
-    // FECHA + EDAD
+    // ========== FECHA + EDAD AUTOMÁTICA ==========
     document.getElementById('nacimiento').addEventListener('input', function(e) {
         var val = e.target.value.replace(/\D/g, '').slice(0, 8);
         var f = '';
@@ -412,6 +508,7 @@
         } else { document.getElementById('edadDisplay').textContent = '—'; document.getElementById('edadDisplay').classList.remove('calculated'); }
     });
     document.getElementById('razon').addEventListener('input', function(e) { document.getElementById('contadorRazon').textContent = e.target.value.length + '/50'; });
+
     function configurarToggle(cb, f) {
         document.getElementById(cb).addEventListener('change', function() {
             var el = document.getElementById(f);
@@ -420,26 +517,105 @@
         });
     }
     configurarToggle('sinTelefono', 'telefono'); configurarToggle('sinObraSocial', 'obraSocial'); configurarToggle('sinDomicilio', 'domicilio');
+
+    // ========== TIPO INGRESO + REANIMACIÓN + WHATSAPP ==========
     document.querySelectorAll('input[name="tipoIngreso"]').forEach(function(r) {
         r.addEventListener('change', function() {
-            var a = this.value === 'Ambulancia';
-            document.getElementById('seccionAmbulancia').style.display = a ? 'block' : 'none';
-            document.getElementById('seccionReanimacion').style.display = a ? 'block' : 'none';
+            var esAmbulancia = this.value === 'Ambulancia';
+            document.getElementById('seccionAmbulancia').style.display = esAmbulancia ? 'block' : 'none';
+            document.getElementById('seccionReanimacion').style.display = esAmbulancia ? 'block' : 'none';
+            document.getElementById('btnWhatsApp').classList.toggle('hidden', !esAmbulancia);
         });
     });
+
+    // ========== AMBULANCIA INTERIOR (NO OCULTA NOMBRE) ==========
     document.getElementById('ambulanciaInterior').addEventListener('change', function() {
-        document.getElementById('grupoDepartamento').style.display = this.checked ? 'block' : 'none';
-        document.getElementById('ambulanciaNombre').style.display = this.checked ? 'none' : 'block';
+        var grupoDep = document.getElementById('grupoDepartamento');
+        if (this.checked) {
+            grupoDep.style.display = 'block';
+            // El campo ambulanciaNombre permanece visible
+        } else {
+            grupoDep.style.display = 'none';
+            document.getElementById('departamento').value = '';
+        }
     });
 
-    // GUARDAR
+    // ========== BOTÓN WHATSAPP ==========
+    document.getElementById('btnWhatsApp').addEventListener('click', function() {
+        // Obtener valores del formulario
+        var nombre = (document.getElementById('nombre').value.trim() || 'NO ESPECIFICADO').toUpperCase();
+        var dni = document.getElementById('dni').value.trim() || 'S/D';
+        var nac = document.getElementById('nacimiento').value.trim() || 'DD/MM/AAAA';
+        var edad = document.getElementById('edadDisplay').textContent.replace(' años', '') || 'NO CALCULADA';
+        var domicilio = (document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : 'NO REGISTRA')).toUpperCase();
+        var telefono = document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : 'NO REGISTRA');
+        var obraSocial = document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : 'NO TIENE');
+        var razon = (document.getElementById('razon').value.trim() || 'NO ESPECIFICADO').toUpperCase();
+        var ambulancia = (document.getElementById('ambulanciaNombre').value.trim() || 'S/N').toUpperCase();
+        var esInterior = document.getElementById('ambulanciaInterior').checked;
+        var departamento = '';
+        if (esInterior) {
+            departamento = document.getElementById('departamento').value || 'INTERIOR (sin departamento)';
+        }
+        var esReanimacion = document.querySelector('input[name="esReanimacion"]:checked').value === 'SI';
+
+        var ahora = new Date();
+        var fechaActual = ahora.toLocaleDateString('es-AR');
+        var horaActual = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+
+        var mensaje = '🚑 *INGRESO AMBULANCIA - HISJB*\n';
+        mensaje += '📅 *FECHA:* ' + fechaActual + '  |  🕒 *HORA:* ' + horaActual + '\n';
+        mensaje += '━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        mensaje += '👤 *PACIENTE:* ' + nombre + '\n';
+        mensaje += '🆔 *DNI:* ' + dni + '\n';
+        mensaje += '🎂 *FECHA NAC.:* ' + nac + '  (' + edad + ' años)\n';
+        mensaje += '🏠 *DOMICILIO:* ' + domicilio + '\n';
+        mensaje += '📞 *TELÉFONO:* ' + telefono + '\n';
+        mensaje += '💳 *OBRA SOCIAL:* ' + obraSocial + '\n';
+        mensaje += '🚑 *MOVIL/UNIDAD:* ' + ambulancia + '\n';
+        if (esInterior) {
+            mensaje += '📍 *ORIGEN:* 🌄 INTERIOR - ' + departamento.toUpperCase() + '\n';
+        } else {
+            mensaje += '📍 *ORIGEN:* 🏙️ CAPITAL\n';
+        }
+        mensaje += '⚠️ *MOTIVO:* ' + razon + '\n';
+        if (esReanimacion) {
+            mensaje += '\n🆘 *¡ATENCIÓN! PACIENTE EN REANIMACIÓN* 🆘\n';
+        }
+        mensaje += '\n━━━━━━━━━━━━━━━━━━━━━━\n';
+        mensaje += '📱 *REGISTRADO POR SISTEMA DE ADMISIÓN 24 HS*';
+
+        // Copiar al portapapeles
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(mensaje).then(function() {
+                mostrarToast('✅ Texto copiado. ¡Pegalo en WhatsApp!');
+                // Feedback visual en el botón
+                var btn = document.getElementById('btnWhatsApp');
+                btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                setTimeout(function() { btn.innerHTML = '<i class="fab fa-whatsapp"></i> Copiar para WhatsApp'; }, 2000);
+            }).catch(function() {
+                mostrarToast('Error al copiar. Intentá de nuevo.', 'error');
+            });
+        } else {
+            // Fallback para navegadores antiguos
+            var textarea = document.createElement('textarea');
+            textarea.value = mensaje;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            mostrarToast('✅ Texto copiado (modo alternativo)');
+        }
+    });
+
+    // ========== GUARDAR ==========
     document.getElementById('btnGuardar').addEventListener('click', function() {
         var nombre = document.getElementById('nombre').value.trim();
         var dni = document.getElementById('dni').value.trim();
         var nac = document.getElementById('nacimiento').value.trim();
         var edad = document.getElementById('edadDisplay').textContent;
         var razon = document.getElementById('razon').value.trim();
-        if (!nombre) return mostrarToast('Complete Nombre', 'error');
+        if (!nombre) return mostrarToast('Complete Apellido y Nombre', 'error');
         if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido', 'error');
         if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nac)) return mostrarToast('Fecha incompleta', 'error');
         if (edad === '—' || edad === 'Inválida') return mostrarToast('Fecha inválida', 'error');
@@ -448,8 +624,11 @@
         var amb = '', dep = '', rea = 'NO';
         if (tipo === 'Ambulancia') {
             rea = document.querySelector('input[name="esReanimacion"]:checked').value;
-            if (document.getElementById('ambulanciaInterior').checked) { dep = document.getElementById('departamento').value; amb = dep; if (!dep) return mostrarToast('Seleccione departamento', 'error'); }
-            else { amb = document.getElementById('ambulanciaNombre').value.trim(); if (!amb) return mostrarToast('Ingrese ambulancia', 'error'); }
+            amb = (document.getElementById('ambulanciaNombre').value.trim() || 'S/N').toUpperCase();
+            if (document.getElementById('ambulanciaInterior').checked) {
+                dep = document.getElementById('departamento').value;
+                if (!dep) return mostrarToast('Seleccione un departamento', 'error');
+            }
         }
         var reg = {
             fecha: document.getElementById('fecha').value, hora: document.getElementById('hora').value,
@@ -458,7 +637,7 @@
             telefono: (document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '')).toUpperCase(),
             obraSocial: (document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '')).toUpperCase(),
             domicilio: (document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '')).toUpperCase(),
-            tipoIngreso: tipo, ambulancia: amb.toUpperCase(), departamento: dep.toUpperCase(), esReanimacion: rea, token: window.API_TOKEN
+            tipoIngreso: tipo, ambulancia: amb, departamento: dep.toUpperCase(), esReanimacion: rea, token: window.API_TOKEN
         };
         if (isOnline() && window.APPS_SCRIPT_URL) {
             fetch(window.APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(reg), headers: {'Content-Type':'application/json'}, mode:'no-cors' })
@@ -466,9 +645,12 @@
                 .catch(function() { guardarPendiente(reg); mostrarToast('Error. Pendiente.', 'error'); });
         } else { guardarPendiente(reg); mostrarToast('Sin conexión. Pendiente.'); }
     });
+
     function guardarPendiente(r) { pendingRecords.push({...r, timestamp: Date.now()}); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); }
     function limpiarFormulario() {
-        ['nombre','dni','nacimiento','razon','telefono','obraSocial','domicilio'].forEach(function(id) { var el = document.getElementById(id); el.value = ''; el.disabled = false; el.style.background = ''; });
+        ['nombre','dni','nacimiento','razon','telefono','obraSocial','domicilio','ambulanciaNombre'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) { el.value = ''; el.disabled = false; el.style.background = ''; }
+        });
         document.getElementById('edadDisplay').textContent = '—'; document.getElementById('edadDisplay').classList.remove('calculated');
         document.getElementById('contadorRazon').textContent = '0/50';
         ['sinTelefono','sinObraSocial','sinDomicilio'].forEach(function(id) { document.getElementById(id).checked = false; });
@@ -476,16 +658,17 @@
         document.getElementById('seccionAmbulancia').style.display = 'none'; document.getElementById('seccionReanimacion').style.display = 'none';
         document.getElementById('ambulanciaInterior').checked = false; document.getElementById('grupoDepartamento').style.display = 'none';
         document.querySelector('input[value="NO"]').checked = true;
+        document.getElementById('btnWhatsApp').classList.add('hidden');
     }
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
 
-    // PENDIENTES
+    // ========== PENDIENTES ==========
     function actualizarListaPendientes() {
         var c = document.getElementById('listaPendientes'); c.innerHTML = '';
         if (!pendingRecords.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:1.5rem;">Sin pendientes</p>'; return; }
         pendingRecords.forEach(function(r, i) {
             var d = document.createElement('div'); d.className = 'history-item'; if (r.esReanimacion==='SI') d.classList.add('reanimation');
-            d.innerHTML = '<div class="info-paciente"><strong>'+r.nombre+'</strong> · DNI '+r.dni+' '+(r.esReanimacion==='SI'?'<span class="badge-reanimation">REANIMACIÓN</span>':'')+'<div class="detalle">'+r.fecha+' '+r.hora+' — '+r.razon+'</div></div><button class="btn btn-danger btn-sm" data-idx="'+i+'"><i class="fas fa-trash"></i></button>';
+            d.innerHTML = '<div class="info-paciente"><strong>'+r.nombre+'</strong> · DNI '+r.dni+' '+(r.esReanimacion==='SI'?'<span class="badge-reanimation">REANIMACIÓN</span>':'')+'<div class="detalle">'+r.fecha+' '+r.hora+' — '+r.razon+'</div><div class="extra"><span>📞 '+r.telefono+'</span> <span>🏥 '+r.obraSocial+'</span> <span>📍 '+r.domicilio+'</span></div></div><button class="btn btn-danger btn-sm" data-idx="'+i+'"><i class="fas fa-trash"></i></button>';
             d.querySelector('button').addEventListener('click', function() { pendingRecords.splice(parseInt(this.getAttribute('data-idx')),1); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); });
             c.appendChild(d);
         });
@@ -506,7 +689,7 @@
         });
     });
 
-    // CONSULTA CON PAGINACIÓN
+    // ========== CONSULTA ==========
     function buscar(query, filter, offset, limit, append) {
         if (!append) {
             document.getElementById('historyList').innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
@@ -539,7 +722,6 @@
         if (registros.length === 0 && !append) { cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">Sin resultados</p>'; return; }
         document.getElementById('resultCount').textContent = 'Mostrando ' + (append ? currentOffset + registros.length : registros.length) + ' de ' + totalRegistros + ' registro(s)';
         
-        // Estadísticas (solo en carga inicial)
         if (!append) {
             document.getElementById('statTotal').textContent = totalRegistros;
             document.getElementById('statAmbulatorio').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulatorio'; }).length;
@@ -558,7 +740,6 @@
         });
     }
 
-    // Botón "Cargar más"
     document.getElementById('btnLoadMore').addEventListener('click', function() {
         currentOffset += currentLimit;
         var query = document.getElementById('searchInput').value.trim();
@@ -569,7 +750,6 @@
         setTimeout(function() { self.disabled = false; self.innerHTML = '<i class="fas fa-chevron-down"></i> Cargar más registros'; }, 1000);
     });
 
-    // Búsqueda automática
     var searchTimeout;
     document.getElementById('searchInput').addEventListener('input', function(e) {
         clearTimeout(searchTimeout);
@@ -585,19 +765,15 @@
     document.getElementById('btnSearch').addEventListener('click', function() { currentOffset = 0; buscar(document.getElementById('searchInput').value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); });
     document.getElementById('btnRefreshHistory').addEventListener('click', cargarUltimosRegistros);
 
-    // BOTÓN VER EXCEL (abre en incógnito)
     document.getElementById('btnOpenExcel').addEventListener('click', function() {
         var url = window.SHEETS_URL;
-        // Intentar abrir en ventana incógnito (no todos los navegadores lo permiten)
         var win = window.open(url, '_blank', 'noopener,noreferrer,width=1200,height=800');
         if (!win || win.closed || typeof win.closed === 'undefined') {
-            // Si el popup fue bloqueado, abrir en pestaña normal
             window.open(url, '_blank');
-            mostrarToast('Si no se abrió, permita ventanas emergentes o use Ctrl+Shift+N');
+            mostrarToast('Si no se abrió, permita ventanas emergentes');
         }
     });
 
-    // CONEXIÓN
     window.addEventListener('online', function() { document.getElementById('offlineBanner').style.display = 'none'; });
     window.addEventListener('offline', function() { document.getElementById('offlineBanner').style.display = 'block'; });
     if (!isOnline()) document.getElementById('offlineBanner').style.display = 'block';
