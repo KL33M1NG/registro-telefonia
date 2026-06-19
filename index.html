@@ -640,14 +640,9 @@
             var pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
             var form = pdfDoc.getForm();
 
-            var ahora = new Date();
-            var fechaHoy = ahora.toLocaleDateString('es-AR');
-            var h = ahora.getHours();
+            var h24 = ahora.getHours();
             var m = String(ahora.getMinutes()).padStart(2, '0');
-            var ampm = h >= 12 ? 'p. m.' : 'a. m.';
-            if (h > 12) h -= 12;
-            if (h === 0) h = 12;
-            var horaHoy = h + ':' + m + ' ' + ampm;
+            var horaHoy = h24 + ':' + m;
 
             // Rellenar campos (ajusta los nombres según tu PDF)
             var campos = {
