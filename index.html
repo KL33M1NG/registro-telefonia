@@ -230,7 +230,7 @@
 </header>
 
 <div class="container">
-    <!-- ========== FORMULARIO DE CARGA ========== -->
+    <!-- FORMULARIO DE CARGA -->
     <div class="card" id="formCard">
         <div class="card-header"><i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · TELEFONÍA</div>
         <div class="hospital-badge"><i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias</div>
@@ -338,6 +338,13 @@
                             <option>VALLE VIEJO</option>
                         </select>
                     </div>
+                    <!-- CHECKBOX IMPRIMIR FICHA (NUEVO) -->
+                    <div class="field-group full-width" id="seccionImprimirFicha" style="display: none;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="imprimirFichaAmbulancia">
+                            <label for="imprimirFichaAmbulancia">🖨️ Imprimir ficha de ambulancia</label>
+                        </div>
+                    </div>
                     <!-- REANIMACIÓN -->
                     <div class="full-width reanimation-section" id="seccionReanimacion" style="display: none;">
                         <label><i class="fas fa-heart-pulse"></i> ¿ES REANIMACIÓN?</label>
@@ -364,7 +371,7 @@
         </div>
     </div>
 
-    <!-- ========== CONSULTA ========== -->
+    <!-- CONSULTA -->
     <div class="card hidden" id="historyCard">
         <div class="card-header">
             <i class="fas fa-database"></i> CONSULTA · GOOGLE SHEETS
@@ -396,7 +403,7 @@
         </div>
     </div>
 
-    <!-- ========== PENDIENTES ========== -->
+    <!-- PENDIENTES -->
     <div class="card hidden" id="panelPendientes">
         <div class="card-header"><i class="fas fa-cloud-upload-alt"></i> Pendientes</div>
         <div id="listaPendientes" class="pending-list"></div>
@@ -507,13 +514,15 @@
     }
     configurarToggle('sinTelefono', 'telefono'); configurarToggle('sinObraSocial', 'obraSocial'); configurarToggle('sinDomicilio', 'domicilio');
 
-    // ========== TIPO INGRESO + REANIMACIÓN + WHATSAPP ==========
+    // ========== TIPO INGRESO + MOSTRAR CHECKBOX IMPRIMIR + REANIMACIÓN + WHATSAPP ==========
     document.querySelectorAll('input[name="tipoIngreso"]').forEach(function(r) {
         r.addEventListener('change', function() {
             var esAmbulancia = this.value === 'Ambulancia';
             document.getElementById('seccionAmbulancia').style.display = esAmbulancia ? 'block' : 'none';
             document.getElementById('seccionReanimacion').style.display = esAmbulancia ? 'block' : 'none';
             document.getElementById('btnWhatsApp').classList.toggle('hidden', !esAmbulancia);
+            // Mostrar/ocultar checkbox de imprimir ficha (solo ambulancia)
+            document.getElementById('seccionImprimirFicha').style.display = esAmbulancia ? 'block' : 'none';
         });
     });
 
@@ -576,7 +585,7 @@
         }
     });
 
-    // ========== GUARDAR + PDF ==========
+    // ========== GUARDAR + PDF (CONDICIONAL) ==========
     document.getElementById('btnGuardar').addEventListener('click', function() {
         var nombre = document.getElementById('nombre').value.trim();
         var dni = document.getElementById('dni').value.trim();
@@ -590,6 +599,7 @@
         if (!razon) return mostrarToast('Ingrese razón', 'error');
         var tipo = document.querySelector('input[name="tipoIngreso"]:checked').value;
         var amb = '', dep = '', rea = 'NO';
+        var imprimir = true; // por defecto imprime (para ambulatorio)
         if (tipo === 'Ambulancia') {
             rea = document.querySelector('input[name="esReanimacion"]:checked').value;
             amb = (document.getElementById('ambulanciaNombre').value.trim() || 'S/N').toUpperCase();
@@ -597,6 +607,8 @@
                 dep = document.getElementById('departamento').value;
                 if (!dep) return mostrarToast('Seleccione un departamento', 'error');
             }
+            // Solo imprime si el checkbox está marcado
+            imprimir = document.getElementById('imprimirFichaAmbulancia').checked;
         }
         var registro = {
             fecha: document.getElementById('fecha').value,
@@ -623,8 +635,12 @@
                 .catch(function() { guardarPendiente(registro); });
         } else { guardarPendiente(registro); mostrarToast('Sin conexión. Guardado pendiente.'); }
 
-        // 2. Generar PDF y abrir
-        generarPDF(registro);
+        // 2. PDF solo si corresponde
+        if (imprimir) {
+            generarPDF(registro);
+        } else {
+            mostrarToast('Ficha de ambulancia no se imprimirá (opción desactivada).');
+        }
         limpiarFormulario();
     });
 
@@ -660,23 +676,29 @@
                 }
             }
 
-            // Aplanar formulario (no editable)
             form.flatten();
-
             var pdfModificado = await pdfDoc.save();
             var blob = new Blob([pdfModificado], { type: 'application/pdf' });
             var url = URL.createObjectURL(blob);
-            var ventana = window.open(url, '_blank');
 
-            if (ventana) {
-                ventana.onload = function() {
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            iframe.id = 'pdf-print-frame';
+            document.body.appendChild(iframe);
+
+            iframe.onload = function() {
+                setTimeout(function() {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
                     setTimeout(function() {
-                        ventana.print();
-                    }, 1500);
-                };
-            }
+                        document.body.removeChild(iframe);
+                        URL.revokeObjectURL(url);
+                    }, 2000);
+                }, 1000);
+            };
 
-            mostrarToast('✅ PDF listo. Se abrirá la ventana de impresión.');
+            mostrarToast('✅ Imprimiendo automáticamente...');
         } catch(error) {
             console.error('Error al generar PDF:', error);
             mostrarToast('Error al generar el PDF: ' + error.message, 'error');
@@ -694,6 +716,8 @@
         ['sinTelefono','sinObraSocial','sinDomicilio'].forEach(function(id) { document.getElementById(id).checked = false; });
         document.querySelector('input[value="Ambulatorio"]').checked = true;
         document.getElementById('seccionAmbulancia').style.display = 'none'; document.getElementById('seccionReanimacion').style.display = 'none';
+        document.getElementById('seccionImprimirFicha').style.display = 'none';
+        document.getElementById('imprimirFichaAmbulancia').checked = false;
         document.getElementById('ambulanciaInterior').checked = false; document.getElementById('grupoDepartamento').style.display = 'none';
         document.querySelector('input[value="NO"]').checked = true;
         document.getElementById('btnWhatsApp').classList.add('hidden');
