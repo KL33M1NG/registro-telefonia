@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <style>
         :root {
             --bg: #f0f4f8; --card-bg: #ffffff; --text: #1a202c; --text-secondary: #4a5568;
@@ -107,6 +108,7 @@
         .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
         .btn-green { background: linear-gradient(135deg, #0d9488, #14b8a6); }
         .btn-whatsapp { background: var(--whatsapp-green); color: white; }
+        .btn-pdf { background: linear-gradient(135deg, #dc2626, #f87171); }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reanimation-section {
@@ -370,7 +372,7 @@
 
         <!-- Botones de acción -->
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar Registro</button>
+            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar e Imprimir</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
             <button class="btn btn-whatsapp hidden" id="btnWhatsApp"><i class="fab fa-whatsapp"></i> Copiar para WhatsApp</button>
         </div>
@@ -433,6 +435,7 @@
         window.APPS_SCRIPT_URL = _u;
         window.API_TOKEN = _t;
         window.SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1so9KibE-xbkPjcYYkuy6iESYMC1h9u3JKvh6CnxvXRM/edit';
+        window.PDF_URL = 'FICHA-TRIAGE.pdf';
     })();
 
     // ========== ESTADO ==========
@@ -528,21 +531,15 @@
         });
     });
 
-    // ========== AMBULANCIA INTERIOR (NO OCULTA NOMBRE) ==========
+    // ========== AMBULANCIA INTERIOR ==========
     document.getElementById('ambulanciaInterior').addEventListener('change', function() {
         var grupoDep = document.getElementById('grupoDepartamento');
-        if (this.checked) {
-            grupoDep.style.display = 'block';
-            // El campo ambulanciaNombre permanece visible
-        } else {
-            grupoDep.style.display = 'none';
-            document.getElementById('departamento').value = '';
-        }
+        if (this.checked) { grupoDep.style.display = 'block'; }
+        else { grupoDep.style.display = 'none'; document.getElementById('departamento').value = ''; }
     });
 
     // ========== BOTÓN WHATSAPP ==========
     document.getElementById('btnWhatsApp').addEventListener('click', function() {
-        // Obtener valores del formulario
         var nombre = (document.getElementById('nombre').value.trim() || 'NO ESPECIFICADO').toUpperCase();
         var dni = document.getElementById('dni').value.trim() || 'S/D';
         var nac = document.getElementById('nacimiento').value.trim() || 'DD/MM/AAAA';
@@ -554,9 +551,7 @@
         var ambulancia = (document.getElementById('ambulanciaNombre').value.trim() || 'S/N').toUpperCase();
         var esInterior = document.getElementById('ambulanciaInterior').checked;
         var departamento = '';
-        if (esInterior) {
-            departamento = document.getElementById('departamento').value || 'INTERIOR (sin departamento)';
-        }
+        if (esInterior) departamento = document.getElementById('departamento').value || 'INTERIOR';
         var esReanimacion = document.querySelector('input[name="esReanimacion"]:checked').value === 'SI';
 
         var ahora = new Date();
@@ -573,42 +568,29 @@
         mensaje += '📞 *TELÉFONO:* ' + telefono + '\n';
         mensaje += '💳 *OBRA SOCIAL:* ' + obraSocial + '\n';
         mensaje += '🚑 *MOVIL/UNIDAD:* ' + ambulancia + '\n';
-        if (esInterior) {
-            mensaje += '📍 *ORIGEN:* 🌄 INTERIOR - ' + departamento.toUpperCase() + '\n';
-        } else {
-            mensaje += '📍 *ORIGEN:* 🏙️ CAPITAL\n';
-        }
+        if (esInterior) mensaje += '📍 *ORIGEN:* 🌄 INTERIOR - ' + departamento.toUpperCase() + '\n';
+        else mensaje += '📍 *ORIGEN:* 🏙️ CAPITAL\n';
         mensaje += '⚠️ *MOTIVO:* ' + razon + '\n';
-        if (esReanimacion) {
-            mensaje += '\n🆘 *¡ATENCIÓN! PACIENTE EN REANIMACIÓN* 🆘\n';
-        }
+        if (esReanimacion) mensaje += '\n🆘 *¡ATENCIÓN! PACIENTE EN REANIMACIÓN* 🆘\n';
         mensaje += '\n━━━━━━━━━━━━━━━━━━━━━━\n';
         mensaje += '📱 *REGISTRADO POR SISTEMA DE ADMISIÓN 24 HS*';
 
-        // Copiar al portapapeles
         if (navigator.clipboard) {
             navigator.clipboard.writeText(mensaje).then(function() {
                 mostrarToast('✅ Texto copiado. ¡Pegalo en WhatsApp!');
-                // Feedback visual en el botón
                 var btn = document.getElementById('btnWhatsApp');
                 btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
                 setTimeout(function() { btn.innerHTML = '<i class="fab fa-whatsapp"></i> Copiar para WhatsApp'; }, 2000);
-            }).catch(function() {
-                mostrarToast('Error al copiar. Intentá de nuevo.', 'error');
-            });
+            }).catch(function() { mostrarToast('Error al copiar. Intentá de nuevo.', 'error'); });
         } else {
-            // Fallback para navegadores antiguos
-            var textarea = document.createElement('textarea');
-            textarea.value = mensaje;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
+            var textarea = document.createElement('textarea'); textarea.value = mensaje;
+            document.body.appendChild(textarea); textarea.select(); document.execCommand('copy');
             document.body.removeChild(textarea);
             mostrarToast('✅ Texto copiado (modo alternativo)');
         }
     });
 
-    // ========== GUARDAR ==========
+    // ========== GUARDAR + PDF ==========
     document.getElementById('btnGuardar').addEventListener('click', function() {
         var nombre = document.getElementById('nombre').value.trim();
         var dni = document.getElementById('dni').value.trim();
@@ -630,21 +612,75 @@
                 if (!dep) return mostrarToast('Seleccione un departamento', 'error');
             }
         }
-        var reg = {
+        var registro = {
             fecha: document.getElementById('fecha').value, hora: document.getElementById('hora').value,
             nombre: nombre.toUpperCase(), dni: dni, nacimiento: nac, edad: edad.replace(' años',''),
             razon: razon.toUpperCase(),
-            telefono: (document.getElementById('telefono').value.trim() || (document.getElementById('sinTelefono').checked ? 'NN' : '')).toUpperCase(),
-            obraSocial: (document.getElementById('obraSocial').value.trim() || (document.getElementById('sinObraSocial').checked ? 'NN' : '')).toUpperCase(),
-            domicilio: (document.getElementById('domicilio').value.trim() || (document.getElementById('sinDomicilio').checked ? 'NN' : '')).toUpperCase(),
+            telefono: document.getElementById('sinTelefono').checked ? '' : (document.getElementById('telefono').value.trim() || '').toUpperCase(),
+            obraSocial: document.getElementById('sinObraSocial').checked ? '' : (document.getElementById('obraSocial').value.trim() || '').toUpperCase(),
+            domicilio: document.getElementById('sinDomicilio').checked ? '' : (document.getElementById('domicilio').value.trim() || '').toUpperCase(),
             tipoIngreso: tipo, ambulancia: amb, departamento: dep.toUpperCase(), esReanimacion: rea, token: window.API_TOKEN
         };
+
+        // 1. Enviar a Google Sheets
         if (isOnline() && window.APPS_SCRIPT_URL) {
-            fetch(window.APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(reg), headers: {'Content-Type':'application/json'}, mode:'no-cors' })
-                .then(function() { mostrarToast('Guardado'); limpiarFormulario(); })
-                .catch(function() { guardarPendiente(reg); mostrarToast('Error. Pendiente.', 'error'); });
-        } else { guardarPendiente(reg); mostrarToast('Sin conexión. Pendiente.'); }
+            fetch(window.APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(registro), headers: {'Content-Type':'application/json'}, mode:'no-cors' })
+                .then(function() { mostrarToast('Guardado en Sheets'); })
+                .catch(function() { guardarPendiente(registro); });
+        } else { guardarPendiente(registro); mostrarToast('Sin conexión. Guardado pendiente.'); }
+
+        // 2. Generar PDF y abrir
+        generarPDF(registro);
+        limpiarFormulario();
     });
+
+    async function generarPDF(registro) {
+        try {
+            var pdfBytes = await fetch(window.PDF_URL).then(function(r) { return r.arrayBuffer(); });
+            var pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+            var form = pdfDoc.getForm();
+
+            var ahora = new Date();
+            var fechaHoy = ahora.toLocaleDateString('es-AR');
+            var horaHoy = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+
+            // Rellenar campos (ajusta los nombres según tu PDF)
+            var campos = {
+                'FECHA': fechaHoy,
+                'HORA': horaHoy,
+                'APELLIDO Y NOMBRE': registro.nombre,
+                'DNI': registro.dni,
+                'FECHA DE NACIMIENTO': registro.nacimiento,
+                'EDAD': registro.edad + ' años',
+                'TELEFONO': registro.telefono || '',
+                'OBRA SOCIAL': registro.obraSocial || '',
+                'DOMICILIO': registro.domicilio || ''
+            };
+
+            for (var nombreCampo in campos) {
+                try {
+                    var campo = form.getTextField(nombreCampo);
+                    campo.setText(campos[nombreCampo]);
+                } catch(e) {
+                    console.warn('Campo no encontrado: ' + nombreCampo);
+                }
+            }
+
+            var pdfModificado = await pdfDoc.save();
+            var blob = new Blob([pdfModificado], { type: 'application/pdf' });
+            var url = URL.createObjectURL(blob);
+            var ventana = window.open(url, '_blank');
+            if (ventana) {
+                ventana.onload = function() {
+                    ventana.print();
+                };
+            }
+            mostrarToast('✅ PDF generado. Se abrió en una nueva pestaña.');
+        } catch(error) {
+            console.error('Error al generar PDF:', error);
+            mostrarToast('Error al generar el PDF. Revise la consola.', 'error');
+        }
+    }
 
     function guardarPendiente(r) { pendingRecords.push({...r, timestamp: Date.now()}); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); }
     function limpiarFormulario() {
@@ -704,9 +740,7 @@
                 mostrarResultados(data.data, append);
                 document.getElementById('loadMoreContainer').style.display = (offset + limit < totalRegistros) ? 'block' : 'none';
             })
-            .catch(function(e) {
-                document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;">Error: '+e.message+'</p>';
-            });
+            .catch(function(e) { document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;">Error: '+e.message+'</p>'; });
     }
 
     function cargarUltimosRegistros() {
@@ -721,14 +755,12 @@
         if (!append) { cont.innerHTML = ''; }
         if (registros.length === 0 && !append) { cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">Sin resultados</p>'; return; }
         document.getElementById('resultCount').textContent = 'Mostrando ' + (append ? currentOffset + registros.length : registros.length) + ' de ' + totalRegistros + ' registro(s)';
-        
         if (!append) {
             document.getElementById('statTotal').textContent = totalRegistros;
             document.getElementById('statAmbulatorio').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulatorio'; }).length;
             document.getElementById('statAmbulancia').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulancia'; }).length;
             document.getElementById('statReanimacion').textContent = registros.filter(function(r) { return r.esReanimacion === 'SI'; }).length;
         }
-
         registros.forEach(function(r) {
             var d = document.createElement('div'); d.className = 'history-item'; if (r.esReanimacion==='SI') d.classList.add('reanimation');
             d.innerHTML = '<div class="info-paciente">' +
@@ -764,14 +796,10 @@
     document.getElementById('searchInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') { clearTimeout(searchTimeout); currentOffset = 0; buscar(this.value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); } });
     document.getElementById('btnSearch').addEventListener('click', function() { currentOffset = 0; buscar(document.getElementById('searchInput').value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); });
     document.getElementById('btnRefreshHistory').addEventListener('click', cargarUltimosRegistros);
-
     document.getElementById('btnOpenExcel').addEventListener('click', function() {
         var url = window.SHEETS_URL;
         var win = window.open(url, '_blank', 'noopener,noreferrer,width=1200,height=800');
-        if (!win || win.closed || typeof win.closed === 'undefined') {
-            window.open(url, '_blank');
-            mostrarToast('Si no se abrió, permita ventanas emergentes');
-        }
+        if (!win || win.closed || typeof win.closed === 'undefined') { window.open(url, '_blank'); mostrarToast('Permita ventanas emergentes si no se abrió'); }
     });
 
     window.addEventListener('online', function() { document.getElementById('offlineBanner').style.display = 'none'; });
