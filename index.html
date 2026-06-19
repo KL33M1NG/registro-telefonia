@@ -108,7 +108,6 @@
         .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
         .btn-green { background: linear-gradient(135deg, #0d9488, #14b8a6); }
         .btn-whatsapp { background: var(--whatsapp-green); color: white; }
-        .btn-pdf { background: linear-gradient(135deg, #dc2626, #f87171); }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reanimation-section {
@@ -130,30 +129,17 @@
             color: var(--success);
         }
         .history-list {
-            max-height: 600px;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 1rem;
-            background: var(--input-bg);
+            max-height: 600px; overflow-y: auto; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 1rem; background: var(--input-bg);
         }
         .history-item {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1rem;
-            align-items: center;
-            padding: 1.2rem 1.5rem;
-            background: var(--card-bg);
-            border-radius: var(--radius-sm);
-            margin-bottom: 0.8rem;
-            box-shadow: var(--shadow-sm);
-            transition: all var(--transition);
-            border-left: 4px solid var(--accent);
-            font-size: 0.95rem;
+            display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center;
+            padding: 1.2rem 1.5rem; background: var(--card-bg); border-radius: var(--radius-sm);
+            margin-bottom: 0.8rem; box-shadow: var(--shadow-sm); transition: all var(--transition);
+            border-left: 4px solid var(--accent); font-size: 0.95rem;
         }
         .history-item.reanimation {
-            border-left-color: var(--reanimation-red);
-            border-left-width: 5px;
+            border-left-color: var(--reanimation-red); border-left-width: 5px;
             background: linear-gradient(135deg, rgba(220,38,38,0.03), rgba(239,68,68,0.06));
         }
         .history-item:hover { transform: translateX(3px); box-shadow: var(--shadow); }
@@ -503,7 +489,7 @@
         e.target.value = f;
         if (/^\d{2}\/\d{2}\/\d{4}$/.test(f)) {
             var p = f.split('/'); var fn = new Date(p[2], p[1]-1, p[0]); var hoy = new Date();
-            if (fn.getDate() !== parseInt(p[0]) || fn.getMonth() !== parseInt(p[1])-1 || fn > hoy) { document.getElementById('edadDisplay').textContent = 'Inválida'; return; }
+            if (fn.getDate() !== parseInt(p[0]) || fn.getMonth() !== parseInt(p[1])-1 || fn > hoy) { document.getElementById('edadDisplay').textContent = 'Inválida'; document.getElementById('edadDisplay').classList.remove('calculated'); return; }
             var edad = hoy.getFullYear() - fn.getFullYear();
             if (hoy.getMonth() < fn.getMonth() || (hoy.getMonth() === fn.getMonth() && hoy.getDate() < fn.getDate())) edad--;
             document.getElementById('edadDisplay').textContent = edad + ' años';
@@ -613,13 +599,21 @@
             }
         }
         var registro = {
-            fecha: document.getElementById('fecha').value, hora: document.getElementById('hora').value,
-            nombre: nombre.toUpperCase(), dni: dni, nacimiento: nac, edad: edad.replace(' años',''),
+            fecha: document.getElementById('fecha').value,
+            hora: document.getElementById('hora').value,
+            nombre: nombre.toUpperCase(),
+            dni: dni,
+            nacimiento: nac,
+            edad: edad.replace(' años',''),
             razon: razon.toUpperCase(),
             telefono: document.getElementById('sinTelefono').checked ? '' : (document.getElementById('telefono').value.trim() || '').toUpperCase(),
             obraSocial: document.getElementById('sinObraSocial').checked ? '' : (document.getElementById('obraSocial').value.trim() || '').toUpperCase(),
             domicilio: document.getElementById('sinDomicilio').checked ? '' : (document.getElementById('domicilio').value.trim() || '').toUpperCase(),
-            tipoIngreso: tipo, ambulancia: amb, departamento: dep.toUpperCase(), esReanimacion: rea, token: window.API_TOKEN
+            tipoIngreso: tipo,
+            ambulancia: amb,
+            departamento: dep.toUpperCase(),
+            esReanimacion: rea,
+            token: window.API_TOKEN
         };
 
         // 1. Enviar a Google Sheets
@@ -636,15 +630,15 @@
 
     async function generarPDF(registro) {
         try {
+            mostrarToast('Generando PDF...');
             var pdfBytes = await fetch(window.PDF_URL).then(function(r) { return r.arrayBuffer(); });
             var pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
             var form = pdfDoc.getForm();
 
-            var h24 = ahora.getHours();
-            var m = String(ahora.getMinutes()).padStart(2, '0');
-            var horaHoy = h24 + ':' + m;
+            var ahora = new Date();
+            var fechaHoy = ahora.toLocaleDateString('es-AR');
+            var horaHoy = String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0');
 
-            // Rellenar campos (ajusta los nombres según tu PDF)
             var campos = {
                 'FECHA': fechaHoy,
                 'HORA': horaHoy,
@@ -666,23 +660,31 @@
                 }
             }
 
+            // Aplanar formulario (no editable)
+            form.flatten();
+
             var pdfModificado = await pdfDoc.save();
             var blob = new Blob([pdfModificado], { type: 'application/pdf' });
             var url = URL.createObjectURL(blob);
             var ventana = window.open(url, '_blank');
+
             if (ventana) {
                 ventana.onload = function() {
-                    ventana.print();
+                    setTimeout(function() {
+                        ventana.print();
+                    }, 1500);
                 };
             }
-            mostrarToast('✅ PDF generado. Se abrió en una nueva pestaña.');
+
+            mostrarToast('✅ PDF listo. Se abrirá la ventana de impresión.');
         } catch(error) {
             console.error('Error al generar PDF:', error);
-            mostrarToast('Error al generar el PDF. Revise la consola.', 'error');
+            mostrarToast('Error al generar el PDF: ' + error.message, 'error');
         }
     }
 
     function guardarPendiente(r) { pendingRecords.push({...r, timestamp: Date.now()}); localStorage.setItem('pendingRecords', JSON.stringify(pendingRecords)); actualizarListaPendientes(); }
+
     function limpiarFormulario() {
         ['nombre','dni','nacimiento','razon','telefono','obraSocial','domicilio','ambulanciaNombre'].forEach(function(id) {
             var el = document.getElementById(id); if (el) { el.value = ''; el.disabled = false; el.style.background = ''; }
