@@ -642,7 +642,12 @@
 
             var ahora = new Date();
             var fechaHoy = ahora.toLocaleDateString('es-AR');
-            var horaHoy = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+            var h = ahora.getHours();
+            var m = String(ahora.getMinutes()).padStart(2, '0');
+            var ampm = h >= 12 ? 'p. m.' : 'a. m.';
+            if (h > 12) h -= 12;
+            if (h === 0) h = 12;
+            var horaHoy = h + ':' + m + ' ' + ampm;
 
             // Rellenar campos (ajusta los nombres según tu PDF)
             var campos = {
