@@ -259,6 +259,14 @@
                 </div>
             </div>
 
+            <!-- CHECKBOX IMPRIMIR FICHA (visible siempre, texto cambia según tipo) -->
+            <div class="field-group full-width" id="seccionImprimirFicha">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="imprimirFicha">
+                    <label for="imprimirFicha" id="labelImprimirFicha">🖨️ Imprimir ficha de ambulatorio</label>
+                </div>
+            </div>
+
             <div class="field-group">
                 <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
                 <input type="text" id="nombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
@@ -338,13 +346,6 @@
                             <option>VALLE VIEJO</option>
                         </select>
                     </div>
-                    <!-- CHECKBOX IMPRIMIR FICHA (NUEVO) -->
-                    <div class="field-group full-width" id="seccionImprimirFicha" style="display: none;">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="imprimirFichaAmbulancia">
-                            <label for="imprimirFichaAmbulancia">🖨️ Imprimir ficha de ambulancia</label>
-                        </div>
-                    </div>
                     <!-- REANIMACIÓN -->
                     <div class="full-width reanimation-section" id="seccionReanimacion" style="display: none;">
                         <label><i class="fas fa-heart-pulse"></i> ¿ES REANIMACIÓN?</label>
@@ -365,7 +366,7 @@
 
         <!-- Botones de acción -->
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar e Imprimir</button>
+            <button class="btn btn-primary" id="btnGuardar"><i class="fas fa-save"></i> Guardar</button>
             <button class="btn btn-success" id="btnLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
             <button class="btn btn-whatsapp hidden" id="btnWhatsApp"><i class="fab fa-whatsapp"></i> Copiar para WhatsApp</button>
         </div>
@@ -514,15 +515,20 @@
     }
     configurarToggle('sinTelefono', 'telefono'); configurarToggle('sinObraSocial', 'obraSocial'); configurarToggle('sinDomicilio', 'domicilio');
 
-    // ========== TIPO INGRESO + MOSTRAR CHECKBOX IMPRIMIR + REANIMACIÓN + WHATSAPP ==========
+    // ========== TIPO INGRESO + CAMBIAR LABEL CHECKBOX IMPRIMIR + REANIMACIÓN + WHATSAPP ==========
     document.querySelectorAll('input[name="tipoIngreso"]').forEach(function(r) {
         r.addEventListener('change', function() {
             var esAmbulancia = this.value === 'Ambulancia';
             document.getElementById('seccionAmbulancia').style.display = esAmbulancia ? 'block' : 'none';
             document.getElementById('seccionReanimacion').style.display = esAmbulancia ? 'block' : 'none';
             document.getElementById('btnWhatsApp').classList.toggle('hidden', !esAmbulancia);
-            // Mostrar/ocultar checkbox de imprimir ficha (solo ambulancia)
-            document.getElementById('seccionImprimirFicha').style.display = esAmbulancia ? 'block' : 'none';
+            // Cambiar label del checkbox de impresión
+            var labelImprimir = document.getElementById('labelImprimirFicha');
+            if (esAmbulancia) {
+                labelImprimir.innerHTML = '🖨️ Imprimir ficha de ambulancia';
+            } else {
+                labelImprimir.innerHTML = '🖨️ Imprimir ficha de ambulatorio';
+            }
         });
     });
 
@@ -585,7 +591,7 @@
         }
     });
 
-    // ========== GUARDAR + PDF (CONDICIONAL) ==========
+    // ========== GUARDAR + PDF (CONDICIONAL POR CHECKBOX) ==========
     document.getElementById('btnGuardar').addEventListener('click', function() {
         var nombre = document.getElementById('nombre').value.trim();
         var dni = document.getElementById('dni').value.trim();
@@ -599,7 +605,6 @@
         if (!razon) return mostrarToast('Ingrese razón', 'error');
         var tipo = document.querySelector('input[name="tipoIngreso"]:checked').value;
         var amb = '', dep = '', rea = 'NO';
-        var imprimir = true; // por defecto imprime (para ambulatorio)
         if (tipo === 'Ambulancia') {
             rea = document.querySelector('input[name="esReanimacion"]:checked').value;
             amb = (document.getElementById('ambulanciaNombre').value.trim() || 'S/N').toUpperCase();
@@ -607,8 +612,6 @@
                 dep = document.getElementById('departamento').value;
                 if (!dep) return mostrarToast('Seleccione un departamento', 'error');
             }
-            // Solo imprime si el checkbox está marcado
-            imprimir = document.getElementById('imprimirFichaAmbulancia').checked;
         }
         var registro = {
             fecha: document.getElementById('fecha').value,
@@ -635,11 +638,13 @@
                 .catch(function() { guardarPendiente(registro); });
         } else { guardarPendiente(registro); mostrarToast('Sin conexión. Guardado pendiente.'); }
 
-        // 2. PDF solo si corresponde
+        // 2. PDF solo si el checkbox de imprimir está marcado
+        var imprimir = document.getElementById('imprimirFicha').checked;
         if (imprimir) {
             generarPDF(registro);
         } else {
-            mostrarToast('Ficha de ambulancia no se imprimirá (opción desactivada).');
+            var tipoLabel = tipo === 'Ambulancia' ? 'ambulancia' : 'ambulatorio';
+            mostrarToast('Ficha de ' + tipoLabel + ' no se imprimirá (opción desactivada).');
         }
         limpiarFormulario();
     });
@@ -716,11 +721,11 @@
         ['sinTelefono','sinObraSocial','sinDomicilio'].forEach(function(id) { document.getElementById(id).checked = false; });
         document.querySelector('input[value="Ambulatorio"]').checked = true;
         document.getElementById('seccionAmbulancia').style.display = 'none'; document.getElementById('seccionReanimacion').style.display = 'none';
-        document.getElementById('seccionImprimirFicha').style.display = 'none';
-        document.getElementById('imprimirFichaAmbulancia').checked = false;
+        document.getElementById('imprimirFicha').checked = false;
         document.getElementById('ambulanciaInterior').checked = false; document.getElementById('grupoDepartamento').style.display = 'none';
         document.querySelector('input[value="NO"]').checked = true;
         document.getElementById('btnWhatsApp').classList.add('hidden');
+        document.getElementById('labelImprimirFicha').innerHTML = '🖨️ Imprimir ficha de ambulatorio';
     }
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
 
