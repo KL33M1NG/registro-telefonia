@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
     <style>
         :root {
             --bg: #f0f4f8; --card-bg: #ffffff; --text: #1a202c; --text-secondary: #4a5568;
@@ -200,6 +201,149 @@
         .loading-spinner i { font-size: 3rem; color: var(--accent); }
         .result-count { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500; }
         .load-more-container { text-align: center; margin-top: 1.5rem; }
+
+        /* ===== ESCÁNER DNI ===== */
+        .scanner-toggle-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: linear-gradient(135deg, rgba(49,130,206,0.08), rgba(107,70,193,0.08));
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .scanner-toggle-bar .info {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .scanner-toggle-bar .info i {
+            color: var(--primary-light);
+            font-size: 1.2rem;
+        }
+        .scanner-panel {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            animation: slideDownPanel 0.3s ease;
+        }
+        @keyframes slideDownPanel {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .scanner-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .scanner-grid { grid-template-columns: 1fr; }
+        }
+        .scanner-video-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #000;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .scanner-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .scanner-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .scanner-target {
+            width: 80%;
+            height: 45%;
+            border: 2px dashed rgba(56, 189, 248, 0.8);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+        }
+        .scanner-laser {
+            position: absolute;
+            left: 5%;
+            width: 90%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+            box-shadow: 0 0 12px #38bdf8;
+            animation: scanAnim 2s infinite ease-in-out;
+        }
+        @keyframes scanAnim {
+            0% { top: 10%; opacity: 0.3; }
+            50% { top: 85%; opacity: 1; }
+            100% { top: 10%; opacity: 0.3; }
+        }
+        .scanner-off-placeholder {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            color: #cbd5e1;
+        }
+        .scanner-off-placeholder i {
+            font-size: 2.5rem;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+        .scanner-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+        .scanner-controls .btn-row {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .scanner-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .scanner-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+        }
+        .scanner-status.scanning .dot { background: var(--success); animation: pulseDot 1.5s infinite; }
+        .scanner-status.ready .dot { background: var(--primary-light); }
+        .scanner-status.error .dot { background: var(--danger); }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .card { padding: 1.5rem; }
@@ -234,6 +378,66 @@
     <div class="card" id="formCard">
         <div class="card-header"><i class="fas fa-hospital-user"></i> REGISTRO DE PACIENTES · TELEFONÍA</div>
         <div class="hospital-badge"><i class="fas fa-ambulance"></i> Módulo de Carga · Área de Urgencias</div>
+
+        <!-- ===== BARRA + PANEL DEL ESCÁNER DNI ===== -->
+        <div class="scanner-toggle-bar">
+            <div class="info">
+                <i class="fas fa-id-card"></i>
+                <span>¿Tenés el DNI a mano? Escaneá el código PDF417 y autocompletá los datos. <em style="opacity:0.75;">(Opcional: si no trae DNI, cargá los datos a mano)</em></span>
+            </div>
+            <button type="button" class="btn btn-info btn-sm" id="btnToggleScanner">
+                <i class="fas fa-camera"></i> Abrir escáner DNI
+            </button>
+        </div>
+
+        <div class="scanner-panel hidden" id="scannerPanel">
+            <div class="scanner-grid">
+                <div>
+                    <label style="margin-bottom:0.5rem;"><i class="fas fa-video"></i> Cámara / Origen de video</label>
+                    <select id="scannerCameraSelect" style="margin-bottom:0.8rem;">
+                        <option value="">Cargando dispositivos...</option>
+                    </select>
+                    <div class="scanner-video-wrap">
+                        <video id="scannerVideo" playsinline muted></video>
+                        <div class="scanner-overlay">
+                            <div class="scanner-target">
+                                <div id="scannerLaser" class="scanner-laser hidden"></div>
+                            </div>
+                        </div>
+                        <div id="scannerOffPlaceholder" class="scanner-off-placeholder">
+                            <i class="fas fa-camera"></i>
+                            <p style="font-weight:600;">Cámara inactiva</p>
+                            <p style="font-size:0.8rem;">Pulsa "Iniciar escáner" para comenzar</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="scanner-controls">
+                    <div class="scanner-status" id="scannerStatus">
+                        <span class="dot"></span>
+                        <span id="scannerStatusText">Cámara no iniciada</span>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-success btn-sm" id="btnScannerStart">
+                            <i class="fas fa-play"></i> Iniciar escáner
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" id="btnScannerStop" disabled>
+                            <i class="fas fa-stop"></i> Detener
+                        </button>
+                        <button type="button" class="btn btn-warning btn-sm" id="btnScannerSound">
+                            <i class="fas fa-volume-high" id="scannerSoundIcon"></i> Beep: ON
+                        </button>
+                    </div>
+                    <div style="font-size:0.8rem; color:var(--text-secondary); background:var(--input-bg); padding:0.7rem 0.9rem; border-radius:var(--radius-sm); border:1px dashed var(--border);">
+                        <i class="fas fa-circle-info" style="color:var(--primary-light);"></i>
+                        Apuntá la cámara al <strong>código de barras PDF417</strong> del dorso del DNI. Los datos se cargarán automáticamente.
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-secondary); word-break:break-all; background:var(--input-bg); padding:0.6rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                        <strong>Última lectura:</strong> <span id="scannerRawText">—</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ===== FIN ESCÁNER DNI ===== -->
 
         <div class="form-grid">
             <div class="field-group">
@@ -481,8 +685,9 @@
     function mostrarToast(m, t) {
         var c = document.getElementById('toastContainer');
         var d = document.createElement('div'); d.className = 'toast';
-        d.style.background = t === 'error' ? '#e53e3e' : '#2b6cb0';
-        d.innerHTML = '<i class="fas fa-' + (t === 'error' ? 'exclamation-circle' : 'check-circle') + '"></i> ' + m;
+        d.style.background = t === 'error' ? '#e53e3e' : (t === 'success' ? '#38a169' : '#2b6cb0');
+        var icon = t === 'error' ? 'exclamation-circle' : (t === 'success' ? 'check-circle' : 'info-circle');
+        d.innerHTML = '<i class="fas fa-' + icon + '"></i> ' + m;
         c.appendChild(d);
         setTimeout(function() { d.style.opacity = '0'; d.style.transition = 'opacity 0.3s'; setTimeout(function() { d.remove(); }, 300); }, 3500);
     }
@@ -726,6 +931,9 @@
         document.querySelector('input[value="NO"]').checked = true;
         document.getElementById('btnWhatsApp').classList.add('hidden');
         document.getElementById('labelImprimirFicha').innerHTML = '🖨️ Imprimir ficha de ambulatorio';
+        // Resetear texto raw del escáner (si existe)
+        var rawEl = document.getElementById('scannerRawText');
+        if (rawEl) rawEl.textContent = '—';
     }
     document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
 
@@ -838,6 +1046,212 @@
     if (!isOnline()) document.getElementById('offlineBanner').style.display = 'block';
 
     if ('serviceWorker' in navigator) window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function() {}); });
+
+    // ========== ESCÁNER DNI (PDF417) ==========
+    (function() {
+        var codeReader = null;
+        var selectedDeviceId = null;
+        var isScanning = false;
+        var soundEnabled = true;
+        var lastScannedText = '';
+        var lastScanTime = 0;
+
+        var btnToggle = document.getElementById('btnToggleScanner');
+        var panel = document.getElementById('scannerPanel');
+        var cameraSelect = document.getElementById('scannerCameraSelect');
+        var btnStart = document.getElementById('btnScannerStart');
+        var btnStop = document.getElementById('btnScannerStop');
+        var btnSound = document.getElementById('btnScannerSound');
+        var statusEl = document.getElementById('scannerStatus');
+        var statusText = document.getElementById('scannerStatusText');
+        var offPlaceholder = document.getElementById('scannerOffPlaceholder');
+        var laser = document.getElementById('scannerLaser');
+        var rawTextEl = document.getElementById('scannerRawText');
+
+        function setStatus(text, state) {
+            statusText.textContent = text;
+            statusEl.className = 'scanner-status ' + (state || '');
+        }
+
+        btnToggle.addEventListener('click', function() {
+            var isHidden = panel.classList.contains('hidden');
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                btnToggle.innerHTML = '<i class="fas fa-times"></i> Cerrar escáner';
+                if (!codeReader) initScanner();
+            } else {
+                panel.classList.add('hidden');
+                btnToggle.innerHTML = '<i class="fas fa-camera"></i> Abrir escáner DNI';
+                detenerEscaner();
+            }
+        });
+
+        function initScanner() {
+            if (typeof ZXing === 'undefined') {
+                setStatus('Librería ZXing no cargada', 'error');
+                return;
+            }
+            try {
+                codeReader = new ZXing.BrowserPDF417Reader();
+                cargarCamaras();
+            } catch (e) {
+                console.error(e);
+                setStatus('Error al inicializar escáner', 'error');
+            }
+        }
+
+        async function cargarCamaras() {
+            cameraSelect.innerHTML = '<option value="">Buscando cámaras...</option>';
+            try {
+                var stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                stream.getTracks().forEach(function(t) { t.stop(); });
+                var devices = await navigator.mediaDevices.enumerateDevices();
+                var videoDevices = devices.filter(function(d) { return d.kind === 'videoinput'; });
+                cameraSelect.innerHTML = '';
+                if (!videoDevices.length) {
+                    cameraSelect.innerHTML = '<option value="">No se encontraron cámaras</option>';
+                    setStatus('Sin cámaras disponibles', 'error');
+                    return;
+                }
+                var defaultIndex = 0;
+                videoDevices.forEach(function(device, i) {
+                    var opt = document.createElement('option');
+                    opt.value = device.deviceId;
+                    var label = device.label || ('Cámara ' + (i + 1));
+                    if (label.toLowerCase().indexOf('droidcam') !== -1) {
+                        label = '📱 ' + label + ' (DroidCam)';
+                        defaultIndex = i;
+                    } else {
+                        label = '📷 ' + label;
+                    }
+                    opt.text = label;
+                    cameraSelect.appendChild(opt);
+                });
+                cameraSelect.selectedIndex = defaultIndex;
+                selectedDeviceId = cameraSelect.value;
+                cameraSelect.addEventListener('change', function(e) {
+                    selectedDeviceId = e.target.value;
+                    if (isScanning) { detenerEscaner(); iniciarEscaner(); }
+                });
+                setStatus('Listo para escanear', 'ready');
+            } catch (err) {
+                console.warn(err);
+                cameraSelect.innerHTML = '<option value="">Error al acceder a cámaras</option>';
+                setStatus('Cámara no disponible (revisar permisos/HTTPS)', 'error');
+            }
+        }
+
+        function iniciarEscaner() {
+            if (!codeReader || !selectedDeviceId) {
+                mostrarToast('Seleccioná un dispositivo de video válido', 'error');
+                return;
+            }
+            try {
+                isScanning = true;
+                offPlaceholder.classList.add('hidden');
+                laser.classList.remove('hidden');
+                btnStart.disabled = true;
+                btnStop.disabled = false;
+                setStatus('Escaneando PDF417...', 'scanning');
+
+                codeReader.decodeFromVideoDevice(selectedDeviceId, 'scannerVideo', function(result) {
+                    if (result) {
+                        var rawText = result.getText();
+                        var ahora = Date.now();
+                        if (rawText && rawText !== lastScannedText && (ahora - lastScanTime) > 2000) {
+                            lastScannedText = rawText;
+                            lastScanTime = ahora;
+                            procesarDNI(rawText);
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+                setStatus('Falla al iniciar video', 'error');
+                detenerEscaner();
+            }
+        }
+
+        function detenerEscaner() {
+            if (codeReader && isScanning) {
+                try { codeReader.reset(); } catch(e) {}
+                isScanning = false;
+            }
+            offPlaceholder.classList.remove('hidden');
+            laser.classList.add('hidden');
+            btnStart.disabled = false;
+            btnStop.disabled = true;
+            setStatus('Escáner detenido', 'ready');
+        }
+
+        function parseDNI(rawText) {
+            if (!rawText) return null;
+            var cleaned = rawText.trim().replace(/^"/, '').replace(/"$/, '');
+            var f = cleaned.split('@');
+            if (f.length >= 7) {
+                var dni = (f[4] || '').replace(/\D/g, '');
+                return {
+                    apellido: (f[1] || '').trim().toUpperCase(),
+                    nombre: (f[2] || '').trim().toUpperCase(),
+                    dni: dni,
+                    fechaNacimiento: (f[6] || '').trim()
+                };
+            }
+            return null;
+        }
+
+        function procesarDNI(rawText) {
+            rawTextEl.textContent = rawText;
+            var data = parseDNI(rawText);
+            if (!data || !data.dni) {
+                // Silencioso: no mostrar cartel si no es un DNI
+                return;
+            }
+
+            if (soundEnabled) beep();
+
+            var campoNombre = document.getElementById('nombre');
+            var campoDni = document.getElementById('dni');
+            var campoNac = document.getElementById('nacimiento');
+
+            campoNombre.value = (data.apellido + ' ' + data.nombre).trim().toUpperCase();
+            campoDni.value = data.dni;
+            campoNac.value = data.fechaNacimiento;
+
+            // Disparar el evento input para que se calcule la edad
+            campoNac.dispatchEvent(new Event('input', { bubbles: true }));
+
+            mostrarToast('✅ DNI escaneado: ' + data.apellido + ' ' + data.nombre, 'success');
+            setStatus('DNI leído correctamente', 'ready');
+        }
+
+        function beep() {
+            try {
+                var AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                var ctx = new AudioCtx();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        btnStart.addEventListener('click', iniciarEscaner);
+        btnStop.addEventListener('click', detenerEscaner);
+        btnSound.addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            var iconClass = soundEnabled ? 'fas fa-volume-high' : 'fas fa-volume-xmark';
+            btnSound.innerHTML = '<i class="' + iconClass + '" id="scannerSoundIcon"></i> Beep: ' + (soundEnabled ? 'ON' : 'OFF');
+        });
+    })();
+
     actualizarListaPendientes();
 </script>
 </body>
