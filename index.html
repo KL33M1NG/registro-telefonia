@@ -22,6 +22,7 @@
             --header-gradient: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
             --reanimation-red: #dc2626;
             --whatsapp-green: #25D366;
+            --obito-dark: #1f2937;
         }
         body.dark-mode {
             --bg: #0f172a; --card-bg: #1e293b; --text: #e2e8f0; --text-secondary: #94a3b8;
@@ -92,6 +93,7 @@
             box-shadow: 0 0 0 4px rgba(49,130,206,0.12); transform: translateY(-1px);
         }
         input[readonly] { background: var(--border); cursor: not-allowed; opacity: 0.75; }
+        select:disabled { background: var(--border); cursor: not-allowed; opacity: 0.6; }
         textarea { resize: vertical; min-height: 60px; }
         .checkbox-group, .radio-group { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.9rem; }
         .radio-group { gap: 2rem; margin: 0.5rem 0; padding: 0.6rem; background: var(--input-bg); border-radius: var(--radius-sm); border: 1px solid var(--border); }
@@ -109,6 +111,7 @@
         .btn-info { background: linear-gradient(135deg, #6b46c1, #9f7aea); }
         .btn-green { background: linear-gradient(135deg, #0d9488, #14b8a6); }
         .btn-whatsapp { background: var(--whatsapp-green); color: white; }
+        .btn-obito { background: linear-gradient(135deg, #1f2937, #374151); color: white; }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reanimation-section {
@@ -197,6 +200,11 @@
             padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600;
             color: var(--primary-light); margin-bottom: 0.5rem;
         }
+        .hospital-badge.obito-badge {
+            background: linear-gradient(135deg, rgba(31,41,55,0.12), rgba(55,65,81,0.18));
+            color: #4b5563;
+        }
+        body.dark-mode .hospital-badge.obito-badge { color: #cbd5e1; }
         .loading-spinner { text-align: center; padding: 3rem; }
         .loading-spinner i { font-size: 3rem; color: var(--accent); }
         .result-count { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500; }
@@ -293,7 +301,7 @@
         .scanner-off-placeholder {
             position: absolute;
             inset: 0;
-            background: rgba(15, 23, 42, 0.92);
+            background: #0f172a;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -367,6 +375,7 @@
         <button class="nav-btn active" id="btnNavForm"><i class="fas fa-user-plus"></i> Carga</button>
         <button class="nav-btn" id="btnNavHistory"><i class="fas fa-search"></i> Consultar</button>
         <button class="nav-btn" id="btnNavPending"><i class="fas fa-clock"></i> Pendientes</button>
+        <button class="nav-btn" id="btnNavObito"><i class="fas fa-book-dead"></i> OBITO</button>
         <button class="theme-toggle" id="themeToggle">
             <i class="fas fa-moon"></i> <span id="themeLabel">Oscuro</span>
         </button>
@@ -617,6 +626,74 @@
             <button class="btn btn-danger" id="btnClearAll"><i class="fas fa-trash-alt"></i> Eliminar</button>
         </div>
     </div>
+
+    <!-- OBITO -->
+    <div class="card hidden" id="obitoCard">
+        <div class="card-header"><i class="fas fa-book-dead"></i> NOTIFICACIÓN DE ÓBITO</div>
+        <div class="hospital-badge obito-badge"><i class="fas fa-file-medical"></i> Completá los datos y copiá el mensaje para el grupo de WhatsApp</div>
+
+        <div class="form-grid">
+            <div class="field-group">
+                <label><i class="far fa-calendar-alt"></i> Fecha</label>
+                <input type="text" id="obitoFecha" readonly>
+            </div>
+            <div class="field-group">
+                <label><i class="far fa-clock"></i> Hora</label>
+                <input type="text" id="obitoHora" readonly>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-user"></i> Apellido y Nombre <span class="required">*</span></label>
+                <input type="text" id="obitoNombre" placeholder="INGRESE APELLIDO Y NOMBRE" style="text-transform: uppercase;" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label><i class="fas fa-id-card"></i> DNI <span class="required">*</span></label>
+                <input type="text" id="obitoDni" maxlength="11" placeholder="SIN PUNTOS NI LETRAS" inputmode="numeric" pattern="[0-9]*" autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-cake-candles"></i> Fecha de Nacimiento <span class="required">*</span></label>
+                <input type="text" id="obitoNacimiento" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label><i class="fas fa-calculator"></i> Edad (automática)</label>
+                <div class="age-display" id="obitoEdadDisplay">—</div>
+            </div>
+
+            <div class="field-group full-width">
+                <div class="section-separator" style="margin: 0;"></div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fas fa-hospital"></i> Servicio <span class="required">*</span></label>
+                <select id="obitoServicio">
+                    <option value="">Seleccione un servicio...</option>
+                    <option value="23">Cirugía General</option>
+                    <option value="24">Clínica Médica</option>
+                    <option value="100">Cx Oncológica - Cuello y Cabeza</option>
+                    <option value="67">Emergencias Médicas</option>
+                    <option value="69">HISJB - UTI</option>
+                    <option value="99">HISJB - UTI II</option>
+                    <option value="89">Oncología</option>
+                    <option value="101">Quemados</option>
+                    <option value="94">Salud Mental</option>
+                    <option value="45">Traumatología</option>
+                    <option value="88">Unidad Coronaria</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label><i class="fas fa-map-pin"></i> Área <span class="required">*</span></label>
+                <select id="obitoArea" disabled>
+                    <option value="">Primero seleccione un servicio...</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <button class="btn btn-whatsapp" id="btnObitoWhatsApp"><i class="fab fa-whatsapp"></i> Copiar para WhatsApp</button>
+            <button class="btn btn-success" id="btnObitoLimpiar"><i class="fas fa-undo-alt"></i> Limpiar</button>
+        </div>
+    </div>
 </div>
 
 <div id="toastContainer"></div>
@@ -662,16 +739,24 @@
     var formCard = document.getElementById('formCard');
     var historyCard = document.getElementById('historyCard');
     var panelPendientes = document.getElementById('panelPendientes');
+    var obitoCard = document.getElementById('obitoCard');
+
     function mostrarSeccion(s) {
-        formCard.classList.add('hidden'); historyCard.classList.add('hidden'); panelPendientes.classList.add('hidden');
+        formCard.classList.add('hidden');
+        historyCard.classList.add('hidden');
+        panelPendientes.classList.add('hidden');
+        obitoCard.classList.add('hidden');
         document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+
         if (s === 'form') { formCard.classList.remove('hidden'); document.getElementById('btnNavForm').classList.add('active'); }
         if (s === 'history') { historyCard.classList.remove('hidden'); document.getElementById('btnNavHistory').classList.add('active'); cargarUltimosRegistros(); }
         if (s === 'pending') { panelPendientes.classList.remove('hidden'); document.getElementById('btnNavPending').classList.add('active'); actualizarListaPendientes(); }
+        if (s === 'obito') { obitoCard.classList.remove('hidden'); document.getElementById('btnNavObito').classList.add('active'); actualizarRelojObito(); }
     }
     document.getElementById('btnNavForm').addEventListener('click', function() { mostrarSeccion('form'); });
     document.getElementById('btnNavHistory').addEventListener('click', function() { mostrarSeccion('history'); });
     document.getElementById('btnNavPending').addEventListener('click', function() { mostrarSeccion('pending'); });
+    document.getElementById('btnNavObito').addEventListener('click', function() { mostrarSeccion('obito'); });
 
     // ========== RELOJ ==========
     function actualizarReloj() {
@@ -727,7 +812,6 @@
             document.getElementById('seccionAmbulancia').style.display = esAmbulancia ? 'block' : 'none';
             document.getElementById('seccionReanimacion').style.display = esAmbulancia ? 'block' : 'none';
             document.getElementById('btnWhatsApp').classList.toggle('hidden', !esAmbulancia);
-            // Cambiar label del checkbox de impresión
             var labelImprimir = document.getElementById('labelImprimirFicha');
             if (esAmbulancia) {
                 labelImprimir.innerHTML = '🖨️ Imprimir ficha de ambulancia';
@@ -836,14 +920,12 @@
             token: window.API_TOKEN
         };
 
-        // 1. Enviar a Google Sheets
         if (isOnline() && window.APPS_SCRIPT_URL) {
             fetch(window.APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(registro), headers: {'Content-Type':'application/json'}, mode:'no-cors' })
                 .then(function() { mostrarToast('Guardado en Sheets'); })
                 .catch(function() { guardarPendiente(registro); });
         } else { guardarPendiente(registro); mostrarToast('Sin conexión. Guardado pendiente.'); }
 
-        // 2. PDF solo si el checkbox de imprimir está marcado
         var imprimir = document.getElementById('imprimirFicha').checked;
         if (imprimir) {
             generarPDF(registro);
@@ -931,7 +1013,6 @@
         document.querySelector('input[value="NO"]').checked = true;
         document.getElementById('btnWhatsApp').classList.add('hidden');
         document.getElementById('labelImprimirFicha').innerHTML = '🖨️ Imprimir ficha de ambulatorio';
-        // Resetear texto raw del escáner (si existe)
         var rawEl = document.getElementById('scannerRawText');
         if (rawEl) rawEl.textContent = '—';
     }
@@ -1204,7 +1285,6 @@
             rawTextEl.textContent = rawText;
             var data = parseDNI(rawText);
             if (!data || !data.dni) {
-                // Silencioso: no mostrar cartel si no es un DNI
                 return;
             }
 
@@ -1218,7 +1298,6 @@
             campoDni.value = data.dni;
             campoNac.value = data.fechaNacimiento;
 
-            // Disparar el evento input para que se calcule la edad
             campoNac.dispatchEvent(new Event('input', { bubbles: true }));
 
             mostrarToast('✅ DNI escaneado: ' + data.apellido + ' ' + data.nombre, 'success');
@@ -1249,6 +1328,144 @@
             soundEnabled = !soundEnabled;
             var iconClass = soundEnabled ? 'fas fa-volume-high' : 'fas fa-volume-xmark';
             btnSound.innerHTML = '<i class="' + iconClass + '" id="scannerSoundIcon"></i> Beep: ' + (soundEnabled ? 'ON' : 'OFF');
+        });
+    })();
+
+    // ========== OBITO ==========
+    (function() {
+        var AREAS_POR_SERVICIO = {
+            '23':  [{ v: '123', t: 'Cardiovascular' }, { v: '39', t: 'Cirugía General' }, { v: '134', t: 'Cirugía Oncológica' }, { v: '124', t: 'Maxilo Facial' }, { v: '125', t: 'Quemados' }],
+            '24':  [{ v: '108', t: 'Clínica Médica' }, { v: '117', t: 'Infectología' }],
+            '100': [{ v: '141', t: 'Cirugía' }, { v: '142', t: 'Cx Oncológica - Cuello y Cabeza' }],
+            '67':  [{ v: '110', t: 'Internado de Emergencia' }],
+            '69':  [{ v: '106', t: 'UTI I' }],
+            '99':  [{ v: '138', t: 'UTI II' }],
+            '89':  [{ v: '120', t: 'Camas Prestadas - Oncología' }, { v: '115', t: 'Cuidados Paliativos' }, { v: '24', t: 'Hematología' }, { v: '116', t: 'Hemoterapia' }, { v: '114', t: 'Oncología' }],
+            '101': [{ v: '140', t: 'HSJB - Quemados' }],
+            '94':  [{ v: '126', t: 'Salud Mental' }],
+            '45':  [{ v: '29', t: 'Traumatología' }],
+            '88':  [{ v: '113', t: 'Unidad Coronaria' }]
+        };
+
+        var servicioSelect = document.getElementById('obitoServicio');
+        var areaSelect = document.getElementById('obitoArea');
+
+        servicioSelect.addEventListener('change', function() {
+            var areas = AREAS_POR_SERVICIO[this.value] || [];
+            areaSelect.innerHTML = '';
+            if (!areas.length) {
+                areaSelect.disabled = true;
+                areaSelect.innerHTML = '<option value="">Primero seleccione un servicio...</option>';
+                return;
+            }
+            areaSelect.disabled = false;
+            areaSelect.innerHTML = '<option value="">Seleccione un área...</option>';
+            areas.forEach(function(a) {
+                var opt = document.createElement('option');
+                opt.value = a.v;
+                opt.text = a.t;
+                areaSelect.appendChild(opt);
+            });
+        });
+
+        function actualizarRelojObito() {
+            var ahora = new Date();
+            document.getElementById('obitoFecha').value = String(ahora.getDate()).padStart(2,'0') + '/' + String(ahora.getMonth()+1).padStart(2,'0') + '/' + ahora.getFullYear();
+            document.getElementById('obitoHora').value = String(ahora.getHours()).padStart(2,'0') + ':' + String(ahora.getMinutes()).padStart(2,'0');
+        }
+        // Exponer para que mostrarSeccion('obito') la llame
+        window.actualizarRelojObito = actualizarRelojObito;
+
+        setInterval(function() {
+            if (!obitoCard.classList.contains('hidden')) actualizarRelojObito();
+        }, 1000);
+
+        document.getElementById('obitoNacimiento').addEventListener('input', function(e) {
+            var val = e.target.value.replace(/\D/g, '').slice(0, 8);
+            var f = '';
+            if (val.length > 4) f = val.slice(0,2) + '/' + val.slice(2,4) + '/' + val.slice(4);
+            else if (val.length > 2) f = val.slice(0,2) + '/' + val.slice(2);
+            else f = val;
+            e.target.value = f;
+
+            var edadEl = document.getElementById('obitoEdadDisplay');
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(f)) {
+                var p = f.split('/');
+                var fn = new Date(p[2], p[1]-1, p[0]);
+                var hoy = new Date();
+                if (fn.getDate() !== parseInt(p[0]) || fn.getMonth() !== parseInt(p[1])-1 || fn > hoy) {
+                    edadEl.textContent = 'Inválida';
+                    edadEl.classList.remove('calculated');
+                    return;
+                }
+                var edad = hoy.getFullYear() - fn.getFullYear();
+                if (hoy.getMonth() < fn.getMonth() || (hoy.getMonth() === fn.getMonth() && hoy.getDate() < fn.getDate())) edad--;
+                edadEl.textContent = edad + ' años';
+                edadEl.classList.add('calculated');
+            } else {
+                edadEl.textContent = '—';
+                edadEl.classList.remove('calculated');
+            }
+        });
+
+        document.getElementById('btnObitoWhatsApp').addEventListener('click', function() {
+            var nombre = document.getElementById('obitoNombre').value.trim().toUpperCase();
+            var dni = document.getElementById('obitoDni').value.trim();
+            var nac = document.getElementById('obitoNacimiento').value.trim();
+            var edadTxt = document.getElementById('obitoEdadDisplay').textContent;
+            var servicio = servicioSelect.options[servicioSelect.selectedIndex] ? servicioSelect.options[servicioSelect.selectedIndex].text : '';
+            var area = areaSelect.options[areaSelect.selectedIndex] ? areaSelect.options[areaSelect.selectedIndex].text : '';
+
+            if (!nombre) return mostrarToast('Complete Apellido y Nombre', 'error');
+            if (!dni || !/^\d{7,11}$/.test(dni)) return mostrarToast('DNI inválido', 'error');
+            if (!/^\d{2}\/\d{2}\/\d{4}$/.test(nac)) return mostrarToast('Fecha de nacimiento incompleta', 'error');
+            if (edadTxt === '—' || edadTxt === 'Inválida') return mostrarToast('Fecha de nacimiento inválida', 'error');
+            if (!servicioSelect.value) return mostrarToast('Seleccione un servicio', 'error');
+            if (!areaSelect.value) return mostrarToast('Seleccione un área', 'error');
+
+            var edad = edadTxt.replace(' años', '');
+            var ahora = new Date();
+            var fechaActual = ahora.toLocaleDateString('es-AR');
+            var horaActual = String(ahora.getHours()).padStart(2,'0') + ':' + String(ahora.getMinutes()).padStart(2,'0');
+
+            var mensaje = '⚫ *NOTIFICACIÓN DE ÓBITO - HISJB*\n';
+            mensaje += '📅 *FECHA:* ' + fechaActual + '  |  🕒 *HORA:* ' + horaActual + '\n';
+            mensaje += '━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            mensaje += '👤 *PACIENTE:* ' + nombre + '\n';
+            mensaje += '🆔 *DNI:* ' + dni + '\n';
+            mensaje += '🎂 *FECHA NAC.:* ' + nac + '  (' + edad + ' años)\n';
+            mensaje += '🏥 *SERVICIO:* ' + servicio + '\n';
+            mensaje += '📍 *ÁREA:* ' + area + '\n';
+            mensaje += '\n━━━━━━━━━━━━━━━━━━━━━━\n';
+            mensaje += '📱 *REGISTRADO POR SISTEMA DE ADMISIÓN 24 HS*';
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(mensaje).then(function() {
+                    mostrarToast('✅ Texto copiado. ¡Pegalo en WhatsApp!');
+                    var btn = document.getElementById('btnObitoWhatsApp');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                    setTimeout(function() { btn.innerHTML = '<i class="fab fa-whatsapp"></i> Copiar para WhatsApp'; }, 2000);
+                }).catch(function() { mostrarToast('Error al copiar. Intentá de nuevo.', 'error'); });
+            } else {
+                var textarea = document.createElement('textarea');
+                textarea.value = mensaje;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                mostrarToast('✅ Texto copiado (modo alternativo)');
+            }
+        });
+
+        document.getElementById('btnObitoLimpiar').addEventListener('click', function() {
+            document.getElementById('obitoNombre').value = '';
+            document.getElementById('obitoDni').value = '';
+            document.getElementById('obitoNacimiento').value = '';
+            document.getElementById('obitoEdadDisplay').textContent = '—';
+            document.getElementById('obitoEdadDisplay').classList.remove('calculated');
+            servicioSelect.value = '';
+            areaSelect.innerHTML = '<option value="">Primero seleccione un servicio...</option>';
+            areaSelect.disabled = true;
         });
     })();
 
