@@ -1222,7 +1222,7 @@
             }
         }
 
-        function iniciarEscaner() {
+                function iniciarEscaner() {
             if (!codeReader || !selectedDeviceId) {
                 mostrarToast('Seleccioná un dispositivo de video válido', 'error');
                 return;
@@ -1235,7 +1235,30 @@
                 btnStop.disabled = false;
                 setStatus('Escaneando PDF417...', 'scanning');
 
-                codeReader.decodeFromVideoDevice(selectedDeviceId, 'scannerVideo', function(result) {
+                // Callback con manejo de errores tolerante
+                var onDecode = function(result, err) {
+                    // Error de ZXing (a veces es solo "no encontró código en este frame")
+                    if (err && !(err instanceof ZXing.NotFoundException)) {
+                        // Silenciamos errores comunes de decodificación parcial
+                        var msg = (err && err.message) ? err.message : String(err);
+                        if (msg.indexOf('stopping scan loop') !== -1 ||
+                            msg.indexOf('unexpected error during decode') !== -1) {
+                            // Reiniciar el loop automáticamente tras un pequeño delay
+                            setTimeout(function() {
+                                if (isScanning && codeReader) {
+                                    try {
+                                        codeReader.reset();
+                                        codeReader.decodeFromVideoDevice(selectedDeviceId, 'scannerVideo', onDecode);
+                                    } catch (e) {
+                                        console.warn('No se pudo reiniciar el escáner:', e);
+                                    }
+                                }
+                            }, 300);
+                            return;
+                        }
+                    }
+
+                    // Éxito: procesar el código leído
                     if (result) {
                         var rawText = result.getText();
                         var ahora = Date.now();
@@ -1245,7 +1268,23 @@
                             procesarDNI(rawText);
                         }
                     }
-                });
+                };
+
+                // Silenciar el warning "Trying to play video that is already playing"
+                var videoEl = document.getElementById('scannerVideo');
+                if (videoEl && !videoEl.dataset.playPatched) {
+                    var originalPlay = videoEl.play.bind(videoEl);
+                    videoEl.play = function() {
+                        var p = originalPlay();
+                        if (p && typeof p.catch === 'function') {
+                            p.catch(function() { /* ignorar */ });
+                        }
+                        return p;
+                    };
+                    videoEl.dataset.playPatched = '1';
+                }
+
+                codeReader.decodeFromVideoDevice(selectedDeviceId, 'scannerVideo', onDecode);
             } catch (err) {
                 console.error(err);
                 setStatus('Falla al iniciar video', 'error');
