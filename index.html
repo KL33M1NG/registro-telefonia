@@ -112,6 +112,7 @@
         .btn-green { background: linear-gradient(135deg, #0d9488, #14b8a6); }
         .btn-whatsapp { background: var(--whatsapp-green); color: white; }
         .btn-obito { background: linear-gradient(135deg, #1f2937, #374151); color: white; }
+        .btn-secondary { background: linear-gradient(135deg, #a0aec0, #cbd5e0); color: #1a202c; }
         .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .reanimation-section {
@@ -168,8 +169,6 @@
             display: flex; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
             background: var(--input-bg); padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border);
         }
-        .search-box input { flex: 1; min-width: 250px; padding: 0.8rem 1.2rem; border-radius: 2rem; font-size: 1rem; }
-        .search-box select { width: auto; min-width: 180px; padding: 0.8rem 1.2rem; border-radius: 2rem; font-size: 1rem; }
         .stats-bar {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 1rem; margin-bottom: 1.5rem;
@@ -375,7 +374,7 @@
         <button class="nav-btn active" id="btnNavForm"><i class="fas fa-user-plus"></i> Carga</button>
         <button class="nav-btn" id="btnNavHistory"><i class="fas fa-search"></i> Consultar</button>
         <button class="nav-btn" id="btnNavPending"><i class="fas fa-clock"></i> Pendientes</button>
-        <button class="nav-btn" id="btnNavObito"><i class="fas fa-book-dead"></i> OBITO</button>
+        <button class="nav-btn" id="btnNavObito"><i class="fas fa-book-dead"></i> Obito</button>
         <button class="theme-toggle" id="themeToggle">
             <i class="fas fa-moon"></i> <span id="themeLabel">Oscuro</span>
         </button>
@@ -460,7 +459,7 @@
 
             <div class="field-group full-width">
                 <label><i class="fas fa-truck-medical"></i> Tipo de ingreso</label>
-                <div class="radio-group">
+                <div class="radio-group" style="gap: 1.5rem; align-items: center; flex-wrap: wrap;">
                     <div class="radio-item">
                         <input type="radio" id="tipoAmbulatorio" name="tipoIngreso" value="Ambulatorio" checked>
                         <label for="tipoAmbulatorio">🚶 Ambulatorio</label>
@@ -469,6 +468,9 @@
                         <input type="radio" id="tipoAmbulancia" name="tipoIngreso" value="Ambulancia">
                         <label for="tipoAmbulancia">🚑 Ambulancia</label>
                     </div>
+                    <button type="button" class="btn btn-obito btn-sm" id="btnAccesoObito" style="margin-left: auto;">
+                        <i class="fas fa-book-dead"></i> NOTIFICAR ÓBITO
+                    </button>
                 </div>
             </div>
 
@@ -588,29 +590,38 @@
     <!-- CONSULTA -->
     <div class="card hidden" id="historyCard">
         <div class="card-header">
-            <i class="fas fa-database"></i> CONSULTA · GOOGLE SHEETS
-            <span style="margin-left:auto;font-size:0.85rem;font-weight:500;color:var(--text-secondary);">
-                <i class="fas fa-sort-amount-down"></i> Más recientes primero
-            </span>
+            <i class="fas fa-search"></i> CONSULTA DE PACIENTES
         </div>
-        <div class="stats-bar" id="statsBar">
-            <div class="stat-card"><div class="stat-number" id="statTotal">-</div><div class="stat-label">Total</div></div>
-            <div class="stat-card"><div class="stat-number" id="statAmbulatorio">-</div><div class="stat-label">Ambulatorio</div></div>
-            <div class="stat-card"><div class="stat-number" id="statAmbulancia">-</div><div class="stat-label">Ambulancia</div></div>
-            <div class="stat-card reanimacion-stat"><div class="stat-number" id="statReanimacion">-</div><div class="stat-label">Reanimación</div></div>
+
+        <div class="search-box" style="flex-direction: column; align-items: stretch;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="field-group">
+                    <label><i class="fas fa-id-card"></i> DNI</label>
+                    <input type="text" id="searchDni" inputmode="numeric" pattern="[0-9]*" placeholder="Buscar por DNI..." autocomplete="off" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="border-radius: 2rem;">
+                </div>
+                <div class="field-group">
+                    <label><i class="fas fa-user"></i> Apellido</label>
+                    <input type="text" id="searchApellido" placeholder="Buscar por apellido..." autocomplete="off" style="text-transform: uppercase; border-radius: 2rem;">
+                </div>
+                <div class="field-group">
+                    <label><i class="far fa-calendar-alt"></i> Fecha</label>
+                    <input type="date" id="searchFecha" style="border-radius: 2rem;">
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: flex-end;">
+                <button class="btn btn-info btn-sm" id="btnSearch"><i class="fas fa-search"></i> Buscar</button>
+                <button class="btn btn-secondary btn-sm" id="btnClearSearch"><i class="fas fa-eraser"></i> Limpiar filtros</button>
+                <button class="btn btn-success btn-sm" id="btnRefreshHistory"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                <button class="btn btn-green btn-sm" id="btnOpenExcel"><i class="fas fa-file-excel"></i> Ver Excel</button>
+            </div>
         </div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar... (automático al escribir)">
-            <select id="searchFilter">
-                <option value="todos">Todos</option><option value="nombre">Nombre</option><option value="dni">DNI</option><option value="razon">Razón</option><option value="fecha">Fecha</option>
-            </select>
-            <button class="btn btn-info btn-sm" id="btnSearch"><i class="fas fa-search"></i> Buscar</button>
-            <button class="btn btn-success btn-sm" id="btnRefreshHistory"><i class="fas fa-sync-alt"></i> Actualizar</button>
-            <button class="btn btn-green btn-sm" id="btnOpenExcel"><i class="fas fa-file-excel"></i> Ver Excel</button>
-        </div>
+
         <div class="result-count" id="resultCount"></div>
         <div class="history-list" id="historyList">
-            <div class="loading-spinner" id="historyLoading"><i class="fas fa-spinner fa-spin"></i><p style="margin-top:1rem;">Cargando...</p></div>
+            <p style="text-align:center;color:var(--text-secondary);padding:3rem;">
+                <i class="fas fa-info-circle" style="font-size:1.5rem;opacity:0.5;display:block;margin-bottom:0.5rem;"></i>
+                Ingresá un DNI, un apellido, o seleccioná una fecha para consultar registros.
+            </p>
         </div>
         <div class="load-more-container" id="loadMoreContainer" style="display:none;">
             <button class="btn btn-info" id="btnLoadMore"><i class="fas fa-chevron-down"></i> Cargar más registros</button>
@@ -676,9 +687,11 @@
                     <option value="99">HISJB - UTI II</option>
                     <option value="89">Oncología</option>
                     <option value="101">Quemados</option>
+                    <option value="69">Reanimación</option>
                     <option value="94">Salud Mental</option>
                     <option value="45">Traumatología</option>
                     <option value="88">Unidad Coronaria</option>
+                    
                 </select>
             </div>
             <div class="field-group">
@@ -716,7 +729,7 @@
     // ========== ESTADO ==========
     var pendingRecords = JSON.parse(localStorage.getItem('pendingRecords') || '[]');
     var currentOffset = 0;
-    var currentLimit = 50;
+    var currentLimit = 100;
     var totalRegistros = 0;
     function isOnline() { return navigator.onLine; }
 
@@ -749,7 +762,7 @@
         document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
 
         if (s === 'form') { formCard.classList.remove('hidden'); document.getElementById('btnNavForm').classList.add('active'); }
-        if (s === 'history') { historyCard.classList.remove('hidden'); document.getElementById('btnNavHistory').classList.add('active'); cargarUltimosRegistros(); }
+        if (s === 'history') { historyCard.classList.remove('hidden'); document.getElementById('btnNavHistory').classList.add('active'); resetearConsulta(); }
         if (s === 'pending') { panelPendientes.classList.remove('hidden'); document.getElementById('btnNavPending').classList.add('active'); actualizarListaPendientes(); }
         if (s === 'obito') { obitoCard.classList.remove('hidden'); document.getElementById('btnNavObito').classList.add('active'); actualizarRelojObito(); }
     }
@@ -1045,81 +1058,140 @@
         });
     });
 
-    // ========== CONSULTA ==========
-    function buscar(query, filter, offset, limit, append) {
+    // ========== CONSULTA (búsqueda en el backend) ==========
+    function resetearConsulta() {
+        document.getElementById('searchDni').value = '';
+        document.getElementById('searchApellido').value = '';
+        document.getElementById('searchFecha').value = '';
+        document.getElementById('resultCount').textContent = '';
+        document.getElementById('loadMoreContainer').style.display = 'none';
+        document.getElementById('historyList').innerHTML =
+            '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">' +
+            '<i class="fas fa-info-circle" style="font-size:1.5rem;opacity:0.5;display:block;margin-bottom:0.5rem;"></i>' +
+            'Ingresá un DNI, un apellido, o seleccioná una fecha para consultar registros.' +
+            '</p>';
+    }
+
+    function buscarEnBackend(offset, limit, append) {
+        var dni = document.getElementById('searchDni').value.trim();
+        var apellido = document.getElementById('searchApellido').value.trim().toUpperCase();
+        var fechaInput = document.getElementById('searchFecha').value; // YYYY-MM-DD
+        var fechaDDMM = '';
+        if (fechaInput) {
+            var partes = fechaInput.split('-');
+            fechaDDMM = partes[2] + '/' + partes[1] + '/' + partes[0];
+        }
+
+        var hayFiltros = dni || apellido || fechaDDMM;
+        if (!hayFiltros) {
+            mostrarToast('Ingresá al menos un filtro (DNI, Apellido o Fecha)', 'error');
+            return;
+        }
+
         if (!append) {
-            document.getElementById('historyList').innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div>';
+            document.getElementById('historyList').innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i><p>Buscando...</p></div>';
             document.getElementById('loadMoreContainer').style.display = 'none';
         }
-        var params = 'action=search&query='+encodeURIComponent(query)+'&filter='+encodeURIComponent(filter)+'&token='+encodeURIComponent(window.API_TOKEN)+'&offset='+offset+'&limit='+limit;
-        fetch(window.APPS_SCRIPT_URL+'?'+params)
+
+        // Enviamos los filtros al backend, que hace la búsqueda en Sheets
+        var params = 'action=search' +
+                     '&dni=' + encodeURIComponent(dni) +
+                     '&apellido=' + encodeURIComponent(apellido) +
+                     '&fecha=' + encodeURIComponent(fechaDDMM) +
+                     '&token=' + encodeURIComponent(window.API_TOKEN) +
+                     '&offset=' + offset + '&limit=' + limit;
+
+        fetch(window.APPS_SCRIPT_URL + '?' + params)
             .then(function(r) { return r.json(); })
             .then(function(data) {
-                if (data.result !== 'success') throw new Error(data.error);
+                if (data.result !== 'success') throw new Error(data.error || 'Error desconocido');
                 totalRegistros = data.total;
-                mostrarResultados(data.data, append);
+                mostrarResultados(data.data, append, true);
                 document.getElementById('loadMoreContainer').style.display = (offset + limit < totalRegistros) ? 'block' : 'none';
             })
-            .catch(function(e) { document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;">Error: '+e.message+'</p>'; });
+            .catch(function(e) {
+                document.getElementById('historyList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:2rem;">Error: ' + e.message + '</p>';
+            });
     }
 
-    function cargarUltimosRegistros() {
-        currentOffset = 0; currentLimit = 50;
-        document.getElementById('searchInput').value = '';
-        document.getElementById('searchFilter').value = 'todos';
-        buscar('', 'todos', currentOffset, currentLimit, false);
-    }
-
-    function mostrarResultados(registros, append) {
+    function mostrarResultados(registros, append, hayFiltros) {
         var cont = document.getElementById('historyList');
         if (!append) { cont.innerHTML = ''; }
-        if (registros.length === 0 && !append) { cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">Sin resultados</p>'; return; }
-        document.getElementById('resultCount').textContent = 'Mostrando ' + (append ? currentOffset + registros.length : registros.length) + ' de ' + totalRegistros + ' registro(s)';
-        if (!append) {
-            document.getElementById('statTotal').textContent = totalRegistros;
-            document.getElementById('statAmbulatorio').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulatorio'; }).length;
-            document.getElementById('statAmbulancia').textContent = registros.filter(function(r) { return r.tipoIngreso === 'Ambulancia'; }).length;
-            document.getElementById('statReanimacion').textContent = registros.filter(function(r) { return r.esReanimacion === 'SI'; }).length;
+
+        if (registros.length === 0) {
+            if (!append) {
+                if (hayFiltros) {
+                    cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;"><i class="fas fa-search" style="font-size:1.5rem;opacity:0.5;display:block;margin-bottom:0.5rem;"></i>No se encontraron registros con esos filtros.</p>';
+                } else {
+                    cont.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:3rem;">Ingresá un DNI, un apellido, o seleccioná una fecha para consultar registros.</p>';
+                }
+            }
+            document.getElementById('resultCount').textContent = hayFiltros ? 'Sin resultados' : '';
+            return;
         }
+
+        document.getElementById('resultCount').textContent =
+            'Mostrando ' + (append ? currentOffset + registros.length : registros.length) + ' de ' + totalRegistros + ' registro(s)';
+
         registros.forEach(function(r) {
-            var d = document.createElement('div'); d.className = 'history-item'; if (r.esReanimacion==='SI') d.classList.add('reanimation');
+            var d = document.createElement('div'); d.className = 'history-item'; if (r.esReanimacion === 'SI') d.classList.add('reanimation');
             d.innerHTML = '<div class="info-paciente">' +
-                '<strong>'+r.nombre+'</strong>' +
-                '<div class="detalle"><span>🆔 '+r.dni+'</span><span>🎂 '+r.edad+' años</span>'+(r.esReanimacion==='SI'?'<span class="badge-reanimation"><i class="fas fa-heart-pulse"></i> REANIMACIÓN</span>':'')+'</div>' +
-                '<div class="detalle"><span>📅 '+r.fecha+' · 🕒 '+r.hora+'</span><span>❗ '+r.razon+'</span><span>🚪 '+r.tipoIngreso+(r.tipoIngreso==='Ambulancia'?' · 🚑 '+r.ambulancia:'')+'</span></div>' +
-                '<div class="extra"><span>📞 '+r.telefono+'</span><span>🏥 '+r.obraSocial+'</span><span>📍 '+r.domicilio+'</span></div></div>';
+                '<strong>' + r.nombre + '</strong>' +
+                '<div class="detalle"><span>🆔 ' + r.dni + '</span><span>🎂 ' + r.edad + ' años</span>' + (r.esReanimacion === 'SI' ? '<span class="badge-reanimation"><i class="fas fa-heart-pulse"></i> REANIMACIÓN</span>' : '') + '</div>' +
+                '<div class="detalle"><span>📅 ' + r.fecha + ' · 🕒 ' + r.hora + '</span><span>❗ ' + r.razon + '</span><span>🚪 ' + r.tipoIngreso + (r.tipoIngreso === 'Ambulancia' ? ' · 🚑 ' + r.ambulancia : '') + '</span></div>' +
+                '<div class="extra"><span>📞 ' + r.telefono + '</span><span>🏥 ' + r.obraSocial + '</span><span>📍 ' + r.domicilio + '</span></div></div>';
             cont.appendChild(d);
         });
     }
 
-    document.getElementById('btnLoadMore').addEventListener('click', function() {
-        currentOffset += currentLimit;
-        var query = document.getElementById('searchInput').value.trim();
-        var filter = document.getElementById('searchFilter').value;
-        this.disabled = true; this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
-        buscar(query, filter, currentOffset, currentLimit, true);
-        var self = this;
-        setTimeout(function() { self.disabled = false; self.innerHTML = '<i class="fas fa-chevron-down"></i> Cargar más registros'; }, 1000);
+    // Botón Buscar
+    document.getElementById('btnSearch').addEventListener('click', function() {
+        currentOffset = 0;
+        buscarEnBackend(0, currentLimit, false);
     });
 
-    var searchTimeout;
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
-        var q = e.target.value.trim();
-        searchTimeout = setTimeout(function() {
-            currentOffset = 0;
-            if (q.length >= 2 || q.length === 0) {
-                buscar(q, document.getElementById('searchFilter').value, 0, currentLimit, false);
-            }
-        }, 500);
+    // Enter en los campos
+    document.getElementById('searchDni').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') { currentOffset = 0; buscarEnBackend(0, currentLimit, false); }
     });
-    document.getElementById('searchInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') { clearTimeout(searchTimeout); currentOffset = 0; buscar(this.value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); } });
-    document.getElementById('btnSearch').addEventListener('click', function() { currentOffset = 0; buscar(document.getElementById('searchInput').value.trim(), document.getElementById('searchFilter').value, 0, currentLimit, false); });
-    document.getElementById('btnRefreshHistory').addEventListener('click', cargarUltimosRegistros);
+    document.getElementById('searchApellido').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') { currentOffset = 0; buscarEnBackend(0, currentLimit, false); }
+    });
+    document.getElementById('searchFecha').addEventListener('change', function() {
+        currentOffset = 0;
+        buscarEnBackend(0, currentLimit, false);
+    });
+
+    // Limpiar filtros
+    document.getElementById('btnClearSearch').addEventListener('click', resetearConsulta);
+
+    // Actualizar
+    document.getElementById('btnRefreshHistory').addEventListener('click', function() {
+        var hayFiltros = document.getElementById('searchDni').value.trim() ||
+                         document.getElementById('searchApellido').value.trim() ||
+                         document.getElementById('searchFecha').value;
+        if (hayFiltros) {
+            currentOffset = 0;
+            buscarEnBackend(0, currentLimit, false);
+        } else {
+            resetearConsulta();
+        }
+    });
+
+    // Ver Excel
     document.getElementById('btnOpenExcel').addEventListener('click', function() {
         var url = window.SHEETS_URL;
         var win = window.open(url, '_blank', 'noopener,noreferrer,width=1200,height=800');
         if (!win || win.closed || typeof win.closed === 'undefined') { window.open(url, '_blank'); mostrarToast('Permita ventanas emergentes si no se abrió'); }
+    });
+
+    // Cargar más
+    document.getElementById('btnLoadMore').addEventListener('click', function() {
+        currentOffset += currentLimit;
+        this.disabled = true; this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+        buscarEnBackend(currentOffset, currentLimit, true);
+        var self = this;
+        setTimeout(function() { self.disabled = false; self.innerHTML = '<i class="fas fa-chevron-down"></i> Cargar más registros'; }, 1000);
     });
 
     window.addEventListener('online', function() { document.getElementById('offlineBanner').style.display = 'none'; });
@@ -1222,7 +1294,7 @@
             }
         }
 
-                function iniciarEscaner() {
+        function iniciarEscaner() {
             if (!codeReader || !selectedDeviceId) {
                 mostrarToast('Seleccioná un dispositivo de video válido', 'error');
                 return;
@@ -1235,15 +1307,11 @@
                 btnStop.disabled = false;
                 setStatus('Escaneando PDF417...', 'scanning');
 
-                // Callback con manejo de errores tolerante
                 var onDecode = function(result, err) {
-                    // Error de ZXing (a veces es solo "no encontró código en este frame")
                     if (err && !(err instanceof ZXing.NotFoundException)) {
-                        // Silenciamos errores comunes de decodificación parcial
                         var msg = (err && err.message) ? err.message : String(err);
                         if (msg.indexOf('stopping scan loop') !== -1 ||
                             msg.indexOf('unexpected error during decode') !== -1) {
-                            // Reiniciar el loop automáticamente tras un pequeño delay
                             setTimeout(function() {
                                 if (isScanning && codeReader) {
                                     try {
@@ -1257,8 +1325,6 @@
                             return;
                         }
                     }
-
-                    // Éxito: procesar el código leído
                     if (result) {
                         var rawText = result.getText();
                         var ahora = Date.now();
@@ -1270,14 +1336,13 @@
                     }
                 };
 
-                // Silenciar el warning "Trying to play video that is already playing"
                 var videoEl = document.getElementById('scannerVideo');
                 if (videoEl && !videoEl.dataset.playPatched) {
                     var originalPlay = videoEl.play.bind(videoEl);
                     videoEl.play = function() {
                         var p = originalPlay();
                         if (p && typeof p.catch === 'function') {
-                            p.catch(function() { /* ignorar */ });
+                            p.catch(function() { });
                         }
                         return p;
                     };
@@ -1412,7 +1477,6 @@
             document.getElementById('obitoFecha').value = String(ahora.getDate()).padStart(2,'0') + '/' + String(ahora.getMonth()+1).padStart(2,'0') + '/' + ahora.getFullYear();
             document.getElementById('obitoHora').value = String(ahora.getHours()).padStart(2,'0') + ':' + String(ahora.getMinutes()).padStart(2,'0');
         }
-        // Exponer para que mostrarSeccion('obito') la llame
         window.actualizarRelojObito = actualizarRelojObito;
 
         setInterval(function() {
@@ -1507,6 +1571,11 @@
             areaSelect.disabled = true;
         });
     })();
+
+    // ========== ACCESO DIRECTO A OBITO DESDE EL FORMULARIO ==========
+    document.getElementById('btnAccesoObito').addEventListener('click', function() {
+        mostrarSeccion('obito');
+    });
 
     actualizarListaPendientes();
 </script>
